@@ -300,10 +300,6 @@ int cplr_generate(cplr_t *c) {
   return 0;
 }
 
-int cplr_loadlibs(cplr_t *c) {
-  return 0;
-}
-
 static void cplr_tcc_error(cplr_t *c, const char *msg) {
   fprintf(stderr, "tcc: %s\n", msg);
 }
@@ -683,13 +679,6 @@ int main(int argc, char **argv) {
   if(cplr_prepare(&c)) {
     fprintf(stderr, "Error: Prepare failed.\n");
     return 1;
-  }
-
-  if(!(c.flag & CPLR_FLAG_NORUN)) {
-    if(cplr_loadlibs(&c)) {
-      fprintf(stderr, "Error: Coult not load libraries.\n");
-      return 1;
-    }
   }
 
   if(cplr_generate(&c)) {
