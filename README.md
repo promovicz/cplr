@@ -1,4 +1,19 @@
-## C for 2020
+## c - Utility for running C code
+
+### Features
+
+ * Command-line utility for running C code directly
+ * Fast with a bang, like a bomb
+ * Will include most UNIX headers by default
+ * Has error messages appropriate for command-line use
+ * Can import any pkg-config package
+ * Uses tcc/libtcc internally
+ * Usual compiler options: -I <incdir>, -L <libdir>, -l <lib>
+ * Extra convenience options: -i <include>, -S <sysincdir>, -s <sysinc>
+ * Two options for adding code: -e <statement>, -t <toplevel>
+ * Flags: -v (verbose compiler), -d (dump code), -p (pristine env), -n (no execute)
+
+### Why this tool exists
 
 If you are a UNIX/C programmer like me then you know the feeling of needing to call a C function to try something out.
 
