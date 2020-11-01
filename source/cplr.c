@@ -540,13 +540,15 @@ const char *longhelp[] = {
 };
 #endif /* USE_GETOPT_LONG */
 
-/* help function */
-static void cplr_show_help(cplr_t *c, FILE *out) {
-  /* program basename for mail address */
-  const char *bn = basename(c->argv[0]);
-  /* short summary */
+static void cplr_show_summary(cplr_t *c, FILE*out) {
   fprintf(out, "Usage: %s [-vdnphHV] <statement>...\n", c->argv[0]);
   fprintf(out, "The C piler: a tool for executing C code\n\n");
+}
+
+/* help function */
+static void cplr_show_help(cplr_t *c, FILE *out) {
+  /* short summary */
+  cplr_show_summary(c, out);
   /* with getopt_long we can easily print more information */
 #ifdef USE_GETOPT_LONG
   int i;
@@ -564,13 +566,26 @@ static void cplr_show_help(cplr_t *c, FILE *out) {
   }
   fprintf(out, "\n");
 #endif
-  fprintf(out, "Copyright (C) 2020 Ingo Albrecht <%s@promovicz.org>.\n", bn);
-  fprintf(out, "Licensed under the GNU General Public License version 3 or later.\n");
-  fprintf(out, "See package file COPYING or https://www.gnu.org/licenses/.\n\n");
 }
 
 /* herald function */
 static void cplr_show_herald(cplr_t *c, FILE *out) {
+  /* program basename for mail address */
+  const char *bn = basename(c->argv[0]);
+
+  /* short summary */
+  cplr_show_summary(c, out);
+
+  /* history */
+  fprintf(out, "Invented in the ides of October anno MMXX.\n\n");
+
+  /* blessing */
+  fprintf(out, "May it be useful to you.\n\n");
+
+  /* copyright information */
+  fprintf(out, "Copyright (C) 2020 Ingo Albrecht <%s@promovicz.org>.\n", bn);
+  fprintf(out, "Licensed under the GNU General Public License version 3 or later.\n");
+  fprintf(out, "See package file COPYING or https://www.gnu.org/licenses/.\n\n");
 }
 
 /* version function */
@@ -687,13 +702,13 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
   return 1;
  help:
   cplr_show_help(c, stdout);
-  return 0;
+  return 2;
  herald:
   cplr_show_herald(c, stdout);
-  return 0;
+  return 2;
  version:
   cplr_show_version(c, stdout);
-  return 0;
+  return 2;
 }
 
 int main(int argc, char **argv) {
@@ -701,7 +716,13 @@ int main(int argc, char **argv) {
   cplr_t c;
   memset(&c, 0, sizeof(c));
 
-  if(cplr_optparse(&c, argc, argv)) {
+  res = cplr_optparse(&c, argc, argv);
+  switch(res) {
+  case 0:
+    break;
+  case 2:
+    return 0;
+  default:
     return 1;
   }
 
