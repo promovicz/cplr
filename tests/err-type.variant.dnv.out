@@ -39,9 +39,10 @@
     38	/* statement */
     39	#line 1 "statement_0"
     40	    puts(1);
-    41	#line 262 "internal"
-    42	    return ret;
-    43	}
+    41	/* done */
+    42	#line 263 "internal"
+    43	    return ret;
+    44	}
 ================================================================================
 Compiler condition:
 statement_0:1: warning: assignment makes pointer from integer without a cast

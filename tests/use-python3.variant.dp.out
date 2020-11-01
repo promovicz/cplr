@@ -9,7 +9,8 @@
      9	    for(int i = 1; i < argc; i++) PyRun_SimpleString(argv[i]);
     10	/* after */
     11	    Py_Finalize();
-    12	    return ret;
-    13	}
+    12	/* done */
+    13	    return ret;
+    14	}
 this actually works
 oh yes absolutely it does

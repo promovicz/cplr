@@ -20,8 +20,9 @@
     20	    int ret = 0;
     21	/* statement */
     22	    puts(1);
-    23	    return ret;
-    24	}
+    23	/* done */
+    24	    return ret;
+    25	}
 Compiler condition:
 statement_0:1: warning: assignment makes pointer from integer without a cast
 Compilation succeeded.

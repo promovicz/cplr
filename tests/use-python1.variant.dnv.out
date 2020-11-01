@@ -50,8 +50,9 @@ Package python3 library: python3.7m
     45	    PyRun_SimpleString("print(\"hello\")");
     46	#line 1 "statement_2"
     47	    Py_Finalize();
-    48	#line 262 "internal"
-    49	    return ret;
-    50	}
+    48	/* done */
+    49	#line 263 "internal"
+    50	    return ret;
+    51	}
 ================================================================================
 Compilation succeeded.

@@ -18,5 +18,6 @@
     18	/* main */
     19	int main(int argc, char **argv) {
     20	    int ret = 0;
-    21	    return ret;
-    22	}
+    21	/* done */
+    22	    return ret;
+    23	}

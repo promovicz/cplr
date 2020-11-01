@@ -17,8 +17,9 @@ Package python3 library: python3.7m
     12	    PyRun_SimpleString("print(\"hello\")");
     13	#line 1 "statement_2"
     14	    Py_Finalize();
-    15	#line 262 "internal"
-    16	    return ret;
-    17	}
+    15	/* done */
+    16	#line 263 "internal"
+    17	    return ret;
+    18	}
 ================================================================================
 hello

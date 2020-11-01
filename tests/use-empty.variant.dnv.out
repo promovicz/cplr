@@ -36,8 +36,9 @@
     35	#line 236 "internal"
     36	int main(int argc, char **argv) {
     37	    int ret = 0;
-    38	#line 262 "internal"
-    39	    return ret;
-    40	}
+    38	/* done */
+    39	#line 263 "internal"
+    40	    return ret;
+    41	}
 ================================================================================
 Compilation succeeded.

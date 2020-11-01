@@ -19,8 +19,9 @@ Package python3 library: python3.7m
     14	/* after */
     15	#line 1 "after_0"
     16	    Py_Finalize();
-    17	#line 262 "internal"
-    18	    return ret;
-    19	}
+    17	/* done */
+    18	#line 263 "internal"
+    19	    return ret;
+    20	}
 ================================================================================
 Compilation succeeded.

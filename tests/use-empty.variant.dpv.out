@@ -3,7 +3,8 @@
      2	#line 236 "internal"
      3	int main(int argc, char **argv) {
      4	    int ret = 0;
-     5	#line 262 "internal"
-     6	    return ret;
-     7	}
+     5	/* done */
+     6	#line 263 "internal"
+     7	    return ret;
+     8	}
 ================================================================================

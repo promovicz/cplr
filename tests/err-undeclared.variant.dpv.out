@@ -6,9 +6,10 @@
      5	/* statement */
      6	#line 1 "statement_0"
      7	    undeclared;
-     8	#line 262 "internal"
-     9	    return ret;
-    10	}
+     8	/* done */
+     9	#line 263 "internal"
+    10	    return ret;
+    11	}
 ================================================================================
 Compiler condition:
 statement_0:1: error: 'undeclared' undeclared

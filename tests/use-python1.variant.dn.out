@@ -24,6 +24,7 @@
     24	    Py_Initialize();
     25	    PyRun_SimpleString("print(\"hello\")");
     26	    Py_Finalize();
-    27	    return ret;
-    28	}
+    27	/* done */
+    28	    return ret;
+    29	}
 Compilation succeeded.

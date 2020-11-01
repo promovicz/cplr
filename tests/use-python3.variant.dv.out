@@ -52,9 +52,10 @@ Package python3 library: python3.7m
     47	/* after */
     48	#line 1 "after_0"
     49	    Py_Finalize();
-    50	#line 262 "internal"
-    51	    return ret;
-    52	}
+    50	/* done */
+    51	#line 263 "internal"
+    52	    return ret;
+    53	}
 ================================================================================
 this actually works
 oh yes absolutely it does

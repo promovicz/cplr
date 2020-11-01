@@ -3,8 +3,9 @@
      3	    int ret = 0;
      4	/* statement */
      5	    puts(1);
-     6	    return ret;
-     7	}
+     6	/* done */
+     7	    return ret;
+     8	}
 Compiler condition:
 statement_0:1: warning: implicit declaration of function 'puts'
 Compilation succeeded.
