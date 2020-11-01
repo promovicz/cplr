@@ -171,7 +171,7 @@ main() {
             touch "${stamp}"
             run_editor "${path}" && if [ "${path}" -nt "${stamp}" ]; then
                 gentest "${test}"
-            fi && rm -f "${stamp}"
+            fi && rm -f "${stamp}" *~
         fi
     else
       command="help"
