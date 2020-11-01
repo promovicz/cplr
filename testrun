@@ -33,8 +33,8 @@ runone() {
     local cres=""
     # check that the test exists
     if ! [ -e "${fcmd}" ]; then
-	echo -e "\n${N}: Test '${name}' does not exist"
-	exit 1
+        echo -e "\n${N}: Test '${name}' does not exist"
+        exit 1
     fi
     # run command, capture output and return value
     #echo "${N}: Running test '${name}'"
@@ -44,22 +44,22 @@ runone() {
     set -e
     # compare return value
     if ! [ "${cres}" = "${rres}" ]; then
-	fail=true
-	echo -e "\n${N}: Test '${name}' expected return ${rres} but got ${cres}"
+        fail=true
+        echo -e "\n${N}: Test '${name}' expected return ${rres} but got ${cres}"
     fi
     # compare output
     if ! cmp -s "${fout}" "${ftmp}"; then
-	fail=true
-	echo -e "\n${N}: Test '${name}' failed output comparison:"
-	diff -du "${fout}" "${ftmp}"
+        fail=true
+        echo -e "\n${N}: Test '${name}' failed output comparison:"
+        diff -du "${fout}" "${ftmp}"
     fi
     # finish up
     if [ -n "${fail}" ]; then
-	return 1
+        return 1
     else
-	#echo "${N}: Test '${name}' has succeeded"
-	rm "${ftmp}"
-	return 0
+        #echo "${N}: Test '${name}' has succeeded"
+        rm "${ftmp}"
+        return 0
     fi
 }
 
@@ -69,12 +69,12 @@ runone() {
 #
 runsome() {
     for t in "$@"; do
-	echo -n "${N}: Running ${t}... "
-	if runone "${t}"; then
-	    echo "${green}success${normal}."
-	else
-	    echo "${red}failure${normal}."
-	fi
+        echo -n "${N}: Running ${t}... "
+        if runone "${t}"; then
+            echo "${green}success${normal}."
+        else
+            echo "${red}failure${normal}."
+        fi
     done
 }
 
@@ -88,9 +88,9 @@ main() {
 
     # default to running all tests
     if [ -z "$*" ]; then
-	runsome $(alltestvariants) # quoted
+        runsome $(alltestvariants) # quoted
     else
-	runsome "$@"
+        runsome "$@"
     fi
 }
 
