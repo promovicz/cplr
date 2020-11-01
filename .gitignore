@@ -1,5 +1,5 @@
 # copious build output
-c
+bin/cplr
 # editor files
 *~
 .*.swp
