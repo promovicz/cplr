@@ -262,32 +262,49 @@ int cplr_code(cplr_t *c) {
   int i;
   ln_t *n;
   char fn[32];
-  i = 0;
-  FOREACH(c->defsys, n) {
-    snprintf(fn, sizeof(fn), "defsysinclude_%d", i++);
-    CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+  if(!l_empty(&c->defsys)) {
+    CPLR_EMIT_COMMENT(c, "defsysinclude");
+    i = 0;
+    L_FOREACH(&c->defsys, n) {
+      snprintf(fn, sizeof(fn), "defsysinclude_%d", i++);
+      CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+    }
   }
-  i = 0;
-  FOREACH(c->syss, n) {
-    snprintf(fn, sizeof(fn), "sysinclude_%d", i++);
-    CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+  if(!l_empty(&c->syss)) {
+    CPLR_EMIT_COMMENT(c, "sysinclude");
+    i = 0;
+    L_FOREACH(&c->syss, n) {
+      snprintf(fn, sizeof(fn), "sysinclude_%d", i++);
+      CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+    }
   }
-  i = 0;
-  FOREACH(c->incs, n) {
-    snprintf(fn, sizeof(fn), "include_%d", i++);
-    CPLR_EMIT_INCLUDE(c, fn, "#include \"%s\"\n", n->v.s);
+  if(!l_empty(&c->incs)) {
+    CPLR_EMIT_COMMENT(c, "include");
+    i = 0;
+    L_FOREACH(&c->incs, n) {
+      snprintf(fn, sizeof(fn), "include_%d", i++);
+      CPLR_EMIT_INCLUDE(c, fn, "#include \"%s\"\n", n->v.s);
+    }
   }
-  i = 0;
-  FOREACH(c->tlfs, n) {
-    snprintf(fn, sizeof(fn), "toplevel_%d", i++);
-    CPLR_EMIT_TOPLEVEL(c, fn, "%s;\n", n->v.s);
+  if(!l_empty(&c->tlfs)) {
+    CPLR_EMIT_COMMENT(c, "toplevel");
+    i = 0;
+    L_FOREACH(&c->tlfs, n) {
+      snprintf(fn, sizeof(fn), "toplevel_%d", i++);
+      CPLR_EMIT_TOPLEVEL(c, fn, "%s;\n", n->v.s);
+    }
   }
+  CPLR_EMIT_COMMENT(c, "main");
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
   CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
-  i = 0;
-  FOREACH(c->stms, n) {
-    snprintf(fn, sizeof(fn), "statement_%d", i++);
-    CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
+  if(!l_empty(&c->stms)) {
+    CPLR_EMIT_COMMENT(c, "statement");
+    i = 0;
+    L_FOREACH(&c->stms, n) {
+      snprintf(fn, sizeof(fn), "statement_%d", i++);
+      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
+    }
+  }
   }
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
   CPLR_EMIT_INTERNAL(c, "}\n");
