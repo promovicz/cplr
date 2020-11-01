@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cc -std=c99 -pedantic -g -Wall -Wextra -Wno-unused -ldl -o c c.c /usr/lib/**/libtcc.a
+cc -std=c99 -pedantic -g -Wall -Wextra -Wno-unused -ldl -Iinclude -o bin/cplr source/cplr.c /usr/lib/**/libtcc.a
 
