@@ -45,99 +45,15 @@
 
 #include <libtcc.h>
 
+#include "libx.h"
+#include "libl.h"
+#include "libs.h"
+
 #define USE_GETOPT_LONG
 
 const char *bar =
   "========================================"
   "========================================";
-
-void *xcalloc(size_t s, size_t n) {
-  void *o = calloc(s, n);
-  if(!o) {
-    fprintf(stderr, "Allocation for %zu objects of size %zu failed", n, s);
-    abort();
-  }
-  return o;
-}
-
-void xfree(void **p) {
-  if(!*p) {
-    fprintf(stderr, "Trying to free a NULL pointer");
-    abort();
-  }
-  free(*p);
-  *p = NULL;
-}
-
-char *vsmnprintf(size_t limit, const char *fmt, va_list a) {
-  int len, chk;
-  char *buf;
-  va_list x;
-  if(limit > INT_MAX) {
-    limit = INT_MAX;
-  }
-  va_copy(x, a);
-  len = vsnprintf(NULL, 0, fmt, x);
-  va_end(x);
-  if(len > (int)limit) {
-    return NULL;
-  }
-  buf = malloc(len + 1);
-  if(!buf) {
-    return NULL;
-  }
-  va_copy(x, a);
-  chk = vsnprintf(buf, len + 1, fmt, x);
-  va_end(x);
-  assert(chk == len);
-  fprintf(stderr, "fmt \"%s\" res \"%s\"\n", fmt, buf);
-  return buf;
-}
-
-char *smnprintf(size_t limit, const char *fmt, ...) {
-  char *res;
-  va_list a;
-  va_start(a, fmt);
-  res = vsmnprintf(limit, fmt, a);
-  va_end(a);
-  return res;
-}
-
-typedef struct lh lh_t;
-typedef struct ln ln_t;
-
-struct lh {
-  ln_t *f;
-  ln_t *l;
-};
-
-struct ln {
-  lh_t *h;
-  ln_t *n;
-  union {
-    char *s;
-  } v;
-};
-
-bool l_empty(lh_t *lh) {
-  return lh->f == NULL;
-}
-
-void l_appends(lh_t *lh, char *s) {
-  ln_t *n = xcalloc(sizeof(ln_t), 1);
-  n->h = lh;
-  n->v.s = s;
-  if(lh->l) {
-    lh->l->n = n;
-  }
-  lh->l = n;
-  if(!lh->f) {
-    lh->f = n;
-  }
-}
-
-#define L_FOREACH(l, i) \
-  for((i) = ((l)->f); (i); (i) = (i)->n)
 
 int pkg_exists(const char *name) {
   int res;
