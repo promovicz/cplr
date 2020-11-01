@@ -1,6 +1,6 @@
 #!/bin/sh
 
-c -P gtk+-3.0 -i gtk/gtk.h \
+bin/cplr -P gtk+-3.0 -i gtk/gtk.h \
 -t 'int clicks = 0' \
 -t 'void clicked(GtkWidget *w, char *s) { g_message("Click %d on widget %s.", ++clicks, s); }' \
 -t 'void closed(GtkWidget *w, char *s) { g_message("Closed by widget %s.", s); gtk_main_quit(); }' \
