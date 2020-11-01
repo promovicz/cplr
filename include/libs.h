@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-#include "libx.h"
+#include "attr.h"
 
 char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   int len, chk;

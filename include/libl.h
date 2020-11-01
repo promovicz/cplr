@@ -3,6 +3,8 @@
 
 #include "libx.h"
 
+#include "attr.h"
+
 typedef struct lh lh_t;
 typedef struct ln ln_t;
 
