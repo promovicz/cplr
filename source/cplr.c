@@ -583,10 +583,10 @@ static void cplr_show_herald(cplr_t *c, FILE *out) {
   cplr_show_summary(c, out);
 
   /* history */
-  fprintf(out, "Invented in the ides of October anno MMXX.\n\n");
+  fprintf(out, "Invented around the ides of October anno MMXX.\n\n");
 
   /* blessing */
-  fprintf(out, "May it be useful to you.\n\n");
+  fprintf(out, "May this be as useful for you as it is for me.\n\n");
 
   /* copyright information */
   fprintf(out, "Copyright (C) 2020 Ingo Albrecht <%s@promovicz.org>.\n", bn);
