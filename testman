@@ -29,21 +29,28 @@ genvariant() {
         # generation - use new data
         echo "Generating test variant '${vname}'"
         # save the command
-        ( for a in "$@"; do
-              nquote "${a}"
-          done
-        ) > "${vname}.cmd"
+        ( nquote "$@"; echo ) > "${vname}.cmd"
         # run the test
-        tee "${vname}.in" | ( "$@" 2>&1 ) | tee "${vname}.out"
+        tee "${vname}.in" | (
+          set +e
+          eval "$@" 2>&1
+          echo "$?" > "${vname}.res"
+          set -e
+        ) | tee "${vname}.out"
     else
         # regeneration - use existing data
         echo "Regenerating test variant '${vname}'"
         # run the test
-        ( . "${vname}.cmd" 2>&1 < "${vname}.in" ) | tee "${vname}.out"
+        (
+          set +e
+          . "${vname}.cmd" 2>&1
+          echo "$?" > "${vname}.res"
+          set -e
+        ) < "${vname}.in" | tee "${vname}.out"
     fi
 
     # report and store result code
-    cres="$?"
+    cres="$(cat "${vname}.res")"
     echo "Result: ${cres}"
     echo "${cres}" > "${vname}.res"
 }
@@ -65,12 +72,6 @@ gentest() {
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! REGENERATING ${name}"
     fi
     echo ""
-
-    local command="$1"
-    if [ -n "${command}" ]; then
-        echo "DROPPING $1" 1>&2
-        shift 1
-    fi
 
     # generate variants
     local opts=""
@@ -97,16 +98,19 @@ gentest() {
                         sed 's/\w+#.*$//' "${base}.cmd" | (
                             local done=""
                             while read -r line; do
-                                if (echo "${line}" | grep -q " \-\-"); then
-                                    echo "${line}" | sed "s/ --/ ${vopts} --/"
-                                    done=true
-                                elif [ -n "${done}" ] || (echo "${line}" | grep -q -e '[\\]$' -e '^[[:space:]]*$'); then
-                                    # empty lines and continued lines copied verbatim
-                                    echo "${line}"
-                                else
-                                    printf '%s %q\n' "${line}" "${vopts}"
-                                    done=true
-                                fi
+                              if (echo "${line}" | grep -q " \-\-"); then
+                                #say "case a: ${line}"
+                                echo "${line}" | sed "s/ --/ ${vopts} --/"
+                                done=true
+                              elif [ -n "${done}" ] || (echo "${line}" | grep -q -e '[\\]$' -e '^[[:space:]]*$'); then
+                                #say "case b: ${line}"
+                                # empty lines and continued lines copied verbatim
+                                echo "${line}"
+                              else
+                                #say "case c: ${line}"
+                                printf '%s %q\n' "${line}" "${vopts}"
+                                done=true
+                              fi
                             done
                         ) | tee "${vname}.cmd"
                     fi
@@ -137,7 +141,7 @@ main() {
 	for test in $(alltests); do
 	    echo "${test}"
 	done
-    elif [ "${command}" = "regenerate" ]; then
+    elif [ "${command}" = "generate" ]; then
         local name="$1"
         if [ -n "${name}" ]; then
             shift 1
@@ -169,7 +173,11 @@ main() {
                 gentest "${test}"
             fi && rm -f "${stamp}"
         fi
-    elif [ "${command}" = "help" ] || [ "${command}" = "-h" ] || [ -z "${command}" ]; then
+    else
+      command="help"
+    fi
+
+    if [ "${command}" = "help" ] || [ "${command}" = "-h" ] || [ -z "${command}" ]; then
         echo "Usage:"
         echo "    ${N} list "
         echo "      List all base tests."
@@ -183,7 +191,7 @@ main() {
 	echo "      Allowed files: cmd, in"
 	echo "      Test will be regenerated automatically if changed."
         echo ""
-        echo "    ${N} regenerate [all | <name>...]"
+        echo "    ${N} generate [all | <name>...]"
         echo "      Regenerate test reference from stored commands."
         echo "      If no names are provided then all tests will regen."
         echo ""
