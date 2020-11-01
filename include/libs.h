@@ -69,16 +69,4 @@ char *msprintf(const char *fmt, ...) {
   return res;
 }
 
-ATTR_FUN_FORMAT(printf, 1, 2)
-ATTR_FUN_PURE
-ATTR_ARG_FORMAT(1)
-char *msprintf(const char *fmt, ...) {
-  char *res;
-  va_list a;
-  va_start(a, fmt);
-  res = vmsnprintf(INT_MAX, fmt, a);
-  va_end(a);
-  return res;
-}
-
 #endif /* !CPLR_STRING_H */
