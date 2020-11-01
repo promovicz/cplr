@@ -216,6 +216,8 @@ typedef struct cplr {
   lh_t srcs;
   lh_t tlfs;
   lh_t stms;
+  lh_t befs;
+  lh_t afts;
 
   cplr_gstate_t g_state;
   int   g_prevline;
