@@ -203,7 +203,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->defsys)) {
     CPLR_EMIT_COMMENT(c, "defsysinclude");
     i = 0;
-    L_FOREACH(&c->defsys, n) {
+    L_FORWARD(&c->defsys, n) {
       snprintf(fn, sizeof(fn), "defsysinclude_%d", i++);
       CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
     }
@@ -211,7 +211,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->syss)) {
     CPLR_EMIT_COMMENT(c, "sysinclude");
     i = 0;
-    L_FOREACH(&c->syss, n) {
+    L_FORWARD(&c->syss, n) {
       snprintf(fn, sizeof(fn), "sysinclude_%d", i++);
       CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
     }
@@ -219,7 +219,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->incs)) {
     CPLR_EMIT_COMMENT(c, "include");
     i = 0;
-    L_FOREACH(&c->incs, n) {
+    L_FORWARD(&c->incs, n) {
       snprintf(fn, sizeof(fn), "include_%d", i++);
       CPLR_EMIT_INCLUDE(c, fn, "#include \"%s\"\n", n->v.s);
     }
@@ -227,7 +227,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->tlfs)) {
     CPLR_EMIT_COMMENT(c, "toplevel");
     i = 0;
-    L_FOREACH(&c->tlfs, n) {
+    L_FORWARD(&c->tlfs, n) {
       snprintf(fn, sizeof(fn), "toplevel_%d", i++);
       CPLR_EMIT_TOPLEVEL(c, fn, "%s;\n", n->v.s);
     }
@@ -238,7 +238,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->befs)) {
     CPLR_EMIT_COMMENT(c, "before");
     i = 0;
-    L_FOREACH(&c->befs, n) {
+    L_FORWARD(&c->befs, n) {
       snprintf(fn, sizeof(fn), "before_%d", i++);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
@@ -246,7 +246,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->stms)) {
     CPLR_EMIT_COMMENT(c, "statement");
     i = 0;
-    L_FOREACH(&c->stms, n) {
+    L_FORWARD(&c->stms, n) {
       snprintf(fn, sizeof(fn), "statement_%d", i++);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
@@ -254,7 +254,7 @@ int cplr_code(cplr_t *c) {
   if(!l_empty(&c->afts)) {
     CPLR_EMIT_COMMENT(c, "after");
     i = 0;
-    L_FOREACH(&c->afts, n) {
+    L_BACKWARDS(&c->afts, n) {
       snprintf(fn, sizeof(fn), "after_%d", i++);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
@@ -396,38 +396,38 @@ int cplr_prepare(cplr_t *c) {
   if(tcc_set_output_type(t, TCC_OUTPUT_MEMORY)) {
     return 1;
   }
-  L_FOREACH(&c->pkgs, i) {
+  L_FORWARD(&c->pkgs, i) {
     if(cplr_prepare_package(c, i->v.s)) {
       return 1;
     }
   }
-  L_FOREACH(&c->defdef, i) {
+  L_FORWARD(&c->defdef, i) {
     tcc_set_options(t, i->v.s);
   }
-  L_FOREACH(&c->defs, i) {
+  L_FORWARD(&c->defs, i) {
     tcc_set_options(t, i->v.s);
   }
-  L_FOREACH(&c->sysdirs, i) {
+  L_FORWARD(&c->sysdirs, i) {
     if(tcc_add_sysinclude_path(t, i->v.s)) {
       return 1;
     }
   }
-  L_FOREACH(&c->incdirs, i) {
+  L_FORWARD(&c->incdirs, i) {
     if(tcc_add_include_path(t, i->v.s)) {
       return 1;
     }
   }
-  L_FOREACH(&c->libdirs, i) {
+  L_FORWARD(&c->libdirs, i) {
     if(tcc_add_library_path(t, i->v.s)) {
       return 1;
     }
   }
-  L_FOREACH(&c->libs, i) {
+  L_FORWARD(&c->libs, i) {
     if(tcc_add_library(t, i->v.s)) {
       return 1;
     }
   }
-  L_FOREACH(&c->srcs, i) {
+  L_FORWARD(&c->srcs, i) {
     if(tcc_add_file(t, i->v.s)) {
       return 1;
     }
