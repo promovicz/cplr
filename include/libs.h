@@ -5,6 +5,9 @@
 
 #include "attr.h"
 
+ATTR_FUN_FORMAT(printf, 2, 0)
+ATTR_FUN_PURE
+ATTR_ARG_FORMAT(2)
 char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   int len, chk;
   char *buf;
@@ -35,6 +38,9 @@ char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   return buf;
 }
 
+ATTR_FUN_FORMAT(printf, 2, 3)
+ATTR_FUN_PURE
+ATTR_ARG_FORMAT(2)
 char *msnprintf(size_t limit, const char *fmt, ...) {
   char *res;
   va_list a;
@@ -44,10 +50,28 @@ char *msnprintf(size_t limit, const char *fmt, ...) {
   return res;
 }
 
+ATTR_FUN_FORMAT(printf, 1, 0)
+ATTR_FUN_PURE
+ATTR_ARG_FORMAT(1)
 char *vmsprintf(const char *fmt, va_list a) {
   return vmsnprintf(INT_MAX, fmt, a);
 }
 
+ATTR_FUN_FORMAT(printf, 1, 2)
+ATTR_FUN_PURE
+ATTR_ARG_FORMAT(1)
+char *msprintf(const char *fmt, ...) {
+  char *res;
+  va_list a;
+  va_start(a, fmt);
+  res = vmsnprintf(INT_MAX, fmt, a);
+  va_end(a);
+  return res;
+}
+
+ATTR_FUN_FORMAT(printf, 1, 2)
+ATTR_FUN_PURE
+ATTR_ARG_FORMAT(1)
 char *msprintf(const char *fmt, ...) {
   char *res;
   va_list a;

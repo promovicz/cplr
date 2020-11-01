@@ -23,10 +23,12 @@ struct ln {
   } v;
 };
 
+ATTR_FUN_PURE
 bool l_empty(lh_t *lh) {
   return lh->c == 0;
 }
 
+ATTR_FUN_PURE
 size_t l_size(lh_t *lh) {
   return lh->c;
 }
