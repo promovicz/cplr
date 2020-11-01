@@ -1,0 +1,59 @@
+Package python3: -I/usr/include/python3.7m -I/usr/include/x86_64-linux-gnu/python3.7m -lpython3.7m
+Package python3 include dir: /usr/include/python3.7m
+Package python3 include dir: /usr/include/x86_64-linux-gnu/python3.7m
+Package python3 library: python3.7m
+================================================================================
+     1	/* defsysinclude */
+     2	#line 1 "defsysinclude_0"
+     3	#include <sys/stat.h>
+     4	#line 1 "defsysinclude_1"
+     5	#include <sys/types.h>
+     6	#line 1 "defsysinclude_2"
+     7	#include <assert.h>
+     8	#line 1 "defsysinclude_3"
+     9	#include <ctype.h>
+    10	#line 1 "defsysinclude_4"
+    11	#include <errno.h>
+    12	#line 1 "defsysinclude_5"
+    13	#include <fcntl.h>
+    14	#line 1 "defsysinclude_6"
+    15	#include <libgen.h>
+    16	#line 1 "defsysinclude_7"
+    17	#include <limits.h>
+    18	#line 1 "defsysinclude_8"
+    19	#include <stdarg.h>
+    20	#line 1 "defsysinclude_9"
+    21	#include <stdio.h>
+    22	#line 1 "defsysinclude_10"
+    23	#include <stdint.h>
+    24	#line 1 "defsysinclude_11"
+    25	#include <stdlib.h>
+    26	#line 1 "defsysinclude_12"
+    27	#include <string.h>
+    28	#line 1 "defsysinclude_13"
+    29	#include <termios.h>
+    30	#line 1 "defsysinclude_14"
+    31	#include <time.h>
+    32	#line 1 "defsysinclude_15"
+    33	#include <unistd.h>
+    34	/* include */
+    35	#line 1 "include_0"
+    36	#include "Python.h"
+    37	/* main */
+    38	#line 236 "internal"
+    39	int main(int argc, char **argv) {
+    40	    int ret = 0;
+    41	/* before */
+    42	#line 1 "before_0"
+    43	    Py_Initialize();
+    44	/* statement */
+    45	#line 1 "statement_0"
+    46	    PyRun_SimpleString("print(\"hello\")");
+    47	/* after */
+    48	#line 1 "after_0"
+    49	    Py_Finalize();
+    50	#line 262 "internal"
+    51	    return ret;
+    52	}
+================================================================================
+hello

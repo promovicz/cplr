@@ -1,0 +1,26 @@
+Package python3: -I/usr/include/python3.7m -I/usr/include/x86_64-linux-gnu/python3.7m -lpython3.7m
+Package python3 include dir: /usr/include/python3.7m
+Package python3 include dir: /usr/include/x86_64-linux-gnu/python3.7m
+Package python3 library: python3.7m
+================================================================================
+     1	/* include */
+     2	#line 1 "include_0"
+     3	#include "Python.h"
+     4	/* main */
+     5	#line 236 "internal"
+     6	int main(int argc, char **argv) {
+     7	    int ret = 0;
+     8	/* before */
+     9	#line 1 "before_0"
+    10	    Py_Initialize();
+    11	/* statement */
+    12	#line 1 "statement_0"
+    13	    PyRun_SimpleString("print(\"hello\")");
+    14	/* after */
+    15	#line 1 "after_0"
+    16	    Py_Finalize();
+    17	#line 262 "internal"
+    18	    return ret;
+    19	}
+================================================================================
+hello

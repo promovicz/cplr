@@ -1,0 +1,6 @@
+     1	/* main */
+     2	int main(int argc, char **argv) {
+     3	    int ret = 0;
+     4	    return ret;
+     5	}
+Compilation succeeded.
