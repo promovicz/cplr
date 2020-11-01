@@ -1,4 +1,9 @@
 
+/* bar for separating the dump - 80 chars */
+static const char *bar =
+  "========================================"
+  "========================================";
+
 void cplr_emit(cplr_t *c,
                cplr_gstate_t nstate,
                const char * file, int line,

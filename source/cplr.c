@@ -52,7 +52,6 @@
 
 #include "cplr_private.h"
 
-#include "cplr_misc.c"
 #include "cplr_optparse.c"
 #include "cplr_defaults.c"
 #include "cplr_package.c"
