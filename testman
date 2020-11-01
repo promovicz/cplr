@@ -137,11 +137,11 @@ main() {
     cd "${T}"
 
     # check arguments
-    if [ "${command}" = "list" ]; then
+    if [ "${command}" = "ls" ]; then
 	for test in $(alltests); do
 	    echo "${test}"
 	done
-    elif [ "${command}" = "generate" ]; then
+    elif [ "${command}" = "gen" ]; then
         local name="$1"
         if [ -n "${name}" ]; then
             shift 1
@@ -179,7 +179,7 @@ main() {
 
     if [ "${command}" = "help" ] || [ "${command}" = "-h" ] || [ -z "${command}" ]; then
         echo "Usage:"
-        echo "    ${N} list "
+        echo "    ${N} ls "
         echo "      List all base tests."
 	echo ""
         echo "    ${N} new <name> <command>..."
@@ -191,7 +191,7 @@ main() {
 	echo "      Allowed files: cmd, in"
 	echo "      Test will be regenerated automatically if changed."
         echo ""
-        echo "    ${N} generate [all | <name>...]"
+        echo "    ${N} gen [all | <name>...]"
         echo "      Regenerate test reference from stored commands."
         echo "      If no names are provided then all tests will regen."
         echo ""
