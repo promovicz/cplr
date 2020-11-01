@@ -117,9 +117,31 @@ int cplr_code(cplr_t *c) {
   return 0;
 }
 
+#ifdef _GNU_SOURCE
+static ssize_t stream_write(void *cp, const char *buf, size_t size) {
+  cplr_t *c = (cplr_t*)cp;
+  assert(c->g_codebuf);
+  assert(size < SSIZE_MAX);
+  size_t ol = strlen(c->g_codebuf);
+  size_t nl = ol + size + 1;
+  char *n = xrealloc(c->g_codebuf, nl);
+  c->g_codebuf = n;
+  strncpy(n + ol, buf, size + 1);
+  return size;
+}
+static cookie_io_functions_t stream_functions = {
+  NULL, &stream_write, NULL, NULL
+};
+#endif
+
 int cplr_generate(cplr_t *c) {
+#ifdef _GNU_SOURCE
+  c->g_codebuf = strdup("");
+  c->g_code = fopencookie(c, "w", stream_functions);
+#else
   c->g_codebuf = xcalloc(4096, 1);
   c->g_code = fmemopen(c->g_codebuf, 4096, "w");
+#endif
   if(c->flag & CPLR_FLAG_DUMP) {
     if(c->flag & CPLR_FLAG_VERBOSE)
       fprintf(stderr, "%s\n", bar);
@@ -132,5 +154,10 @@ int cplr_generate(cplr_t *c) {
       fprintf(stderr, "%s\n", bar);
   }
   fclose(c->g_code);
+  c->g_code = NULL;
+
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Generated %zu bytes of C code\n", strlen(c->g_codebuf));
+  }
   return 0;
 }

@@ -29,8 +29,6 @@
  * Use the power of ~/.local/bin and enjoy it's freedoms.
  */
 
-#define _POSIX_C_SOURCE 200809L
-
 #define USE_GETOPT_LONG
 
 #include <assert.h>
