@@ -119,8 +119,8 @@ void l_appends(lh_t *lh, char *s) {
   }
 }
 
-#define FOREACH(l, i) \
-  for((i) = ((&l)->f); (i); (i) = (i)->n)
+#define L_FOREACH(l, i) \
+  for((i) = ((l)->f); (i); (i) = (i)->n)
 
 int pkg_exists(const char *name) {
   int res;
