@@ -259,6 +259,7 @@ int cplr_code(cplr_t *c) {
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
   }
+  CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
   CPLR_EMIT_INTERNAL(c, "}\n");
   return 0;
