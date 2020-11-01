@@ -29,6 +29,7 @@
 
 #define _POSIX_C_SOURCE 200809L
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <getopt.h>
@@ -66,24 +67,21 @@ void xfree(void **p) {
 }
 
 char *smnprintf(size_t limit, const char *fmt, ...) {
-  int res = -1;
+  int len, chk;
+  char *buf;
   va_list a;
-  char ibuf[32];
   va_start(a, fmt);
-  res = vsnprintf(ibuf, sizeof(ibuf), fmt, a);
+  len = vsnprintf(NULL, 0, fmt, a);
   va_end(a);
-  if(res > limit) {
+  if(len > limit) {
     return NULL;
   }
-  if(res <= sizeof(ibuf)) {
-    return strdup(ibuf);
-  } else {
-    char *buf = xcalloc(1, res);
-    va_start(a, fmt);
-    res = vsnprintf(buf, res, fmt, a);
-    va_end(a);
-    return buf;
-  }
+  buf = xmalloc(1, len);
+  va_start(a, fmt);
+  chk = vsnprintf(buf, res, fmt, a);
+  va_end(a);
+  assert(chk == len);
+  return buf;
 }
 
 typedef struct lh lh_t;
