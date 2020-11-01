@@ -98,15 +98,12 @@ gentest() {
 			    local done=""
 			    while read -r line; do
 				if (echo "${line}" | grep -q " \-\-"); then
-				    echo "case b" 1>&2
 				    echo "${line}" | sed "s/ --/ ${vopts} --/"
 				    done=true
 				elif [ -n "${done}" ] || (echo "${line}" | grep -q -e '[\\]$' -e '^[[:space:]]*$'); then
-				    echo "case a" 1>&2
 				    # empty lines and continued lines copied verbatim
 				    echo "${line}"
 				else
-				    echo "case b" 1>&2
 				    printf '%s %q\n' "${line}" "${vopts}"
 				    done=true
 				fi

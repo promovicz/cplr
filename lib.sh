@@ -11,8 +11,12 @@ red="$(tput setaf 1)"
 green="$(tput setaf 2)"
 yellow="$(tput setaf 3)"
 
+warning() {
+    echo "${N}: ${yellow}$*${normal}" 1>&2
+}
+
 say() {
-    echo "${yellow}$*${normal}" 1>&2
+    echo "${N}: $*${normal}" 1>&2
 }
 
 quote() {
@@ -35,10 +39,8 @@ nquote() {
     for s in "$@"; do
 	local e="$(quote "${s}")"
 	if [ "${s}" != "${e}" ]; then
-	    say "wrap ${line} = ${s}"
 	    echo -n "${sep}'${s}'"
 	else
-	    say "copy ${line} = ${s}"
 	    echo -n "${sep}${s}"
 	fi
 	sep=" "
@@ -62,6 +64,7 @@ run_editor() {
 	if [ -n "${we}" ]; then
 	    "${we}" "${file}"
 	fi
+        return 0
     done
     echo "Could not find an editor"
     exit 1
