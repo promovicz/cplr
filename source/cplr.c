@@ -46,9 +46,9 @@
 
 #include <libtcc.h>
 
-#include "libx.h"
-#include "libl.h"
-#include "libs.h"
+#include "cplr/memory.h"
+#include "cplr/list.h"
+#include "cplr/string.h"
 
 #define USE_GETOPT_LONG
 

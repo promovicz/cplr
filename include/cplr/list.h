@@ -1,9 +1,8 @@
 #ifndef CPLR_LIST_H
 #define CPLR_LIST_H
 
-#include "libx.h"
-
 #include "attr.h"
+#include "memory.h"
 
 typedef struct lh lh_t;
 typedef struct ln ln_t;
