@@ -14,3 +14,6 @@ end_of_line = lf
 max_line_length = 80
 insert_final_newline = true
 
+[{*.sh,test*,compile}]
+indent_style = spaces
+indent_size = 4
