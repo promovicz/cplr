@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <cplr/memory.h>
-#include <cplr/string.h>
+#include <cext/memory.h>
+#include <cext/string.h>
 
 #include "cpkg.h"
 
