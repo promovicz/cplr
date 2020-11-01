@@ -300,7 +300,7 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
       s = strndup(b, o - b);
       switch(opt) {
       case 'D':
-	l_appends(&c->defs, smnprintf(1024, "-D%s", s));
+	l_appends(&c->defs, msnprintf(1024, "-D%s", s));
 	if(c->flag & CPLR_FLAG_VERBOSE)
 	  fprintf(stderr, "Package %s define: -D%s\n", name, s);
 	free(s);
@@ -617,10 +617,10 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
       l_appends(&c->pkgs, optarg);
       break;
     case 'D':
-      l_appends(&c->defs, smnprintf(1024, "-D%s", optarg));
+      l_appends(&c->defs, msnprintf(1024, "-D%s", optarg));
       break;
     case 'U':
-      l_appends(&c->defs, smnprintf(1024, "-U%s", optarg));
+      l_appends(&c->defs, msnprintf(1024, "-U%s", optarg));
       break;
     case 'I':
       l_appends(&c->incdirs, optarg);

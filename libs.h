@@ -5,7 +5,7 @@
 
 #include "libx.h"
 
-char *vsmnprintf(size_t limit, const char *fmt, va_list a) {
+char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   int len, chk;
   char *buf;
   va_list x;
@@ -30,7 +30,7 @@ char *vsmnprintf(size_t limit, const char *fmt, va_list a) {
   return buf;
 }
 
-char *mnmprintf(size_t limit, const char *fmt, ...) {
+char *mmnprintf(size_t limit, const char *fmt, ...) {
   char *res;
   va_list a;
   va_start(a, fmt);
@@ -39,11 +39,11 @@ char *mnmprintf(size_t limit, const char *fmt, ...) {
   return res;
 }
 
-char *vsmprintf(const char *fmt, va_list a) {
+char *vmsprintf(const char *fmt, va_list a) {
   return vmsnprintf(INT_MAX, fmt, a);
 }
 
-char *smprintf(const char *fmt, ...) {
+char *msprintf(const char *fmt, ...) {
   char *res;
   va_list a;
   va_start(a, fmt);
