@@ -4,32 +4,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ATTR_FUN_ARTIFICIAL			\
+#define ATTR_FUN_ARTIFICIAL                     \
   __attribute__((artificial))
-#define ATTR_FUN_COLD				\
+#define ATTR_FUN_COLD                           \
   __attribute__((cold))
-#define ATTR_FUN_CONST				\
+#define ATTR_FUN_CONST                          \
   __attribute__((const))
-#define ATTR_FUN_PURE				\
+#define ATTR_FUN_PURE                           \
   __attribute__((pure))
-#define ATTR_FUN_MALLOC				\
+#define ATTR_FUN_MALLOC                         \
   __attribute__((malloc))
-#define ATTR_FUN_NORETURN			\
+#define ATTR_FUN_NORETURN                       \
   __attribute__((noreturn))
-#define ATTR_FUN_FORMAT(arch, fmtindex, argindex)	\
+#define ATTR_FUN_FORMAT(arch, fmtindex, argindex)       \
   __attribute__((format(arch, fmtindex, argindex)))
-#define ATTR_ARG_ALLOC_SIZE(...)		\
+#define ATTR_ARG_ALLOC_SIZE(...)                \
   __attribute__((alloc_size(__VA_ARGS__)))
-#define ATTR_ARG_FORMAT(...)			\
+#define ATTR_ARG_FORMAT(...)                    \
   __attribute__((format_arg(__VA_ARGS__)))
-#define ATTR_ARG_NONNULL(...)			\
+#define ATTR_ARG_NONNULL(...)                   \
   __attribute__((nonnull(__VA_ARGS__)))
 
-#define X_VOIDPTR_NOTNULL(function, fmt, ...)	\
-  {						\
-    void *p = function(__VA_ARGS__);		\
-    if(p == NULL) xabortf(fmt, __VA_ARGS__);	\
-    return p;					\
+#define X_VOIDPTR_NOTNULL(function, fmt, ...)   \
+  {                                             \
+    void *p = function(__VA_ARGS__);            \
+    if(p == NULL) xabortf(fmt, __VA_ARGS__);    \
+    return p;                                   \
   }
 
 ATTR_FUN_COLD
