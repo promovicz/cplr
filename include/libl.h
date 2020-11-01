@@ -22,7 +22,7 @@ struct ln {
 };
 
 bool l_empty(lh_t *lh) {
-  return lh->c > 0;
+  return lh->c == 0;
 }
 
 size_t l_size(lh_t *lh) {
