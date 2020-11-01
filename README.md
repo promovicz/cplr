@@ -4,9 +4,9 @@ The C piler is utility for executing C code directly from the shell.
 
 Pretty much everything on a POSIX system can be done in C, and quite a few things can't be done without.
 
-Using this tool you can do all of it without resorting to an editor.
+It's like awk with C as the language. You can do anything with it.
 
-The name means that it "piles" up strings. Because that is how it works.
+The name means that it "piles" up strings, because that is how it works.
 
 Personally I do:
 ```
@@ -51,7 +51,7 @@ And so one day I wrote a tool to do just that:
 ```
 # program that prints its arguments
 # it also returns part of the birth year of UNIX
-$ c 'int i' \
+$ cplr 'int i' \
     'for(i=1;i<argc;i++) { puts(argv[i]); }' \
 	'ret = 69' \
   -- a b c
@@ -70,7 +70,7 @@ And I made it debuggable:
 # you can disable that with -p or --pristine
 # in any case you can add includes with -i or -s
 # and also use the usual -I and -L known from cc
-$ c \
+$ cplr \
     'int i' \
     'for(i=1;i<argc;i++) { puts(argv[i]); }' \
 	-d \
@@ -102,7 +102,7 @@ c
 Enabling verbose mode gives more information and a view under the covers. In the future this mode should also log about the compilation process.
 
 ```
-$ c \
+$ cplr \
     'int i' \
     'for(i=1;i<argc;i++) { puts(argv[i]); }' \
 	-d \
@@ -164,7 +164,7 @@ You can do all sorts of things with cplr:
 # the tool also supports pkg-config natively
 # this allows including most modern libraries
 # here is a simple hello using python
-$ c -P python3 -i Python.h \
+$ bin/cplr -P python3 -i Python.h \
   'Py_Initialize()' \
   'PyRun_SimpleString("print(\"hello\")")' \
   'Py_Finalize()'
@@ -176,7 +176,7 @@ Even weird ones:
 ```
 # if you like stacking things then check this out
 # this is c running python, in turn running a shell
-$ c \
+$ bin/cplr \
     -P python3 \
     -i Python.h \
     -U _XOPEN_SOURCE \
