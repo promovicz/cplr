@@ -360,7 +360,8 @@ int cplr_generate(cplr_t *c) {
 }
 
 static void cplr_tcc_error(cplr_t *c, const char *msg) {
-  fprintf(stderr, "tcc: %s\n", msg);
+  fprintf(stderr, "Compiler condition:\n%s\n", msg);
+  /* TODO split and indent */
 }
 
 int cplr_add_package(cplr_t *c, const char *name, const char *args) {
@@ -714,7 +715,7 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
       fprintf(stderr, "Unknown option -%c\n", optopt);
       goto err;
     default:
-      fprintf(stderr, "Option processing error\n");
+      fprintf(stderr, "Option processing problem\n");
       goto err;
     }
   }
