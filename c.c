@@ -167,10 +167,11 @@ typedef enum {
 
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
-   CPLR_GSTATE_INTERNAL = 1,
-   CPLR_GSTATE_INCLUDE = 2,
-   CPLR_GSTATE_TOPLEVEL = 3,
-   CPLR_GSTATE_STATEMENT = 4,
+   CPLR_GSTATE_COMMENT = 1,
+   CPLR_GSTATE_INTERNAL = 2,
+   CPLR_GSTATE_INCLUDE = 3,
+   CPLR_GSTATE_TOPLEVEL = 4,
+   CPLR_GSTATE_STATEMENT = 5,
 } cplr_gstate_t;
 
 typedef struct cplr {
@@ -210,7 +211,9 @@ void cplr_emit(cplr_t *c,
 	       const char *fmt, ...) {
   bool needline = false;
   va_list a;
-  if(c->g_state != nstate) {
+  if(nstate == CPLR_GSTATE_COMMENT) {
+    needline = false;
+  } else if(c->g_state != nstate) {
     needline = true;
   } else {
     needline = (c->g_prevline && (line != (c->g_prevline+1)));
@@ -229,10 +232,15 @@ void cplr_emit(cplr_t *c,
     vfprintf(c->g_dump, fmt, a);
   }
   va_end(a);
-  c->g_state = nstate;
-  c->g_prevline = line;
+  if(nstate != CPLR_GSTATE_COMMENT) {
+    c->g_state = nstate;
+    c->g_prevline = line;
+  }
 }
 
+#define CPLR_EMIT_COMMENT(c, fmt, ...)		\
+  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,		\
+	    1, "/* " fmt " */\n", ##__VA_ARGS__)
 #define CPLR_EMIT_INCLUDE(c, fn, fmt, ...)		\
   cplr_emit(c, CPLR_GSTATE_INCLUDE, fn,			\
 	    1, fmt, ##__VA_ARGS__)
