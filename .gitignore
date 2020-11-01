@@ -4,4 +4,5 @@ bin/cplr
 *~
 .*.swp
 # test temporaries
+tests/.edit.stamp
 tests/*.tmp
