@@ -1,0 +1,16 @@
+; EditorConfig for cplr
+;
+; This improves collaboration by configuring editors better.
+; See https://editorconfig.org for further information.
+;
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+tab_width = 8
+end_of_line = lf
+max_line_length = 80
+insert_final_newline = true
+
