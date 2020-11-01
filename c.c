@@ -297,6 +297,14 @@ int cplr_code(cplr_t *c) {
   CPLR_EMIT_COMMENT(c, "main");
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
   CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
+  if(!l_empty(&c->befs)) {
+    CPLR_EMIT_COMMENT(c, "before");
+    i = 0;
+    L_FOREACH(&c->befs, n) {
+      snprintf(fn, sizeof(fn), "before_%d", i++);
+      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
+    }
+  }
   if(!l_empty(&c->stms)) {
     CPLR_EMIT_COMMENT(c, "statement");
     i = 0;
@@ -305,6 +313,13 @@ int cplr_code(cplr_t *c) {
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
   }
+  if(!l_empty(&c->afts)) {
+    CPLR_EMIT_COMMENT(c, "after");
+    i = 0;
+    L_FOREACH(&c->afts, n) {
+      snprintf(fn, sizeof(fn), "after_%d", i++);
+      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
+    }
   }
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
   CPLR_EMIT_INTERNAL(c, "}\n");
@@ -441,38 +456,38 @@ int cplr_prepare(cplr_t *c) {
   if(tcc_set_output_type(t, TCC_OUTPUT_MEMORY)) {
     return 1;
   }
-  FOREACH(c->pkgs, i) {
+  L_FOREACH(&c->pkgs, i) {
     if(cplr_prepare_package(c, i->v.s)) {
       return 1;
     }
   }
-  FOREACH(c->defdef, i) {
+  L_FOREACH(&c->defdef, i) {
     tcc_set_options(t, i->v.s);
   }
-  FOREACH(c->defs, i) {
+  L_FOREACH(&c->defs, i) {
     tcc_set_options(t, i->v.s);
   }
-  FOREACH(c->sysdirs, i) {
+  L_FOREACH(&c->sysdirs, i) {
     if(tcc_add_sysinclude_path(t, i->v.s)) {
       return 1;
     }
   }
-  FOREACH(c->incdirs, i) {
+  L_FOREACH(&c->incdirs, i) {
     if(tcc_add_include_path(t, i->v.s)) {
       return 1;
     }
   }
-  FOREACH(c->libdirs, i) {
+  L_FOREACH(&c->libdirs, i) {
     if(tcc_add_library_path(t, i->v.s)) {
       return 1;
     }
   }
-  FOREACH(c->libs, i) {
+  L_FOREACH(&c->libs, i) {
     if(tcc_add_library(t, i->v.s)) {
       return 1;
     }
   }
-  FOREACH(c->srcs, i) {
+  L_FOREACH(&c->srcs, i) {
     if(tcc_add_file(t, i->v.s)) {
       return 1;
     }
@@ -521,7 +536,7 @@ int cplr_defaults(cplr_t *c) {
 }
 
 /* short options */
-const char *shortopts = "-:hvdnpP:D:U:I:L:S:i:l:s:f:t:e:-";
+const char *shortopts = "-:hvdnpP:D:U:I:L:S:i:l:s:f:t:e:b:a:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -544,6 +559,8 @@ const struct option longopts[] = {
 	{NULL,    1, NULL, 'f'},
 	{NULL,    1, NULL, 't'},
 	{NULL,    1, NULL, 'e'},
+	{NULL,    1, NULL, 'b'},
+	{NULL,    1, NULL, 'a'},
 	{NULL,    0, NULL, 0 },
 };
 /* help strings for long options */
@@ -563,8 +580,10 @@ const char *longhelp[] = {
 	"add library",
 	"add sysinclude",
 	"add source file",
-	"add top level statement",
-	"add code level statement",
+	"add toplevel statement",
+	"add main statement",
+	"add before-main statement",
+	"add after-main statement",
 	NULL,
 };
 #endif /* USE_GETOPT_LONG */
@@ -666,6 +685,12 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
     case 'e':
       l_appends(&c->stms, optarg);
+      break;
+    case 'b':
+      l_appends(&c->befs, optarg);
+      break;
+    case 'a':
+      l_appends(&c->afts, optarg);
       break;
     case ':': /* missing option argument */
       fprintf(stderr, "Missing argument for option -%c\n", optopt);
