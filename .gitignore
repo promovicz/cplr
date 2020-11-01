@@ -3,3 +3,5 @@ c
 # editor files
 *~
 .*.swp
+# test temporaries
+tests/*.tmp

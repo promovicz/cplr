@@ -1,0 +1,163 @@
+#!/bin/bash
+
+# errors on
+set -e
+
+# program name and test directory
+P="$0"
+N="$(basename $0)"
+D="$(dirname $0)"
+T="${D}/tests"
+
+# load library
+LIB_SH=true
+. "${D}/lib.sh"
+
+# genvariant <name> <options> <command>...
+#
+# Generate or regenerate a test variant.
+#
+genvariant() {
+    local vname="$1"
+    local vopts="$2" # always 'ignore' when command given
+    shift 2
+    # command result
+    local cres=""
+
+    # run test and create reference
+    if [ -n "$*" ]; then
+	# generation - use new data
+	echo "Generating test variant '${vname}'"
+	# save the command
+	( for a in "$@"; do
+	      nquote "${a}"
+	  done
+	) > "${vname}.cmd"
+	# run the test
+	tee "${vname}.in" | ( "$@" 2>&1 ) | tee "${vname}.out"
+    else
+	# regeneration - use existing data
+	echo "Regenerating test variant '${vname}'"
+	# run the test
+	( . "${vname}.cmd" 2>&1 < "${vname}.in" ) | tee "${vname}.out"
+    fi
+
+    # report and store result code
+    cres="$?"
+    echo "Result: ${cres}"
+    echo "${cres}" > "${vname}.res"
+}
+
+gentest() {
+    local name="$1"
+    shift 1
+
+    # name of base test
+    local base="${name}.base"
+
+    if [ -n "$*" ]; then
+	# generating new test
+	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GENERATING ${name}"
+	# capture input
+	tee "${base}.in"
+    else
+	# regenerating existing test
+	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! REGENERATING ${name}"
+    fi
+    echo ""
+
+    local command="$1"
+    if [ -n "${command}" ]; then
+	echo "DROPPING $1" 1>&2
+	shift 1
+    fi
+
+    # generate variants
+    local opts=""
+    local vname=""
+    local vopts=""
+    for d in "" d; do
+	for n in "" n; do
+	    for p in "" p; do
+		for v in "" v; do
+		    # determine name and options
+		    opts="$d$n$p$v"
+		    vopts=""
+		    if [ -z "${opts}" ]; then
+			vname="${base}"
+		    else
+			vname="${name}.variant.$d$n$p$v"
+			vopts="-$d$n$p$v"
+		    fi
+		    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! VARIANT ${vname}"
+		    # take care of automatic variants
+		    if [ -n "${opts}" ]; then
+			# link the input
+			ln -f -s "${base}.in" "${vname}.in"
+			sed 's/\w+#.*$//' "${base}.cmd" | (
+			    local done=""
+			    while read -r line; do
+				if (echo "${line}" | grep -q " \-\-"); then
+				    echo "case b" 1>&2
+				    echo "${line}" | sed "s/ --/ ${vopts} --/"
+				    done=true
+				elif [ -n "${done}" ] || (echo "${line}" | grep -q -e '[\\]$' -e '^[[:space:]]*$'); then
+				    echo "case a" 1>&2
+				    # empty lines and continued lines copied verbatim
+				    echo "${line}"
+				else
+				    echo "case b" 1>&2
+				    printf '%s %q\n' "${line}" "${vopts}"
+				    done=true
+				fi
+			    done
+			) | tee "${vname}.cmd"
+		    fi
+		    echo ""
+		    if [ -z "${vopts}" ]; then
+			genvariant "${vname}" "ignore" "$@" < "${vname}.in"
+		    else
+			genvariant "${vname}" "${vopts}" < "${vname}.in"
+		    fi
+		    echo ""
+		done
+	    done
+	done
+    done
+}
+
+main() {
+    local name="$1"
+    shift 1
+
+    # check arguments
+    if [ -z "${name}" ] || ( [ "${name}" = "all" ] && [ -n "$*" ] ); then
+	echo "Usage: ${N} ['all' | name] [ command... < input ]"
+	echo ""
+	echo "Case 1: Execute COMMAND and generate test reference."
+	echo "        User must provide INPUT. Use 'echo' as dummy."
+	echo ""
+	echo "Case 2: Regenerate test reference from stored command."
+	echo "        In this case 'all' can be used instead of NAME."
+	echo ""
+	exit 1
+    fi
+
+    # change to test directory
+    cd "${T}"
+
+    # perform appropriate action
+    if [ "${name}" = "all" ] && [ -z "$*" ]; then
+	# case 2
+	local all="$(alltests)"
+	for test in all; do
+	    gentest "${test}"
+	done
+    else
+	# case 1
+	gentest ${name} "$@"
+    fi
+}
+
+# entry point
+main "$@"

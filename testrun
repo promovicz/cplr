@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# errors on
+set -e
+
+# program name and test directory
+P="$0"
+N="$(basename $0)"
+D="$(dirname $0)"
+T="${D}/tests"
+
+# load library
+LIB_SH=true
+. "${D}/lib.sh"
+
+# runone <name>
+#
+# Run test NAME and check results.
+#
+runone() {
+    local name="$1"
+    # fail flag
+    local fail=""
+    # files
+    local fcmd="${name}.cmd"
+    local fout="${name}.out"
+    local ftmp="${name}.tmp"
+    local fres="${name}.res"
+    local fin="${name}.in"
+    # reference result
+    local rres=$(cat ${fres}) # evaluate
+    # command result
+    local cres=""
+    # check that the test exists
+    if ! [ -e "${fcmd}" ]; then
+	echo -e "\n${N}: Test '${name}' does not exist"
+	exit 1
+    fi
+    # run command, capture output and return value
+    #echo "${N}: Running test '${name}'"
+    set +e
+    . "${fcmd}" > "${ftmp}" 2>&1 < "${fin}"
+    cres="$?"
+    set -e
+    # compare return value
+    if ! [ "${cres}" = "${rres}" ]; then
+	fail=true
+	echo -e "\n${N}: Test '${name}' expected return ${rres} but got ${cres}"
+    fi
+    # compare output
+    if ! cmp -s "${fout}" "${ftmp}"; then
+	fail=true
+	echo -e "\n${N}: Test '${name}' failed output comparison:"
+	diff -du "${fout}" "${ftmp}"
+    fi
+    # finish up
+    if [ -n "${fail}" ]; then
+	return 1
+    else
+	#echo "${N}: Test '${name}' has succeeded"
+	rm "${ftmp}"
+	return 0
+    fi
+}
+
+# runsome <name>...
+#
+# Run given tests.
+#
+runsome() {
+    for t in "$@"; do
+	echo -n "${N}: Running ${t}... "
+	if runone "${t}"; then
+	    echo "${green}success${normal}."
+	else
+	    echo "${red}failure${normal}."
+	fi
+    done
+}
+
+# main [<name>...]
+#
+# Run tests in a user-friendly way.
+#
+main() {
+    # change to test directory
+    cd "${T}"
+
+    # default to running all tests
+    if [ -z "$*" ]; then
+	runsome $(alltestvariants) # quoted
+    else
+	runsome "$@"
+    fi
+}
+
+# entry point
+main "$@" || echo "FAILED"
