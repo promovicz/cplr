@@ -14,6 +14,10 @@ void cplr_emit(cplr_t *c,
     needline = false;
   } else if(c->g_state != nstate) {
     needline = true;
+  } else if(c->g_prevfile == NULL || strcmp(c->g_prevfile, file) != 0) {
+    needline = true;
+  } else if(nstate == CPLR_GSTATE_PREPROC) {
+    needline = false;
   } else {
     needline = (c->g_prevline && (line != (c->g_prevline+1)));
   }
@@ -34,14 +38,18 @@ void cplr_emit(cplr_t *c,
   if(nstate != CPLR_GSTATE_COMMENT) {
     c->g_state = nstate;
     c->g_prevline = line;
+    if(c->g_prevfile) {
+      xptrfree((void**)&c->g_prevfile);
+    }
+    c->g_prevfile = strdup(file);
   }
 }
 
 #define CPLR_EMIT_COMMENT(c, fmt, ...)          \
   cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,               \
             1, "/* " fmt " */\n", ##__VA_ARGS__)
-#define CPLR_EMIT_INCLUDE(c, fn, fmt, ...)              \
-  cplr_emit(c, CPLR_GSTATE_INCLUDE, fn,                 \
+#define CPLR_EMIT_PREPROC(c, fn, fmt, ...)              \
+  cplr_emit(c, CPLR_GSTATE_PREPROC, fn,                 \
             1, fmt, ##__VA_ARGS__)
 #define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...)     \
   cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,        \
@@ -53,36 +61,67 @@ void cplr_emit(cplr_t *c,
   cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,       \
             1, fmt, ##__VA_ARGS__)
 
+void cplr_emit_minilib(cplr_t *c, const char *phase, const char *mlb, int count) {
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Emitting minilib '%s' phase '%s'\n", mlb, phase);
+  }
+  char *fn = msprintf("%s_mlib_%d", phase, count);
+  CPLR_EMIT_PREPROC(c, fn, "#define minilib_%s\n", phase);
+  CPLR_EMIT_PREPROC(c, fn, "#include \"%s.m\"\n", mlb);
+  CPLR_EMIT_PREPROC(c, fn, "#undef minilib_%s\n", phase);
+  ptrfree((void**)&fn);
+}
+
+void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
+  int i;
+  ln_t *n;
+  if(reverse) {
+    i = l_size(&c->mlbs);
+    L_BACKWARDS(&c->mlbs, n) {
+      cplr_emit_minilib(c, phase, n->v.s, i--);
+    }
+  } else {
+    i = 0;
+    L_FORWARD(&c->mlbs, n) {
+      cplr_emit_minilib(c, phase, n->v.s, i++);
+    }
+  }
+}
+
 int cplr_code(cplr_t *c) {
   int i;
   ln_t *n;
   char fn[32];
-  if(!l_empty(&c->defsys)) {
+  bool minilibs = !l_empty(&c->mlbs);
+  if(minilibs || !l_empty(&c->defsys)) {
     CPLR_EMIT_COMMENT(c, "defsysinclude");
     i = 0;
     L_FORWARD(&c->defsys, n) {
       snprintf(fn, sizeof(fn), "defsysinclude_%d", i++);
-      CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+      CPLR_EMIT_PREPROC(c, fn, "#include <%s>\n", n->v.s);
     }
   }
-  if(!l_empty(&c->syss)) {
+  if(minilibs || !l_empty(&c->syss)) {
     CPLR_EMIT_COMMENT(c, "sysinclude");
+    cplr_emit_minilibs(c, "sysinclude", false);
     i = 0;
     L_FORWARD(&c->syss, n) {
       snprintf(fn, sizeof(fn), "sysinclude_%d", i++);
-      CPLR_EMIT_INCLUDE(c, fn, "#include <%s>\n", n->v.s);
+      CPLR_EMIT_PREPROC(c, fn, "#include <%s>\n", n->v.s);
     }
   }
-  if(!l_empty(&c->incs)) {
+  if(minilibs || !l_empty(&c->incs)) {
     CPLR_EMIT_COMMENT(c, "include");
+    cplr_emit_minilibs(c, "include", false);
     i = 0;
     L_FORWARD(&c->incs, n) {
       snprintf(fn, sizeof(fn), "include_%d", i++);
-      CPLR_EMIT_INCLUDE(c, fn, "#include \"%s\"\n", n->v.s);
+      CPLR_EMIT_PREPROC(c, fn, "#include \"%s\"\n", n->v.s);
     }
   }
-  if(!l_empty(&c->tlfs)) {
+  if(minilibs || !l_empty(&c->tlfs)) {
     CPLR_EMIT_COMMENT(c, "toplevel");
+    cplr_emit_minilibs(c, "toplevel", false);
     i = 0;
     L_FORWARD(&c->tlfs, n) {
       snprintf(fn, sizeof(fn), "toplevel_%d", i++);
@@ -92,29 +131,32 @@ int cplr_code(cplr_t *c) {
   CPLR_EMIT_COMMENT(c, "main");
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
   CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
-  if(!l_empty(&c->befs)) {
+  if(minilibs || !l_empty(&c->befs)) {
     CPLR_EMIT_COMMENT(c, "before");
+    cplr_emit_minilibs(c, "before", false);
     i = 0;
     L_FORWARD(&c->befs, n) {
       snprintf(fn, sizeof(fn), "before_%d", i++);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
   }
-  if(!l_empty(&c->stms)) {
+  if(minilibs || !l_empty(&c->stms)) {
     CPLR_EMIT_COMMENT(c, "statement");
+    cplr_emit_minilibs(c, "statement", false);
     i = 0;
     L_FORWARD(&c->stms, n) {
       snprintf(fn, sizeof(fn), "statement_%d", i++);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
   }
-  if(!l_empty(&c->afts)) {
+  if(minilibs || !l_empty(&c->afts)) {
     CPLR_EMIT_COMMENT(c, "after");
-    i = 0;
+    i = l_size(&c->afts);
     L_BACKWARDS(&c->afts, n) {
-      snprintf(fn, sizeof(fn), "after_%d", i++);
+      snprintf(fn, sizeof(fn), "after_%d", i--);
       CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
     }
+    cplr_emit_minilibs(c, "after", true);
   }
   CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");

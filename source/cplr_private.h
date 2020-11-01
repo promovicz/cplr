@@ -18,7 +18,7 @@ typedef enum {
    CPLR_GSTATE_INITIAL = 0,
    CPLR_GSTATE_COMMENT = 1,
    CPLR_GSTATE_INTERNAL = 2,
-   CPLR_GSTATE_INCLUDE = 3,
+   CPLR_GSTATE_PREPROC = 3,
    CPLR_GSTATE_TOPLEVEL = 4,
    CPLR_GSTATE_STATEMENT = 5,
 } cplr_gstate_t;
@@ -51,6 +51,7 @@ typedef struct cplr {
 
   cplr_gstate_t g_state;
   int   g_prevline;
+  char *g_prevfile;
   char *g_codebuf;
   FILE *g_code;
   FILE *g_dump;
