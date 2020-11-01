@@ -26,11 +26,10 @@ char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   chk = vsnprintf(buf, len + 1, fmt, x);
   va_end(x);
   assert(chk == len);
-  fprintf(stderr, "fmt \"%s\" res \"%s\"\n", fmt, buf);
   return buf;
 }
 
-char *mmnprintf(size_t limit, const char *fmt, ...) {
+char *msnprintf(size_t limit, const char *fmt, ...) {
   char *res;
   va_list a;
   va_start(a, fmt);
