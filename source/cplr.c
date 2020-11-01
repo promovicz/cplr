@@ -56,44 +56,70 @@ const char *bar =
   "========================================"
   "========================================";
 
-int pkg_exists(const char *name) {
+bool cpkg_exists(const char *name, bool verbose) {
   int res;
-  char cbuf[64];
-  snprintf(cbuf, sizeof(cbuf), "pkg-config --exists %s", name);
-  res = system(cbuf);
-  if(res == -1 || res == 127) {
-    fprintf(stderr, "Error: Could not execute \"%s\".\n", cbuf);
-    return 1;
-  } else if(res) {
-    fprintf(stderr, "Error: Package %s not present.\n", name);
+  bool ret = false;
+  char *cmd = msprintf("pkg-config --exists %s", name);
+  if(verbose) {
+    fprintf(stderr, "Running \"%s\"\n", cmd);
   }
-  return 0;
+  res = system(cmd);
+  if(res == -1 || res == 127) {
+    if(verbose) {
+      fprintf(stderr, "Error: Could not execute \"%s\"\n", cmd);
+    }
+  } else if(res) {
+    if(verbose) {
+      fprintf(stderr, "Error: Package %s not present\n", name);
+    }
+  } else {
+    if(verbose) {
+      fprintf(stderr, "Package %s found\n", name);
+    }
+    ret = true;
+  }
+  free(cmd);
+  return ret;
 }
 
-char *pkg_retrieve(const char *name, const char *what) {
+char *cpkg_retrieve(const char *name, const char *what, bool verbose) {
   int res;
   FILE *ps;
-  char cbuf[64], rbuf[1024];
-  snprintf(cbuf, sizeof(cbuf), "pkg-config %s %s", what, name);
-  ps = popen(cbuf, "r");
+  char *cmd;
+  char rbuf[1024];
+  cmd = msprintf("pkg-config %s %s", what, name);
+  if(verbose) {
+    fprintf(stderr, "Running \"%s\"\n", cmd);
+  }
+  ps = popen(cmd, "r");
   if(!ps) {
-    fprintf(stderr, "Error: Could not popen \"%s\".\n", cbuf);
-    return NULL;
+    if(verbose) {
+      fprintf(stderr, "Error: Could not popen \"%s\"\n", cmd);
+    }
+    goto err;
   }
   res = fread(rbuf, 1, sizeof(rbuf), ps);
   if(res < 0) {
-    fprintf(stderr, "Error: Failed to read from \"%s\".\n", cbuf);
-    return NULL;
+    if(verbose) {
+      fprintf(stderr, "Error: Failed to read from \"%s\"\n", cmd);
+    }
+    goto err;
   }
   if(res == sizeof(rbuf)) {
-    fprintf(stderr, "Error: Package options for %s are to long.\n", name);
-    return NULL;
+    if(verbose) {
+      fprintf(stderr, "Error: Package options for %s are to long.\n", name);
+    }
+    goto err;
   }
   rbuf[res] = 0;
   if(rbuf[res - 1] == '\n')
     rbuf[res - 1] = 0;
   pclose(ps);
+  free(cmd);
   return strdup(rbuf);
+ err:
+  free(cmd);
+  return NULL;
 }
 
 typedef enum {
@@ -367,18 +393,20 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
 
 int cplr_prepare_package(cplr_t *c, const char *name) {
     char *s;
+    bool verbose = c->flag & CPLR_FLAG_VERBOSE;
     TCCState *t = c->tcc;
 
-    if(pkg_exists(name)) {
+    if(!cpkg_exists(name, verbose)) {
+      fprintf(stderr, "Error: Could not find package %s\n", name);
       return 1;
     }
 
-    s = pkg_retrieve(name, "--cflags --libs");
+    s = cpkg_retrieve(name, "--cflags --libs", verbose);
     if(!s) {
       return 1;
     }
-    if(c->flag & CPLR_FLAG_VERBOSE)
-      fprintf(stderr, "Package %s: %s\n", name, s);
+    if(verbose)
+      fprintf(stderr, "Package definitions for %s: %s\n", name, s);
     tcc_set_options(t, s);
     if(cplr_add_package(c, name, s)) {
       fprintf(stderr, "Error: Failed to process package %s.\n", name);
