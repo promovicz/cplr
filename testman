@@ -4,9 +4,9 @@
 set -e
 
 # program name and test directory
-P="$0"
-N="$(basename $0)"
-D="$(dirname $0)"
+P="$(realpath "$0")"
+N="$(basename "${P}")"
+D="$(dirname "${P}")"
 T="${D}/tests"
 
 # load library
