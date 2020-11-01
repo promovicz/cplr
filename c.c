@@ -300,9 +300,10 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
       s = strndup(b, o - b);
       switch(opt) {
       case 'D':
-	l_appends(&c->defs, msnprintf(1024, "-D%s", s));
+      case 'U':
+	l_appends(&c->defs, msnprintf(1024, "-%c%s", s));
 	if(c->flag & CPLR_FLAG_VERBOSE)
-	  fprintf(stderr, "Package %s define: -D%s\n", name, s);
+	  fprintf(stderr, "Package %s define: -%c%s\n", name, s);
 	free(s);
 	break;
       case 'I':
