@@ -102,6 +102,10 @@ struct ln {
   } v;
 };
 
+bool l_empty(lh_t *lh) {
+  return lh->f == NULL;
+}
+
 void l_appends(lh_t *lh, char *s) {
   ln_t *n = xcalloc(sizeof(ln_t), 1);
   n->h = lh;
