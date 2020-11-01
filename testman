@@ -124,35 +124,69 @@ gentest() {
 }
 
 main() {
-    local name="$1"
-    shift 1
-
-    # check arguments
-    if [ -z "${name}" ] || ( [ "${name}" = "all" ] && [ -n "$*" ] ); then
-	echo "Usage: ${N} ['all' | name] [ command... < input ]"
-	echo ""
-	echo "Case 1: Execute COMMAND and generate test reference."
-	echo "        User must provide INPUT. Use 'echo' as dummy."
-	echo ""
-	echo "Case 2: Regenerate test reference from stored command."
-	echo "        In this case 'all' can be used instead of NAME."
-	echo ""
-	exit 1
+    local command="$1"
+    if [ -n "${command}" ]; then
+        shift 1
     fi
 
     # change to test directory
     cd "${T}"
 
-    # perform appropriate action
-    if [ "${name}" = "all" ] && [ -z "$*" ]; then
-	# case 2
-	local all="$(alltests)"
-	for test in all; do
-	    gentest "${test}"
+    # check arguments
+    if [ "${command}" = "list" ]; then
+	for test in $(alltests); do
+	    echo "${test}"
 	done
-    else
-	# case 1
-	gentest ${name} "$@"
+    elif [ "${command}" = "regenerate" ]; then
+        local name="$1"
+        if [ -n "${name}" ]; then
+            shift 1
+        fi
+        local tests="$@"
+        if [ -z "${name}" ] || [ "${name}" = "all" ]; then
+            tests="$(alltests)"
+        fi
+        for test in ${tests}; do
+            gentest "${test}"
+        done
+    elif [ "${command}" = "new" ]; then
+        local name="$1"
+        shift 1
+        gentest ${name} "$@"
+    elif [ "${command}" = "edit" ]; then
+	local test="$1"
+	if [ -z "${test}" ]; then
+	    command="help"
+	else
+	    local file="$2"
+	    if [ -z "${file}" ]; then
+		file="cmd"
+	    fi
+	    local path="${test}.base.${file}"
+	    touch ".edit.stamp"
+	    run_editor "${path}" && if [ "${path}" -nt ".edit.stamp" ]; then
+		"${P}" regenerate "${test}"
+	    fi
+	fi
+    elif [ "${command}" = "help" ] || [ "${command}" = "-h" ] || [ -z "${command}" ]; then
+        echo "Usage:"
+        echo "    ${N} list "
+        echo "      List all base tests."
+	echo ""
+        echo "    ${N} new <name> <command>..."
+        echo "      Execute COMMAND and generate test reference."
+        echo "      User must provide INPUT. Use 'echo' as dummy."
+	echo ""
+	echo "    ${N} edit <name> [<file>]"
+	echo "      Edit file associated with test NAME."
+	echo "      Allowed files: cmd, in"
+	echo "      Test will be regenerated automatically if changed."
+        echo ""
+        echo "    ${N} regenerate [all | <name>...]"
+        echo "      Regenerate test reference from stored commands."
+        echo "      If no names are provided then all tests will regen."
+        echo ""
+        return 1
     fi
 }
 
