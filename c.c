@@ -124,10 +124,12 @@ typedef struct cplr {
 
   lh_t sysdirs;
   lh_t incdirs;
+  lh_t mlbdirs;
   lh_t libdirs;
   lh_t defs;
   lh_t syss;
   lh_t incs;
+  lh_t mlbs;
   lh_t libs;
   lh_t pkgs;
   lh_t srcs;
@@ -477,7 +479,7 @@ int cplr_defaults(cplr_t *c) {
 }
 
 /* short options */
-const char *shortopts = "-:hHVvdnpP:D:U:I:L:S:i:l:s:f:t:e:b:a:-";
+const char *shortopts = "-:hHVvdnpP:D:U:I:M:L:S:i:m:l:s:f:t:e:b:a:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -494,9 +496,11 @@ const struct option longopts[] = {
 	{NULL,    1, NULL, 'D'},
 	{NULL,    1, NULL, 'U'},
 	{NULL,    1, NULL, 'I'},
+	{NULL,    1, NULL, 'M'},
 	{NULL,    1, NULL, 'L'},
 	{NULL,    1, NULL, 'S'},
 	{NULL,    1, NULL, 'i'},
+	{NULL,    1, NULL, 'm'},
 	{NULL,    1, NULL, 'l'},
 	{NULL,    1, NULL, 's'},
 	{NULL,    1, NULL, 'f'},
@@ -520,9 +524,11 @@ const char *longhelp[] = {
 	"define cpp symbol",
 	"undefine cpp symbol",
 	"add include directory",
+	"add minilib directory",
 	"add library directory",
 	"add sysinclude directory",
 	"add include",
+	"add minilib",
 	"add library",
 	"add sysinclude",
 	"add source file",
@@ -626,6 +632,9 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
     case 'I':
       l_appends(&c->incdirs, optarg);
       break;
+    case 'M':
+      l_appends(&c->mlbdirs, optarg);
+      break;
     case 'S':
       l_appends(&c->sysdirs, optarg);
       break;
@@ -634,6 +643,9 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
     case 'i':
       l_appends(&c->incs, optarg);
+      break;
+    case 'm':
+      l_appends(&c->mlbs, optarg);
       break;
     case 's':
       l_appends(&c->syss, optarg);
