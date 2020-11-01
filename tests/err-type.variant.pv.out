@@ -1,0 +1,3 @@
+Compiler condition:
+statement_0:1: warning: implicit declaration of function 'puts'
+Compilation succeeded.

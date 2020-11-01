@@ -1,0 +1,10 @@
+     1	/* main */
+     2	int main(int argc, char **argv) {
+     3	    int ret = 0;
+     4	/* statement */
+     5	    puts(1);
+     6	    return ret;
+     7	}
+Compiler condition:
+statement_0:1: warning: implicit declaration of function 'puts'
+Compilation succeeded.

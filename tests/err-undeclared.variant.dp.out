@@ -1,0 +1,10 @@
+     1	/* main */
+     2	int main(int argc, char **argv) {
+     3	    int ret = 0;
+     4	/* statement */
+     5	    undeclared;
+     6	    return ret;
+     7	}
+Compiler condition:
+statement_0:1: error: 'undeclared' undeclared
+Error: Compilation failed.
