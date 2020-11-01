@@ -18,13 +18,15 @@
  */
 
 /*
- * NOTICE NOTICE NOTICE
+ * NOTICE
  *
  * This program may embody magical lowlevel programming powers
  * that may be illegal to possess in your domain or directory
  * of residence.
  *
- * My strict advice is to use it anyway.
+ * My explicit advice is to use it anyway.
+ *
+ * Use the power of ~/.local/bin and enjoy it's freedoms.
  */
 
 #define _POSIX_C_SOURCE 200809L
