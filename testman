@@ -154,20 +154,21 @@ main() {
         shift 1
         gentest ${name} "$@"
     elif [ "${command}" = "edit" ]; then
-	local test="$1"
-	if [ -z "${test}" ]; then
-	    command="help"
-	else
-	    local file="$2"
-	    if [ -z "${file}" ]; then
-		file="cmd"
-	    fi
-	    local path="${test}.base.${file}"
-	    touch ".edit.stamp"
-	    run_editor "${path}" && if [ "${path}" -nt ".edit.stamp" ]; then
-		"${P}" regenerate "${test}"
-	    fi
-	fi
+        local test="$1"
+        if [ -z "${test}" ]; then
+            command="help"
+        else
+            local file="$2"
+            if [ -z "${file}" ]; then
+                file="cmd"
+            fi
+            local path="${test}.base.${file}"
+	    local stamp=".edit.stamp"
+            touch "${stamp}"
+            run_editor "${path}" && if [ "${path}" -nt "${stamp}" ]; then
+                gentest "${test}"
+            fi && rm -f "${stamp}"
+        fi
     elif [ "${command}" = "help" ] || [ "${command}" = "-h" ] || [ -z "${command}" ]; then
         echo "Usage:"
         echo "    ${N} list "

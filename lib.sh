@@ -67,7 +67,7 @@ run_editor() {
         return 0
     done
     echo "Could not find an editor"
-    exit 1
+    return 1
 }
 
 alltests() {
