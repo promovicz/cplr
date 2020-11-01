@@ -148,9 +148,9 @@ typedef struct cplr {
 } cplr_t;
 
 void cplr_emit(cplr_t *c,
-	       cplr_gstate_t nstate,
-	       const char * file, int line,
-	       const char *fmt, ...) {
+               cplr_gstate_t nstate,
+               const char * file, int line,
+               const char *fmt, ...) {
   bool needline = false;
   va_list a;
   if(nstate == CPLR_GSTATE_COMMENT) {
@@ -180,21 +180,21 @@ void cplr_emit(cplr_t *c,
   }
 }
 
-#define CPLR_EMIT_COMMENT(c, fmt, ...)		\
-  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,		\
-	    1, "/* " fmt " */\n", ##__VA_ARGS__)
-#define CPLR_EMIT_INCLUDE(c, fn, fmt, ...)		\
-  cplr_emit(c, CPLR_GSTATE_INCLUDE, fn,			\
-	    1, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...)	\
-  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,	\
-	    1, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_INTERNAL(c, fmt, ...)			\
-  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal",	\
-	    __LINE__, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_STATEMENT(c, fn, fmt, ...)	\
-  cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,	\
-	    1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_COMMENT(c, fmt, ...)          \
+  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,               \
+            1, "/* " fmt " */\n", ##__VA_ARGS__)
+#define CPLR_EMIT_INCLUDE(c, fn, fmt, ...)              \
+  cplr_emit(c, CPLR_GSTATE_INCLUDE, fn,                 \
+            1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...)     \
+  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,        \
+            1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_INTERNAL(c, fmt, ...)                 \
+  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal",        \
+            __LINE__, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_STATEMENT(c, fn, fmt, ...)    \
+  cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,       \
+            1, fmt, ##__VA_ARGS__)
 
 int cplr_code(cplr_t *c) {
   int i;
@@ -303,26 +303,26 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
       switch(opt) {
       case 'D':
       case 'U':
-	l_appends(&c->defs, msprintf("-%c%s", opt, s));
-	if(c->flag & CPLR_FLAG_VERBOSE)
-	  fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
-	free(s);
-	break;
+        l_appends(&c->defs, msprintf("-%c%s", opt, s));
+        if(c->flag & CPLR_FLAG_VERBOSE)
+          fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
+        free(s);
+        break;
       case 'I':
-	l_appends(&c->incdirs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
-	  fprintf(stderr, "Package %s include dir: %s\n", name, s);
-	break;
+        l_appends(&c->incdirs, s);
+        if(c->flag & CPLR_FLAG_VERBOSE)
+          fprintf(stderr, "Package %s include dir: %s\n", name, s);
+        break;
       case 'L':
-	l_appends(&c->libdirs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
-	  fprintf(stderr, "Package %s library dir: %s\n", name, s);
-	break;
+        l_appends(&c->libdirs, s);
+        if(c->flag & CPLR_FLAG_VERBOSE)
+          fprintf(stderr, "Package %s library dir: %s\n", name, s);
+        break;
       case 'l':
-	l_appends(&c->libs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
-	  fprintf(stderr, "Package %s library: %s\n", name, s);
-	break;
+        l_appends(&c->libs, s);
+        if(c->flag & CPLR_FLAG_VERBOSE)
+          fprintf(stderr, "Package %s library: %s\n", name, s);
+        break;
       }
       opt = 0;
     } else if(dash) {
@@ -331,33 +331,33 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
       case 'I':
       case 'L':
       case 'l':
-	opt = n;
-	while(*o && isspace(*o)) o++;
-	break;
+        opt = n;
+        while(*o && isspace(*o)) o++;
+        break;
       case 'p':
-	if(strstr(o, "pthread") == o) {
-	  if(c->flag & CPLR_FLAG_VERBOSE)
-	    fprintf(stderr, "Package %s uses pthreads.\n", name);
-	  tcc_set_options(c->tcc, "-pthread");
-	  l_appends(&c->libs, "pthread");
-	  o += 6;
-	  break;
-	}
-	/* fall through */
+        if(strstr(o, "pthread") == o) {
+          if(c->flag & CPLR_FLAG_VERBOSE)
+            fprintf(stderr, "Package %s uses pthreads.\n", name);
+          tcc_set_options(c->tcc, "-pthread");
+          l_appends(&c->libs, "pthread");
+          o += 6;
+          break;
+        }
+        /* fall through */
       default:
-	fprintf(stderr, "Warning: unhandled option -%c in package %s: %s\n", n, name, o-1);
-	while(*o && isgraph(*o)) o++;
-	//return 1;
+        fprintf(stderr, "Warning: unhandled option -%c in package %s: %s\n", n, name, o-1);
+        while(*o && isgraph(*o)) o++;
+        //return 1;
       }
       dash = false;
     } else {
       if(n == '-') {
-	dash = true;
+        dash = true;
       } else if(isspace(n)) {
-	continue;
+        continue;
       } else {
-	fprintf(stderr, "Invalid string in package %s: %s\n", name, o);
-	return 1;
+        fprintf(stderr, "Invalid string in package %s: %s\n", name, o);
+        return 1;
       }
     }
   } while(*o++);
@@ -485,58 +485,64 @@ const char *shortopts = "-:hHVvdnpP:D:U:I:M:L:S:i:m:l:s:f:t:e:b:a:-";
 #ifdef USE_GETOPT_LONG
 /* long options */
 const struct option longopts[] = {
-	{"help",     0, NULL, 'h'},
-	{"herald",   0, NULL, 'H'},
-	{"version",  0, NULL, 'V'},
-	{"verbose",  0, NULL, 'v'},
-	{"dump",     0, NULL, 'd'},
-	{"noexec",   0, NULL, 'n'},
-	{"pristine", 0, NULL, 'p'},
-	{NULL,    1, NULL, 'P'},
-	{NULL,    1, NULL, 'D'},
-	{NULL,    1, NULL, 'U'},
-	{NULL,    1, NULL, 'I'},
-	{NULL,    1, NULL, 'M'},
-	{NULL,    1, NULL, 'L'},
-	{NULL,    1, NULL, 'S'},
-	{NULL,    1, NULL, 'i'},
-	{NULL,    1, NULL, 'm'},
-	{NULL,    1, NULL, 'l'},
-	{NULL,    1, NULL, 's'},
-	{NULL,    1, NULL, 'f'},
-	{NULL,    1, NULL, 't'},
-	{NULL,    1, NULL, 'e'},
-	{NULL,    1, NULL, 'b'},
-	{NULL,    1, NULL, 'a'},
-	{NULL,    0, NULL, 0 },
+  {"help",     0, NULL, 'h'},
+  {"herald",   0, NULL, 'H'},
+  {"version",  0, NULL, 'V'},
+  {"verbose",  0, NULL, 'v'},
+  {"dump",     0, NULL, 'd'},
+  {"noexec",   0, NULL, 'n'},
+  {"pristine", 0, NULL, 'p'},
+  {NULL,    1, NULL, 'P'},
+  {NULL,    1, NULL, 'D'},
+  {NULL,    1, NULL, 'U'},
+  {NULL,    1, NULL, 'I'},
+  {NULL,    1, NULL, 'M'},
+  {NULL,    1, NULL, 'L'},
+  {NULL,    1, NULL, 'S'},
+  {NULL,    1, NULL, 'i'},
+  {NULL,    1, NULL, 'm'},
+  {NULL,    1, NULL, 'l'},
+  {NULL,    1, NULL, 's'},
+  {NULL,    1, NULL, 'f'},
+  {NULL,    1, NULL, 't'},
+  {NULL,    1, NULL, 'e'},
+  {NULL,    1, NULL, 'b'},
+  {NULL,    1, NULL, 'a'},
+  {NULL,    0, NULL, 0 },
 };
 /* help strings for long options */
 const char *longhelp[] = {
-	"show help message",
-	"show herald message",
-	"show version string",
+  "show help message",
+  "show herald message",
+  "show version string",
 
-	"print verbose messages",
-	"dump generated code",
-	"do not run, just compile",
-	"pristine environment",
-	"add package",
-	"define cpp symbol",
-	"undefine cpp symbol",
-	"add include directory",
-	"add minilib directory",
-	"add library directory",
-	"add sysinclude directory",
-	"add include",
-	"add minilib",
-	"add library",
-	"add sysinclude",
-	"add source file",
-	"add toplevel statement",
-	"add main statement",
-	"add before-main statement",
-	"add after-main statement",
-	NULL,
+  "print verbose messages",
+  "dump generated code",
+  "do not run, just compile",
+  "pristine environment",
+
+  "add package",
+
+  "define cpp symbol",
+  "undefine cpp symbol",
+
+  "add include directory",
+  "add minilib directory",
+  "add library directory",
+  "add sysinclude directory",
+
+  "add include",
+  "add minilib",
+  "add library",
+  "add sysinclude",
+
+  "add source file",
+
+  "add toplevel statement",
+  "add main statement",
+  "add before-main statement",
+  "add after-main statement",
+  NULL,
 };
 #endif /* USE_GETOPT_LONG */
 
@@ -555,13 +561,13 @@ static void cplr_show_help(cplr_t *c, FILE *out) {
   for(i = 0; longhelp[i]; i++) {
     if(longopts[i].name) {
       fprintf(out, "  -%c, --%-10s\t%s\n",
-	      (char)longopts[i].val,
-	      longopts[i].name,
-	      longhelp[i]);
-	  } else {
+              (char)longopts[i].val,
+              longopts[i].name,
+              longhelp[i]);
+          } else {
       fprintf(out, "  -%c\t\t\t%s\n",
-	      (char)longopts[i].val,
-	      longhelp[i]);
+              (char)longopts[i].val,
+              longhelp[i]);
     }
   }
   fprintf(out, "\n");
