@@ -35,6 +35,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <getopt.h>
+#include <libgen.h>
 #include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -475,13 +476,15 @@ int cplr_defaults(cplr_t *c) {
 }
 
 /* short options */
-const char *shortopts = "-:hvdnpP:D:U:I:L:S:i:l:s:f:t:e:b:a:-";
+const char *shortopts = "-:hHVvdnpP:D:U:I:L:S:i:l:s:f:t:e:b:a:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
 /* long options */
 const struct option longopts[] = {
 	{"help",     0, NULL, 'h'},
+	{"herald",   0, NULL, 'H'},
+	{"version",  0, NULL, 'V'},
 	{"verbose",  0, NULL, 'v'},
 	{"dump",     0, NULL, 'd'},
 	{"noexec",   0, NULL, 'n'},
@@ -505,6 +508,9 @@ const struct option longopts[] = {
 /* help strings for long options */
 const char *longhelp[] = {
 	"show help message",
+	"show herald message",
+	"show version string",
+
 	"print verbose messages",
 	"dump generated code",
 	"do not run, just compile",
@@ -528,26 +534,40 @@ const char *longhelp[] = {
 #endif /* USE_GETOPT_LONG */
 
 /* help function */
-static void cplr_usage(FILE *out) {
-	/* short summary */
-	fprintf(out, "Usage: %s [-vdnp] <statement>...\n\n", "c");
-	/* with getopt_long we can easily print more information */
+static void cplr_show_help(cplr_t *c, FILE *out) {
+  /* program basename for mail address */
+  const char *bn = basename(c->argv[0]);
+  /* short summary */
+  fprintf(out, "Usage: %s [-vdnphHV] <statement>...\n", c->argv[0]);
+  fprintf(out, "The C piler: a tool for executing C code\n\n");
+  /* with getopt_long we can easily print more information */
 #ifdef USE_GETOPT_LONG
-	int i;
-	for(i = 0; longhelp[i]; i++) {
-	  if(longopts[i].name) {
-		fprintf(out, "  -%c, --%-10s\t%s\n",
-			(char)longopts[i].val,
-			longopts[i].name,
-			longhelp[i]);
+  int i;
+  for(i = 0; longhelp[i]; i++) {
+    if(longopts[i].name) {
+      fprintf(out, "  -%c, --%-10s\t%s\n",
+	      (char)longopts[i].val,
+	      longopts[i].name,
+	      longhelp[i]);
 	  } else {
-		fprintf(out, "  -%c\t\t\t%s\n",
-			(char)longopts[i].val,
-			longhelp[i]);
-	  }
-	}
-	fprintf(out, "\n");
+      fprintf(out, "  -%c\t\t\t%s\n",
+	      (char)longopts[i].val,
+	      longhelp[i]);
+    }
+  }
+  fprintf(out, "\n");
 #endif
+  fprintf(out, "Copyright (C) 2020 Ingo Albrecht <%s@promovicz.org>.\n", bn);
+  fprintf(out, "Licensed under the GNU General Public License version 3 or later.\n");
+  fprintf(out, "See package file COPYING or https://www.gnu.org/licenses/.\n\n");
+}
+
+/* herald function */
+static void cplr_show_herald(cplr_t *c, FILE *out) {
+}
+
+/* version function */
+static void cplr_show_version(cplr_t *c, FILE *out) {
 }
 
 /* option parser */
@@ -570,6 +590,10 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
     switch(opt) {
     case 'h': /* help requested */
       goto help;
+    case 'H': /* herald requested */
+      goto herald;
+    case 'V': /* version requested */
+      goto version;
     case 0: /* handled by getopt */
       break;
     case 1: /* non-option argument */
@@ -649,8 +673,14 @@ static int cplr_optparse(cplr_t *c, int argc, char **argv) {
  err:
   return 1;
  help:
-  cplr_usage(stdout);
-  return 1;
+  cplr_show_help(c, stdout);
+  return 0;
+ herald:
+  cplr_show_herald(c, stdout);
+  return 0;
+ version:
+  cplr_show_version(c, stdout);
+  return 0;
 }
 
 int main(int argc, char **argv) {
