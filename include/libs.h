@@ -1,5 +1,5 @@
-#ifndef LIBS_H
-#define LIBS_H
+#ifndef CPLR_STRING_H
+#define CPLR_STRING_H
 
 #include <string.h>
 
@@ -9,23 +9,29 @@ char *vmsnprintf(size_t limit, const char *fmt, va_list a) {
   int len, chk;
   char *buf;
   va_list x;
+  // clamp limit
   if(limit > INT_MAX) {
     limit = INT_MAX;
   }
+  // determine length
   va_copy(x, a);
   len = vsnprintf(NULL, 0, fmt, x);
   va_end(x);
   if(len > (int)limit) {
     return NULL;
   }
+  // allocate
   buf = malloc(len + 1);
   if(!buf) {
     return NULL;
   }
+  // format
   va_copy(x, a);
   chk = vsnprintf(buf, len + 1, fmt, x);
   va_end(x);
+  // verify
   assert(chk == len);
+  // done
   return buf;
 }
 
@@ -51,4 +57,4 @@ char *msprintf(const char *fmt, ...) {
   return res;
 }
 
-#endif /* !LIBS_H */
+#endif /* !CPLR_STRING_H */

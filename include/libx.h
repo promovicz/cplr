@@ -1,9 +1,9 @@
-#ifndef LIBX_H
-#define LIBX_H
+#ifndef CPLR_MEMORY_H
+#define CPLR_MEMORY_H
 
-#include <stdio.h>
 #include <stdlib.h>
 
+#include "abort.h"
 #include "attr.h"
 
 #define X_VOIDPTR_NOTNULL(function, fmt, ...)   \
@@ -12,23 +12,6 @@
     if(p == NULL) xabortf(fmt, __VA_ARGS__);    \
     return p;                                   \
   }
-
-ATTR_FUN_COLD
-ATTR_FUN_NORETURN
-void xabortm(const char *msg) {
-  fprintf(stderr, "%s\n", msg);
-  abort();
-}
-
-ATTR_FUN_NORETURN
-void xabortf(const char *fmt, ...) {
-  va_list a;
-  va_start(a, fmt);
-  vfprintf(stderr, fmt, a);
-  va_end(a);
-  fputc('\n', stderr);
-  abort();
-}
 
 ATTR_FUN_MALLOC
 ATTR_ARG_ALLOC_SIZE(1)
@@ -70,4 +53,4 @@ void xptrfree(void **p) {
   ptrfree(p);
 }
 
-#endif /* !LIBX_H */
+#endif /* !CPLR_MEMORY_H */

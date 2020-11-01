@@ -1,5 +1,5 @@
-#ifndef LIBL_H
-#define LIBL_H
+#ifndef CPLR_LIST_H
+#define CPLR_LIST_H
 
 #include "libx.h"
 
@@ -62,4 +62,4 @@ void l_appends(lh_t *lh, char *s) {
 #define L_BACKWARDS(_lhp, _i) \
   for((_i) = ((_lhp)->l); (_i); (_i) = (_i)->p)
 
-#endif /* !LIBL_H */
+#endif /* !CPLR_LIST_H */
