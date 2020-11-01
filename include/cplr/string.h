@@ -1,6 +1,8 @@
 #ifndef CPLR_STRING_H
 #define CPLR_STRING_H
 
+#include <limits.h>
+#include <stdarg.h>
 #include <string.h>
 
 #include "attr.h"

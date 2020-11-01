@@ -1,6 +1,7 @@
 #ifndef CPLR_ABORT_H
 #define CPLR_ABORT_H
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
