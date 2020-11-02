@@ -22,7 +22,6 @@ void *xrealloc(void *ptr, size_t s) {
   X_VOIDPTR_NOTNULL(realloc, "Reallocation of %p to size %zu failed", ptr, s);
 }
 
-ATTR_ARG_NONNULL(1)
 void xfree(void *p) {
   if(!p) {
     xabortm("xfree: Trying to free a NULL pointer");
@@ -42,7 +41,6 @@ void ptrfree(void **p) {
   *p = NULL;
 }
 
-ATTR_ARG_NONNULL(1)
 void xptrfree(void **p) {
   if(!(p || *p)) {
     xabortm("xptrfree: Trying to free a NULL pointer");
@@ -50,7 +48,6 @@ void xptrfree(void **p) {
   ptrfree(p);
 }
 
-ATTR_ARG_NONNULL(1)
 void lptrfree(void **p) {
   if(!p) {
     xabortm("lptrfree: Trying to free a NULL pointer");

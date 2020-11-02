@@ -28,7 +28,6 @@ ATTR_FUN_RETURNS_NONNULL
 ATTR_ARG_ALLOC_SIZE(2)
 extern void *xrealloc(void *ptr, size_t s);
 
-ATTR_ARG_NONNULL(1)
 extern void xfree(void *p);
 
 extern void lfree(void *p);
@@ -36,10 +35,8 @@ extern void lfree(void *p);
 ATTR_ARG_NONNULL(1)
 extern void ptrfree(void **p);
 
-ATTR_ARG_NONNULL(1)
 extern void xptrfree(void **p);
 
-ATTR_ARG_NONNULL(1)
 extern void lptrfree(void **p);
 
 #endif /* !CPLR_MEMORY_H */
