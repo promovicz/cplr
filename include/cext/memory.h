@@ -7,10 +7,10 @@
 #include "attr.h"
 
 #define X_VOIDPTR_NOTNULL(function, fmt, ...)   \
-  {                                             \
-    void *p = function(__VA_ARGS__);            \
+  {						\
+    void *p = function(__VA_ARGS__);		\
     if(p == NULL) xabortf(fmt, __VA_ARGS__);    \
-    return p;                                   \
+    return p;					\
   }
 
 ATTR_FUN_MALLOC
