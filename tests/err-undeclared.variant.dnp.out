@@ -1,11 +1,13 @@
+================================================================================
      1	/* main */
      2	int main(int argc, char **argv) {
      3	    int ret = 0;
-     4	/* statement */
+     4	/* main */
      5	    undeclared;
      6	/* done */
      7	    return ret;
      8	}
+================================================================================
 Compiler condition:
-statement_0:1: error: 'undeclared' undeclared
+main_0:1: error: 'undeclared' undeclared
 Error: Compilation failed.

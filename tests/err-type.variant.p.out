@@ -1,3 +1,5 @@
 Compiler condition:
-statement_0:1: warning: implicit declaration of function 'puts'
-Compilation succeeded.
+main_0:1: warning: implicit declaration of function 'puts'
+Compiler condition:
+internal:159: error: ';' expected (got "<eof>")
+Error: Compilation failed.

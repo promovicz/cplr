@@ -1,3 +1,4 @@
+================================================================================
      1	/* defsysinclude */
      2	#include <sys/stat.h>
      3	#include <sys/types.h>
@@ -16,15 +17,17 @@
     16	#include <time.h>
     17	#include <unistd.h>
     18	/* include */
-    19	#include "Python.h"
+    19	#include <Python.h>
     20	/* main */
     21	int main(int argc, char **argv) {
     22	    int ret = 0;
-    23	/* statement */
+    23	/* main */
     24	    Py_Initialize();
     25	    PyRun_SimpleString("print(\"hello\")");
     26	    Py_Finalize();
     27	/* done */
     28	    return ret;
     29	}
+================================================================================
+Compilation succeeded.
 hello

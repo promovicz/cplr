@@ -1,1 +1,1 @@
-../bin/cplr 'puts("Hello.")' -dv -dv
+../bin/cplr 'puts("Hello.")' -dv

@@ -1,16 +1,14 @@
 ================================================================================
      1	/* main */
-     2	#line 236 "internal"
-     3	int main(int argc, char **argv) {
-     4	    int ret = 0;
-     5	/* statement */
-     6	#line 1 "statement_0"
-     7	    puts("Hello.");
-     8	/* done */
-     9	#line 263 "internal"
-    10	    return ret;
-    11	}
+     2	int main(int argc, char **argv) {
+     3	    int ret = 0;
+     4	/* main */
+     5	    puts("Hello.");
+     6	/* done */
+     7	    return ret;
+     8	}
 ================================================================================
 Compiler condition:
-statement_0:1: warning: implicit declaration of function 'puts'
+main_0:1: warning: implicit declaration of function 'puts'
+Compilation succeeded.
 Hello.

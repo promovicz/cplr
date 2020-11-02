@@ -1,16 +1,19 @@
+================================================================================
      1	/* include */
-     2	#include "Python.h"
+     2	#include <Python.h>
      3	/* main */
      4	int main(int argc, char **argv) {
      5	    int ret = 0;
      6	/* before */
      7	    Py_Initialize();
-     8	/* statement */
+     8	/* main */
      9	    for(int i = 1; i < argc; i++) PyRun_SimpleString(argv[i]);
     10	/* after */
     11	    Py_Finalize();
     12	/* done */
     13	    return ret;
     14	}
+================================================================================
+Compilation succeeded.
 this actually works
 oh yes absolutely it does

@@ -1,3 +1,4 @@
+================================================================================
      1	/* defsysinclude */
      2	#include <sys/stat.h>
      3	#include <sys/types.h>
@@ -16,18 +17,20 @@
     16	#include <time.h>
     17	#include <unistd.h>
     18	/* include */
-    19	#include "Python.h"
+    19	#include <Python.h>
     20	/* main */
     21	int main(int argc, char **argv) {
     22	    int ret = 0;
     23	/* before */
     24	    Py_Initialize();
-    25	/* statement */
+    25	/* main */
     26	    for(int i = 1; i < argc; i++) PyRun_SimpleString(argv[i]);
     27	/* after */
     28	    Py_Finalize();
     29	/* done */
     30	    return ret;
     31	}
+================================================================================
+Compilation succeeded.
 this actually works
 oh yes absolutely it does

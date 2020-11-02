@@ -1,3 +1,4 @@
+================================================================================
      1	/* defsysinclude */
      2	#include <sys/stat.h>
      3	#include <sys/types.h>
@@ -18,11 +19,12 @@
     18	/* main */
     19	int main(int argc, char **argv) {
     20	    int ret = 0;
-    21	/* statement */
+    21	/* main */
     22	    undeclared;
     23	/* done */
     24	    return ret;
     25	}
+================================================================================
 Compiler condition:
-statement_0:1: error: 'undeclared' undeclared
+main_0:1: error: 'undeclared' undeclared
 Error: Compilation failed.
