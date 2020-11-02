@@ -265,6 +265,12 @@ static void cplr_generate_report(cplr_t *c) {
   }
 }
 
+static void cplr_generate_finish(cplr_t *c) {
+  if(c->g_prevfile) {
+    xptrfree((void**)&c->g_prevfile);
+  }
+}
+
 int cplr_generate(cplr_t *c) {
   /* say hello */
   if(c->flag & CPLR_FLAG_VERBOSE) {
@@ -280,6 +286,8 @@ int cplr_generate(cplr_t *c) {
   cplr_generate_dump(c);
   /* report stats */
   cplr_generate_report(c);
+  /* clean up */
+  cplr_generate_finish(c);
   /* done */
   return 0;
 }
