@@ -89,13 +89,13 @@ static void cplr_show_help(cplr_t *c, FILE *out) {
   for(i = 0; longhelp[i]; i++) {
     if(longopts[i].name) {
       fprintf(out, "  -%c, --%-10s\t%s\n",
-              (char)longopts[i].val,
-              longopts[i].name,
-              longhelp[i]);
-          } else {
+	      (char)longopts[i].val,
+	      longopts[i].name,
+	      longhelp[i]);
+    } else {
       fprintf(out, "  -%c\t\t\t%s\n",
-              (char)longopts[i].val,
-              longhelp[i]);
+	      (char)longopts[i].val,
+	      longhelp[i]);
     }
   }
   fprintf(out, "\n");
