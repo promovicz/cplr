@@ -1,4 +1,6 @@
 
+#include "cplr.h"
+
 int cplr_execute(cplr_t *c) {
   int i;
   int argc = 1 + (c->argc - c->argp);

@@ -1,4 +1,34 @@
 
+#include "cpkg.h"
+
+#include "cplr.h"
+
+int cplr_prepare_package(cplr_t *c, const char *name) {
+    char *s;
+    bool verbose = c->flag & CPLR_FLAG_VERBOSE;
+    TCCState *t = c->tcc;
+
+    if(!cpkg_exists(name, verbose)) {
+      fprintf(stderr, "Error: Could not find package %s\n", name);
+      return 1;
+    }
+
+    s = cpkg_retrieve(name, "--cflags --libs", verbose);
+    if(!s) {
+      return 1;
+    }
+    if(verbose)
+      fprintf(stderr, "Package definitions for %s: %s\n", name, s);
+    tcc_set_options(t, s);
+    if(cplr_add_package(c, name, s)) {
+      fprintf(stderr, "Error: Failed to process package %s.\n", name);
+      return 1;
+    }
+    free(s);
+
+    return 0;
+}
+
 int cplr_add_package(cplr_t *c, const char *name, const char *args) {
   bool dash = false;
   char opt = 0;
@@ -74,30 +104,4 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
     }
   } while(*o++);
   return 0;
-}
-
-int cplr_prepare_package(cplr_t *c, const char *name) {
-    char *s;
-    bool verbose = c->flag & CPLR_FLAG_VERBOSE;
-    TCCState *t = c->tcc;
-
-    if(!cpkg_exists(name, verbose)) {
-      fprintf(stderr, "Error: Could not find package %s\n", name);
-      return 1;
-    }
-
-    s = cpkg_retrieve(name, "--cflags --libs", verbose);
-    if(!s) {
-      return 1;
-    }
-    if(verbose)
-      fprintf(stderr, "Package definitions for %s: %s\n", name, s);
-    tcc_set_options(t, s);
-    if(cplr_add_package(c, name, s)) {
-      fprintf(stderr, "Error: Failed to process package %s.\n", name);
-      return 1;
-    }
-    free(s);
-
-    return 0;
 }

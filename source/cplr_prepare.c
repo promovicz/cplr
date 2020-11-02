@@ -1,4 +1,6 @@
 
+#include "cplr.h"
+
 static void cplr_tcc_error(cplr_t *c, const char *msg) {
   fprintf(stderr, "Compiler condition:\n%s\n", msg);
   /* TODO split and indent */

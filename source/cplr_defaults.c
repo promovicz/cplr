@@ -1,4 +1,6 @@
 
+#include "cplr.h"
+
 int cplr_defaults(cplr_t *c) {
   l_appends(&c->defdef, "-D_DEFAULT_SOURCE");
   l_appends(&c->defdef, "-D_XOPEN_SOURCE=600");

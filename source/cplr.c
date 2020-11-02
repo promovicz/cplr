@@ -49,17 +49,7 @@
 #include "cext/string.h"
 #include "cext/value.h"
 
-#include "cpkg.c"
-
 #include "cplr.h"
-
-#include "cplr_optparse.c"
-#include "cplr_defaults.c"
-#include "cplr_package.c"
-#include "cplr_prepare.c"
-#include "cplr_generate.c"
-#include "cplr_compile.c"
-#include "cplr_execute.c"
 
 int main(int argc, char **argv) {
   int res;

@@ -1,4 +1,8 @@
 
+#include <getopt.h>
+
+#include "cplr.h"
+
 /* short options */
 const char *shortopts = "-:hHVvdnpP:D:U:I:M:L:S:i:m:l:s:f:t:e:b:a:-";
 
@@ -121,7 +125,7 @@ static void cplr_show_version(cplr_t *c, FILE *out) {
 }
 
 /* option parser */
-static int cplr_optparse(cplr_t *c, int argc, char **argv) {
+int cplr_optparse(cplr_t *c, int argc, char **argv) {
   int opt;
   /* remember argc/argv */
   c->argc = argc;

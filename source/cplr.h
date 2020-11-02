@@ -1,11 +1,15 @@
 #ifndef CPLR_PRIVATE_H
 #define CPLR_PRIVATE_H
 
+#include <assert.h>
+#include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <libtcc.h>
 
 #include <cext/list.h>
+#include <cext/string.h>
 
 typedef enum {
    CPLR_FLAG_DUMP = 1,
@@ -59,5 +63,15 @@ typedef struct cplr {
 
   TCCState *tcc;
 } cplr_t;
+
+extern int cplr_optparse(cplr_t *c, int argc, char **argv);
+extern int cplr_defaults(cplr_t *c);
+extern int cplr_prepare(cplr_t *c);
+extern int cplr_generate(cplr_t *c);
+extern int cplr_compile(cplr_t *c);
+extern int cplr_execute(cplr_t *c);
+
+extern int cplr_prepare_package(cplr_t *c, const char *name);
+extern int cplr_add_package(cplr_t *c, const char *name, const char *args);
 
 #endif /* CPLR_PRIVATE_H */

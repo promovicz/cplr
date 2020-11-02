@@ -1,4 +1,9 @@
 
+#include <limits.h>
+#include <stdlib.h>
+
+#include "cplr.h"
+
 /* bar for separating the dump - 80 chars */
 static const char *bar =
   "========================================"
