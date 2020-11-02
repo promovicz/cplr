@@ -93,12 +93,12 @@ static void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
   if(reverse) {
     i = l_size(&c->mlbs);
     L_BACKWARDS(&c->mlbs, n) {
-      cplr_emit_minilib(c, phase, n->v.s, i--);
+      cplr_emit_minilib(c, phase, value_get_str(&n->v), i--);
     }
   } else {
     i = 0;
     L_FORWARD(&c->mlbs, n) {
-      cplr_emit_minilib(c, phase, n->v.s, i++);
+      cplr_emit_minilib(c, phase, value_get_str(&n->v), i++);
     }
   }
 }
@@ -119,7 +119,7 @@ static void cplr_generate_section(cplr_t *c,
     i = l_size(list);
     L_BACKWARDS(list, n) {
       snprintf(fn, sizeof(fn), "%s_%d", name, i--);
-      CPLR_EMIT_STATEMENT(c, fn, fmt, n->v.s);
+      CPLR_EMIT_STATEMENT(c, fn, fmt, value_get_str(&n->v));
     }
     if(minilibs) {
       cplr_emit_minilibs(c, name, true);
@@ -131,7 +131,7 @@ static void cplr_generate_section(cplr_t *c,
     i = 0;
     L_FORWARD(list, n) {
       snprintf(fn, sizeof(fn), "%s_%d", name, i++);
-      CPLR_EMIT_PREPROC(c, fn, fmt, n->v.s);
+      CPLR_EMIT_PREPROC(c, fn, fmt, value_get_str(&n->v));
     }
   }
 }
