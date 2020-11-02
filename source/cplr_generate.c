@@ -163,7 +163,7 @@ static int cplr_generate_code(cplr_t *c) {
   if(havemain) {
     CPLR_EMIT_COMMENT(c, "main");
     CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
-    CPLR_EMIT_INTERNAL(c, "int ret = 0;\n");
+    CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
     if(minilibs || !l_empty(&c->befs)) {
       cplr_generate_section(c, "before", &c->befs,
 			    false, minilibs, "    %s;\n");
@@ -177,7 +177,7 @@ static int cplr_generate_code(cplr_t *c) {
 			    true, minilibs, "    %s;\n");
     }
     CPLR_EMIT_COMMENT(c, "done");
-    CPLR_EMIT_INTERNAL(c, "return ret;\n");
+    CPLR_EMIT_INTERNAL(c, "    return ret;\n");
     CPLR_EMIT_INTERNAL(c, "}\n");
   }
   return 0;
