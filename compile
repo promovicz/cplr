@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cc -std=c99 -pedantic -g -Wall -Wextra -Wno-nonnull-compare -Wno-unused -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -ldl -Iinclude -o bin/cplr source/cplr*.c source/cext*.c source/cpkg.c /usr/lib/**/libtcc.a
+cc -std=c99 -g -Wall -Wextra -Wno-nonnull-compare -Wno-unused -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -ldl -Iinclude -o bin/cplr source/cplr*.c source/cext*.c source/cpkg.c /usr/lib/**/libtcc.a
