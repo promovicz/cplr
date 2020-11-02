@@ -6,3 +6,4 @@ bin/cplr
 # test temporaries
 tests/.edit.stamp
 tests/*.tmp
+tests/*.diff
