@@ -11,9 +11,6 @@ int cplr_prepare(cplr_t *c) {
   /* create and configure tcc */
   TCCState *t = tcc_new();
   tcc_set_error_func(t, c, (void (*)(void *, const char *))&cplr_tcc_error);
-  if(tcc_set_output_type(t, TCC_OUTPUT_MEMORY)) {
-    return 1;
-  }
   c->tcc = t;
   /* define minilib dirs as include dirs */
   L_FORWARD(&c->mlbdirs, i) {
