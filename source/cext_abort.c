@@ -8,6 +8,7 @@ ATTR_FUN_COLD
 ATTR_FUN_NORETURN
 void xabortm(const char *msg) {
   fprintf(stderr, "%s\n", msg);
+  fflush(stderr);
   abort();
 }
 
@@ -19,5 +20,6 @@ void xabortf(const char *fmt, ...) {
   vfprintf(stderr, fmt, a);
   va_end(a);
   fputc('\n', stderr);
+  fflush(stderr);
   abort();
 }
