@@ -54,6 +54,7 @@ typedef struct cplr {
   char *g_prevfile;
   char *g_codebuf;
   FILE *g_code;
+  char *g_dumpbuf;
   FILE *g_dump;
 
   TCCState *tcc;

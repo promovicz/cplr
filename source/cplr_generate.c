@@ -4,10 +4,10 @@ static const char *bar =
   "========================================"
   "========================================";
 
-void cplr_emit(cplr_t *c,
-               cplr_gstate_t nstate,
-               const char * file, int line,
-               const char *fmt, ...) {
+static void cplr_emit(cplr_t *c,
+		      cplr_gstate_t nstate,
+		      const char * file, int line,
+		      const char *fmt, ...) {
   bool needline = false;
   va_list a;
   if(nstate == CPLR_GSTATE_COMMENT) {
@@ -45,23 +45,23 @@ void cplr_emit(cplr_t *c,
   }
 }
 
-#define CPLR_EMIT_COMMENT(c, fmt, ...)          \
-  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,               \
-            1, "/* " fmt " */\n", ##__VA_ARGS__)
-#define CPLR_EMIT_PREPROC(c, fn, fmt, ...)              \
-  cplr_emit(c, CPLR_GSTATE_PREPROC, fn,                 \
-            1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_COMMENT(c, fmt, ...)			\
+  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,		\
+	    1, "/* " fmt " */\n", ##__VA_ARGS__)
+#define CPLR_EMIT_PREPROC(c, fn, fmt, ...)		\
+  cplr_emit(c, CPLR_GSTATE_PREPROC, fn,			\
+	    1, fmt, ##__VA_ARGS__)
 #define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...)     \
-  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,        \
-            1, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_INTERNAL(c, fmt, ...)                 \
-  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal",        \
-            __LINE__, fmt, ##__VA_ARGS__)
+  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,	\
+	    1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_INTERNAL(c, fmt, ...)			\
+  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal",	\
+	    __LINE__, fmt, ##__VA_ARGS__)
 #define CPLR_EMIT_STATEMENT(c, fn, fmt, ...)    \
   cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,       \
-            1, fmt, ##__VA_ARGS__)
+	    1, fmt, ##__VA_ARGS__)
 
-void cplr_emit_minilib(cplr_t *c, const char *phase, const char *mlb, int count) {
+static void cplr_emit_minilib(cplr_t *c, const char *phase, const char *mlb, int count) {
   if(c->flag & CPLR_FLAG_VERBOSE) {
     fprintf(stderr, "Emitting minilib '%s' phase '%s'\n", mlb, phase);
   }
@@ -72,7 +72,7 @@ void cplr_emit_minilib(cplr_t *c, const char *phase, const char *mlb, int count)
   ptrfree((void**)&fn);
 }
 
-void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
+static void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
   int i;
   ln_t *n;
   if(reverse) {
@@ -88,7 +88,7 @@ void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
   }
 }
 
-int cplr_code(cplr_t *c) {
+static int cplr_generate_code(cplr_t *c) {
   int i;
   ln_t *n;
   char fn[32];
@@ -165,7 +165,7 @@ int cplr_code(cplr_t *c) {
 }
 
 #ifdef _GNU_SOURCE
-static ssize_t stream_write(void *cp, const char *buf, size_t size) {
+static ssize_t code_stream_write(void *cp, const char *buf, size_t size) {
   cplr_t *c = (cplr_t*)cp;
   assert(c->g_codebuf);
   assert(size < SSIZE_MAX);
@@ -176,35 +176,106 @@ static ssize_t stream_write(void *cp, const char *buf, size_t size) {
   strncpy(n + ol, buf, size + 1);
   return size;
 }
-static cookie_io_functions_t stream_functions = {
-  NULL, &stream_write, NULL, NULL
+static cookie_io_functions_t code_stream_functions = {
+  NULL, &code_stream_write, NULL, NULL
+};
+static ssize_t dump_stream_write(void *cp, const char *buf, size_t size) {
+  cplr_t *c = (cplr_t*)cp;
+  assert(c->g_dumpbuf);
+  assert(size < SSIZE_MAX);
+  size_t ol = strlen(c->g_dumpbuf);
+  size_t nl = ol + size + 1;
+  char *n = xrealloc(c->g_dumpbuf, nl);
+  c->g_dumpbuf = n;
+  strncpy(n + ol, buf, size + 1);
+  return size;
+}
+static cookie_io_functions_t dump_stream_functions = {
+  NULL, &dump_stream_write, NULL, NULL
 };
 #endif
 
-int cplr_generate(cplr_t *c) {
+static void cplr_generate_open(cplr_t *c) {
 #ifdef _GNU_SOURCE
   c->g_codebuf = strdup("");
-  c->g_code = fopencookie(c, "w", stream_functions);
+  c->g_code = fopencookie(c, "w", code_stream_functions);
 #else
-  c->g_codebuf = xcalloc(4096, 1);
-  c->g_code = fmemopen(c->g_codebuf, 4096, "w");
+  c->g_codebuf = xcalloc(2^16, 1);
+  c->g_code = fmemopen(c->g_codebuf, 2^16, "w");
 #endif
   if(c->flag & CPLR_FLAG_DUMP) {
-    if(c->flag & CPLR_FLAG_VERBOSE)
-      fprintf(stderr, "%s\n", bar);
-    c->g_dump = popen("cat -n 1>&2", "w");
+#ifdef _GNU_SOURCE
+    c->g_dumpbuf = strdup("");
+    c->g_dump = fopencookie(c, "w", dump_stream_functions);
+#else
+    c->g_dumpbuf = xcalloc(2^16, 1);
+    c->g_dump = fmemopen(c->g_dumpbuf, 2^16, "w");
+#endif
   }
-  cplr_code(c);
-  if(c->flag & CPLR_FLAG_DUMP) {
-    pclose(c->g_dump);
-    if(c->flag & CPLR_FLAG_VERBOSE)
-      fprintf(stderr, "%s\n", bar);
-  }
-  fclose(c->g_code);
-  c->g_code = NULL;
+}
 
-  if(c->flag & CPLR_FLAG_VERBOSE) {
-    fprintf(stderr, "Generated %zu bytes of C code\n", strlen(c->g_codebuf));
+static void cplr_generate_close(cplr_t *c) {
+ fclose(c->g_code);
+  c->g_code = NULL;
+  if(c->flag & CPLR_FLAG_DUMP) {
+    fflush(c->g_dump);
+    fclose(c->g_dump);
+    c->g_dump = NULL;
   }
+}
+
+static void cplr_generate_dump(cplr_t *c) {
+  if(c->flag & CPLR_FLAG_DUMP) {
+    fprintf(stderr, "%s\n", bar);
+    fflush(stderr);
+    size_t total = strlen(c->g_dumpbuf);
+    char *buf = c->g_dumpbuf;
+    FILE *dumpout = popen("cat -n - 2>&1", "w");
+    size_t done = 0;
+    while(done < total) {
+      size_t step = total - done;
+      if(step > sizeof(buf)) {
+	step = sizeof(buf);
+      }
+      size_t n = fwrite(buf + done, 1, step, dumpout);
+      if(n < step) {
+	perror("fwrite");
+	exit(1);
+      }
+      done += n;
+    }
+    pclose(dumpout);
+    fprintf(stderr, "%s\n", bar);
+    fflush(stderr);
+  }
+}
+
+static void cplr_generate_report(cplr_t *c) {
+ if(c->flag & CPLR_FLAG_VERBOSE) {
+    size_t cl = 0, dl = 0;
+    if(c->g_codebuf)
+      cl = strlen(c->g_codebuf);
+    if(c->g_dumpbuf)
+      dl = strlen(c->g_dumpbuf);
+    fprintf(stderr, "Generated bytes: %zu code, %zu dump\n", cl, dl);
+  }
+}
+
+int cplr_generate(cplr_t *c) {
+  /* say hello */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Generating code\n");
+  }
+  /* alloc buffers and open streams */
+  cplr_generate_open(c);
+  /* perform code generation */
+  cplr_generate_code(c);
+  /* flush and close */
+  cplr_generate_close(c);
+  /* emit the dump buffer */
+  cplr_generate_dump(c);
+  /* report stats */
+  cplr_generate_report(c);
+  /* done */
   return 0;
 }
