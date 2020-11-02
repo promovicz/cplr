@@ -111,9 +111,13 @@ static void cplr_generate_section(cplr_t *c,
       snprintf(fn, sizeof(fn), "%s_%d", name, i--);
       CPLR_EMIT_STATEMENT(c, fn, fmt, n->v.s);
     }
-    cplr_emit_minilibs(c, name, true);
+    if(minilibs) {
+      cplr_emit_minilibs(c, name, true);
+    }
   } else {
-    cplr_emit_minilibs(c, name, false);
+    if(minilibs) {
+      cplr_emit_minilibs(c, name, false);
+    }
     i = 0;
     L_FORWARD(list, n) {
       snprintf(fn, sizeof(fn), "%s_%d", name, i++);
