@@ -21,12 +21,14 @@ runone() {
     local name="$1"
     # fail flag
     local fail=""
+    local diff=""
     # files
     local fcmd="${name}.cmd"
     local fout="${name}.out"
     local ftmp="${name}.tmp"
     local fres="${name}.res"
     local fin="${name}.in"
+    local fdiff="${name}.diff"
     # reference result
     local rres=$(cat ${fres}) # evaluate
     # command result
@@ -37,7 +39,7 @@ runone() {
         exit 1
     fi
     # run command, capture output and return value
-    #echo "${N}: Running test '${name}'"
+    sayn "Running test '${name}'"
     set +e
     . "${fcmd}" > "${ftmp}" 2>&1 < "${fin}"
     cres="$?"
@@ -45,22 +47,42 @@ runone() {
     # compare return value
     if ! [ "${cres}" = "${rres}" ]; then
         fail=true
-        echo -e "\n${N}: Test '${name}' expected return ${rres} but got ${cres}"
+        sayn ", ${red}res=${cres} expected ${rres}${normal}"
     fi
     # compare output
     if ! cmp -s "${fout}" "${ftmp}"; then
-        fail=true
-        echo -e "\n${N}: Test '${name}' failed output comparison:"
-        diff -du "${fout}" "${ftmp}"
+        lines="$(diff -du -I '#line [0-9]* \"internal\"$' "${fout}" "${ftmp}" | tee "${fdiff}" | wc -l)"
+	if [ "$lines" = "0" ]; then
+	    if [ -z "${fail}" ]; then
+		fail=warn
+	    fi
+	    sayn ", ${yellow}line numbers changed${normal}"
+	else
+	    fail=true
+	    diff=true
+	    sayn ", ${red}output changed${normal}"
+	fi
     fi
     # finish up
-    if [ -n "${fail}" ]; then
-        return 1
-    else
-        #echo "${N}: Test '${name}' has succeeded"
-        rm "${ftmp}"
-        return 0
+    local ret="1"
+    local punct="."
+    if [ -n "${diff}" ]; then
+	punct=":"
     fi
+    if [ "${fail}" = "warn" ]; then
+	sayn "${punct}\n"
+	res=0
+    elif [ -n "${fail}" ]; then
+	sayn ", ${red}fail${normal}${punct}\n"
+    else
+	sayn ", ${green}ok${normal}${punct}\n"
+        rm "${ftmp}"
+	ret=0
+    fi
+    if [ -n "${diff}" ]; then
+	cat "${fdiff}" | sed 's/^/  /' 1>&2
+    fi
+    return "${ret}"
 }
 
 # runsome <name>...
@@ -69,12 +91,7 @@ runone() {
 #
 runsome() {
     for t in "$@"; do
-        echo -n "${N}: Running ${t}... "
-        if runone "${t}"; then
-            echo "${green}success${normal}."
-        else
-            echo "${red}failure${normal}."
-        fi
+	runone "${t}" || true
     done
 }
 
