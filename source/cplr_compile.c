@@ -3,9 +3,6 @@
 
 int cplr_compile(cplr_t *c) {
 
-  if(tcc_set_output_type(c->tcc, TCC_OUTPUT_MEMORY)) {
-    return 1;
-  }
 
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
