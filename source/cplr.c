@@ -51,7 +51,7 @@
 
 #include "cpkg.c"
 
-#include "cplr_private.h"
+#include "cplr.h"
 
 #include "cplr_optparse.c"
 #include "cplr_defaults.c"
