@@ -5,6 +5,9 @@
 
 cplr_t *cplr_new(void) {
   cplr_t *res = xcalloc(sizeof(cplr_t), 1);
+
+  res->t_env = CPLR_ENV_POSIX;
+
   return res;
 }
 

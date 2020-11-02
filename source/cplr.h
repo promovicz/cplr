@@ -19,6 +19,14 @@ typedef enum {
    CPLR_FLAG_PRISTINE = 8,
 } cplr_flag_t;
 
+/* target environment */
+typedef enum {
+   CPLR_ENV_NONE = 0,
+   CPLR_ENV_POSIX = 1,
+   CPLR_ENV_LINUX = (2 | CPLR_ENV_POSIX),
+   CPLR_ENV_LINUX_KERNEL = 4,
+} cplr_env_t;
+
 /* code generation state machine */
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
@@ -32,6 +40,9 @@ typedef enum {
 typedef struct cplr {
   /* flags */
   cplr_flag_t flag;
+
+  /* target environment (posix, linux...) */
+  cplr_env_t t_env;
 
   /* compiler arguments */
   int    argc;
