@@ -13,13 +13,6 @@ void value_clear(value_t *vp) {
   memset(vp, 0, sizeof(value_t));
 }
 
-ATTR_ARG_NONNULL(1)
-void value_assert_type(value_t *vp, vtype_t vt) {
-  if((vp->type & VTEQ_MASK) != (vt & VTEQ_MASK)) {
-    xabortf("Value type error: expected %s got %s\n");
-  }
-}
-
 VALUE_SIMPLE_DEFINE_SETTER(bool, bool, b, VT_BOOL);
 VALUE_SIMPLE_DEFINE_SETTER(char, char, c, VT_CHAR);
 VALUE_SIMPLE_DEFINE_SETTER(short, short, s, VT_SHORT);
