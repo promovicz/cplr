@@ -3,6 +3,8 @@
 
 #include "cplr.h"
 
+#define USE_GETOPT_LONG
+
 /* short options */
 const char *shortopts = "-:hHVvdnpP:D:U:I:M:L:S:i:m:l:s:f:t:e:b:a:-";
 

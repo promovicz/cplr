@@ -29,75 +29,68 @@
  * Use the power of ~/.local/bin and enjoy it's freedoms.
  */
 
-#define USE_GETOPT_LONG
-
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <getopt.h>
-#include <libgen.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "cext/memory.h"
-#include "cext/list.h"
-#include "cext/string.h"
-#include "cext/value.h"
 
 #include "cplr.h"
 
 int main(int argc, char **argv) {
-  int res;
-  cplr_t c;
-  memset(&c, 0, sizeof(c));
+  int res, ret = 1;
+  cplr_t *c = cplr_new();
 
-  res = cplr_optparse(&c, argc, argv);
+  res = cplr_optparse(c, argc, argv);
   switch(res) {
   case 0:
     break;
   case 2:
-    return 0;
+    ret = 0;
+    goto done;
   default:
-    return 1;
+    goto done;
   }
 
-  if(!(c.flag & CPLR_FLAG_PRISTINE)) {
-    if(cplr_defaults(&c)) {
+  if(!(c->flag & CPLR_FLAG_PRISTINE)) {
+    if(cplr_defaults(c)) {
       fprintf(stderr, "Error: Default initialization failed.\n");
-      return 1;
+      goto done;
     }
   }
 
-  if(cplr_prepare(&c)) {
+  if(cplr_prepare(c)) {
     fprintf(stderr, "Error: Prepare failed.\n");
-    return 1;
+    goto done;
   }
 
-  if(cplr_generate(&c)) {
+  if(cplr_generate(c)) {
     fprintf(stderr, "Error: Code generation failed.\n");
-    return 1;
+    goto done;
   }
 
-  if(cplr_compile(&c)) {
+  if(cplr_compile(c)) {
     fprintf(stderr, "Error: Compilation failed.\n");
-    return 1;
+    goto done;
   }
 
-  if(c.flag & (CPLR_FLAG_DUMP | CPLR_FLAG_VERBOSE)) {
+  if(c->flag & (CPLR_FLAG_DUMP | CPLR_FLAG_VERBOSE)) {
     fprintf(stderr, "Compilation succeeded.\n");
   }
 
-  if(!(c.flag & CPLR_FLAG_NORUN)) {
-    res = cplr_execute(&c);
-    if(res) {
-      return res;
+  if(!(c->flag & CPLR_FLAG_NORUN)) {
+    ret = cplr_execute(c);
+    if(ret) {
+      ret = 1;
+      goto done;
     }
   }
 
-  return 0;
+  if(c->flag & (CPLR_FLAG_VERBOSE)) {
+    fprintf(stderr, "Execution succeeded.\n");
+  }
+
+  ret = 0;
+
+ done:
+
+  cplr_free(c);
+
+  return ret;
 }

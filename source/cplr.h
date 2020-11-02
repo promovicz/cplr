@@ -64,6 +64,9 @@ typedef struct cplr {
   TCCState *tcc;
 } cplr_t;
 
+extern cplr_t *cplr_new(void);
+extern void cplr_free(cplr_t *c);
+
 extern int cplr_optparse(cplr_t *c, int argc, char **argv);
 extern int cplr_defaults(cplr_t *c);
 extern int cplr_prepare(cplr_t *c);
