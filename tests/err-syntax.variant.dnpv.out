@@ -3,14 +3,14 @@ Generating code
 Generating section main
 ================================================================================
      1	/* main */
-     2	#line 142 "internal"
+     2	#line 161 "internal"
      3	int main(int argc, char **argv) {
      4	    int ret = 0;
      5	/* main */
      6	#line 1 "main_0"
      7	    }{;
      8	/* done */
-     9	#line 157 "internal"
+     9	#line 176 "internal"
     10	    return ret;
     11	}
 ================================================================================
