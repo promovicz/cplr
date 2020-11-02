@@ -6,7 +6,7 @@ Pretty much everything on a POSIX system can be done in C, and quite a few thing
 
 It's like awk with C as the language. You can do anything with it.
 
-The name means that it "piles" up strings, because that is how it works.
+The name means that it "piles" up strings.
 
 Personally I do:
 ```
