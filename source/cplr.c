@@ -47,6 +47,7 @@
 #include "cext/memory.h"
 #include "cext/list.h"
 #include "cext/string.h"
+#include "cext/value.h"
 
 #include "cpkg.c"
 

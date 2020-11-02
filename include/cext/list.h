@@ -3,6 +3,7 @@
 
 #include "attr.h"
 #include "memory.h"
+#include "value.h"
 
 typedef struct lh lh_t;
 typedef struct ln ln_t;
@@ -17,9 +18,7 @@ struct ln {
   lh_t *h;
   ln_t *n;
   ln_t *p;
-  union {
-    char *s;
-  } v;
+  value_t v;
 };
 
 ATTR_FUN_PURE
