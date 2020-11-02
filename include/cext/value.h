@@ -128,13 +128,15 @@ extern void value_clear(value_t *vp);
 ATTR_ARG_NONNULL(1)
 extern void value_assert_type(value_t *vp, vtype_t vt);
 
+ATTR_FUN_PURE
 static inline vtype_t value_get_type(value_t *vp) {
   return vp->type;
 }
 
 #define VALUE_SIMPLE_INLINE_GETTER(_name, _type, _field, _vtype)	\
+  ATTR_FUN_PURE								\
   ATTR_ARG_NONNULL(1)							\
-  inline _type value_get_##_name(value_t *vp, _type v) {		\
+    static inline _type value_get_##_name(value_t *vp) {		\
     value_assert_type(vp, _vtype);					\
     return vp->_field;							\
   }
@@ -204,11 +206,13 @@ VALUE_SIMPLE_DECLARE_SETTER(ssize, ssize_t);
 
 
 #define VALUE_POINTER_DECLARE_GETTERS(_name, _type)		\
+  ATTR_FUN_PURE						\
   ATTR_ARG_NONNULL(1)						\
   _type *value_get_##_name(value_t *vp);			\
   ATTR_ARG_NONNULL(1)						\
   _type *value_ref_##_name(value_t *vp);
 #define VALUE_POINTER_DEFINE_GETTERS(_name, _type, _field, _vtype, _ref) \
+  ATTR_FUN_PURE							\
   ATTR_ARG_NONNULL(1)							\
   _type *value_get_##_name(value_t *vp) {				\
     value_assert_type(vp, _vtype);					\
