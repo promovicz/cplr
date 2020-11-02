@@ -14,6 +14,7 @@ static void cplr_emit(cplr_t *c,
 		      const char * file, int line,
 		      const char *fmt, ...) {
   bool needline = false;
+  char *sline, *sfmt;
   va_list a;
   if(nstate == CPLR_GSTATE_COMMENT) {
     needline = false;
@@ -26,20 +27,29 @@ static void cplr_emit(cplr_t *c,
   } else {
     needline = (c->g_prevline && (line != (c->g_prevline+1)));
   }
+
+  if(needline)
+    sline = msprintf("#line %d \"%s\"\n", line, file);
   va_start(a, fmt);
+  sfmt = vmsprintf(fmt, a);
+  va_end(a);
+
   if(c->g_code) {
     if(needline)
-      fprintf(c->g_code, "#line %d \"%s\"\n", line, file);
-    vfprintf(c->g_code, fmt, a);
+      fwrite(sline, 1, strlen(sline), c->g_code);
+    fwrite(sfmt, 1, strlen(sfmt), c->g_code);
   }
-  va_end(a);
-  va_start(a, fmt);
+
   if(c->g_dump) {
     if(needline && (c->flag & CPLR_FLAG_VERBOSE))
-      fprintf(c->g_dump, "#line %d \"%s\"\n", line, file);
-    vfprintf(c->g_dump, fmt, a);
+      fwrite(sline, 1, strlen(sline), c->g_dump);
+    fwrite(sfmt, 1, strlen(sfmt), c->g_dump);
   }
-  va_end(a);
+
+  if(needline)
+    xfree(sline);
+  xfree(sfmt);
+
   if(nstate != CPLR_GSTATE_COMMENT) {
     c->g_state = nstate;
     c->g_prevline = line;
