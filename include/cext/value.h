@@ -1,8 +1,12 @@
 #ifndef CPLR_VALUE_H
 #define CPLR_VALUE_H
 
+#include <sys/types.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
+
+#include "cext/memory.h"
 
 typedef enum {
   /* no type */
@@ -43,6 +47,10 @@ typedef enum {
   VTF_ARRAY = ((1 << 30) | VTF_POINTER),
   /* zero-terminated array flag */
   VTF_ARRAYZ = ((1 << 29) | VTF_POINTER),
+  /* ownership flag */
+  VTF_OWNED = (1 << 28),
+  /* static flag */
+  VTF_STATIC = (1 << 27),
 
   /* strings are char arrayz */
   VT_STRING = (VT_CHAR | VTF_ARRAYZ),
@@ -82,5 +90,32 @@ typedef struct value {
     char *s;
   };
 } value_t;
+
+static inline void value_clear(value_t *v) {
+  if(v->t & VTF_POINTER) {
+    if(v->t & VTF_OWNED) {
+      ptrfree(&v->p);
+    }
+  }
+  memset(v, 0, sizeof(value_t));
+}
+
+static inline void value_set_str(value_t *v, char *string) {
+  value_clear(v);
+  v->s = strdup(string);
+  v->t = VT_STRING | VTF_OWNED;
+}
+
+static inline void value_set_str_owned(value_t *v, char *string) {
+  value_clear(v);
+  v->s = string;
+  v->t = VT_STRING | VTF_OWNED;
+}
+
+static inline void value_set_str_static(value_t *v, const char *string) {
+  value_clear(v);
+  v->s = (char *)string;
+  v->t = VT_STRING | VTF_STATIC;
+}
 
 #endif /* !CPLR_VALUE_H */

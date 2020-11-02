@@ -14,7 +14,7 @@ int cplr_prepare(cplr_t *c) {
   c->tcc = t;
   /* define minilib dirs as include dirs */
   L_FORWARD(&c->mlbdirs, i) {
-    l_appends(&c->incdirs, i->v.s);
+    l_append_str(&c->incdirs, i->v.s);
   }
   /* packages */
   L_FORWARD(&c->pkgs, i) {

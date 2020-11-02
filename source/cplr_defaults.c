@@ -2,24 +2,24 @@
 #include "cplr.h"
 
 int cplr_defaults(cplr_t *c) {
-  l_appends(&c->defdef, "-D_DEFAULT_SOURCE");
-  l_appends(&c->defdef, "-D_XOPEN_SOURCE=600");
-  l_appends(&c->defdef, "-D_POSIX_SOURCE=200809L");
-  l_appends(&c->defsys, "sys/stat.h");
-  l_appends(&c->defsys, "sys/types.h");
-  l_appends(&c->defsys, "assert.h");
-  l_appends(&c->defsys, "ctype.h");
-  l_appends(&c->defsys, "errno.h");
-  l_appends(&c->defsys, "fcntl.h");
-  l_appends(&c->defsys, "libgen.h");
-  l_appends(&c->defsys, "limits.h");
-  l_appends(&c->defsys, "stdarg.h");
-  l_appends(&c->defsys, "stdio.h");
-  l_appends(&c->defsys, "stdint.h");
-  l_appends(&c->defsys, "stdlib.h");
-  l_appends(&c->defsys, "string.h");
-  l_appends(&c->defsys, "termios.h");
-  l_appends(&c->defsys, "time.h");
-  l_appends(&c->defsys, "unistd.h");
+    l_append_str_static(&c->defdef, "-D_DEFAULT_SOURCE");
+    l_append_str_static(&c->defdef, "-D_XOPEN_SOURCE=600");
+    l_append_str_static(&c->defdef, "-D_POSIX_SOURCE=200809L");
+    l_append_str_static(&c->defsys, "sys/stat.h");
+    l_append_str_static(&c->defsys, "sys/types.h");
+    l_append_str_static(&c->defsys, "assert.h");
+    l_append_str_static(&c->defsys, "ctype.h");
+    l_append_str_static(&c->defsys, "errno.h");
+    l_append_str_static(&c->defsys, "fcntl.h");
+    l_append_str_static(&c->defsys, "libgen.h");
+    l_append_str_static(&c->defsys, "limits.h");
+    l_append_str_static(&c->defsys, "stdarg.h");
+    l_append_str_static(&c->defsys, "stdio.h");
+    l_append_str_static(&c->defsys, "stdint.h");
+    l_append_str_static(&c->defsys, "stdlib.h");
+    l_append_str_static(&c->defsys, "string.h");
+    l_append_str_static(&c->defsys, "termios.h");
+    l_append_str_static(&c->defsys, "time.h");
+    l_append_str_static(&c->defsys, "unistd.h");
   return 0;
 }

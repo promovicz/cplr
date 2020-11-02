@@ -153,7 +153,7 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
     case 0: /* handled by getopt */
       break;
     case 1: /* non-option argument */
-      l_appends(&c->stms, optarg);
+      l_append_str_static(&c->stms, optarg);
       break;
     case '-': /* terminating argument */
       goto done;
@@ -170,52 +170,52 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       c->flag |= CPLR_FLAG_PRISTINE;
       break;
     case 'P':
-      l_appends(&c->pkgs, optarg);
+      l_append_str_static(&c->pkgs, optarg);
       break;
     case 'D':
-      l_appends(&c->defs, msnprintf(1024, "-D%s", optarg));
+      l_append_str_owned(&c->defs, msnprintf(1024, "-D%s", optarg));
       break;
     case 'U':
-      l_appends(&c->defs, msnprintf(1024, "-U%s", optarg));
+      l_append_str_owned(&c->defs, msnprintf(1024, "-U%s", optarg));
       break;
     case 'I':
-      l_appends(&c->incdirs, optarg);
+      l_append_str_static(&c->incdirs, optarg);
       break;
     case 'M':
-      l_appends(&c->mlbdirs, optarg);
+      l_append_str_static(&c->mlbdirs, optarg);
       break;
     case 'S':
-      l_appends(&c->sysdirs, optarg);
+      l_append_str_static(&c->sysdirs, optarg);
       break;
     case 'L':
-      l_appends(&c->libdirs, optarg);
+      l_append_str_static(&c->libdirs, optarg);
       break;
     case 'i':
-      l_appends(&c->incs, optarg);
+      l_append_str_static(&c->incs, optarg);
       break;
     case 'm':
-      l_appends(&c->mlbs, optarg);
+      l_append_str_static(&c->mlbs, optarg);
       break;
     case 's':
-      l_appends(&c->syss, optarg);
+      l_append_str_static(&c->syss, optarg);
       break;
     case 'l':
-      l_appends(&c->libs, optarg);
+      l_append_str_static(&c->libs, optarg);
       break;
     case 'f':
-      l_appends(&c->srcs, optarg);
+      l_append_str_static(&c->srcs, optarg);
       break;
     case 't':
-      l_appends(&c->tlfs, optarg);
+      l_append_str_static(&c->tlfs, optarg);
       break;
     case 'e':
-      l_appends(&c->stms, optarg);
+      l_append_str_static(&c->stms, optarg);
       break;
     case 'b':
-      l_appends(&c->befs, optarg);
+      l_append_str_static(&c->befs, optarg);
       break;
     case 'a':
-      l_appends(&c->afts, optarg);
+      l_append_str_static(&c->afts, optarg);
       break;
     case ':': /* missing option argument */
       fprintf(stderr, "Missing argument for option -%c\n", optopt);

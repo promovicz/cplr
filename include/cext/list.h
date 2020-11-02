@@ -2,7 +2,6 @@
 #define CPLR_LIST_H
 
 #include "attr.h"
-#include "memory.h"
 #include "value.h"
 
 typedef struct lh lh_t;
@@ -31,11 +30,18 @@ static inline size_t l_size(lh_t *lh) {
   return lh->c;
 }
 
+ATTR_ARG_NONNULL(1)
+extern void l_clear(lh_t *lh);
+
 ATTR_ARG_NONNULL(1,2)
 extern void l_append(lh_t *lh, ln_t *n);
 
 ATTR_ARG_NONNULL(1,2)
-extern void l_appends(lh_t *lh, char *s);
+extern void l_append_str(lh_t *lh, char *s);
+ATTR_ARG_NONNULL(1,2)
+extern void l_append_str_owned(lh_t *lh, char *s);
+ATTR_ARG_NONNULL(1,2)
+extern void l_append_str_static(lh_t *lh, const char *s);
 
 #define L_FORWARD(_lhp, _i) \
   for((_i) = ((_lhp)->f); (_i); (_i) = (_i)->n)

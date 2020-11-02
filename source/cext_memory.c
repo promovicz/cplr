@@ -30,6 +30,12 @@ void xfree(void *p) {
   free(p);
 }
 
+void lfree(void *p) {
+  if(p) {
+    free(p);
+  }
+}
+
 ATTR_ARG_NONNULL(1)
 void ptrfree(void **p) {
   free(*p);
@@ -38,8 +44,19 @@ void ptrfree(void **p) {
 
 ATTR_ARG_NONNULL(1)
 void xptrfree(void **p) {
-  if(!(p && *p)) {
+  if(!(p || *p)) {
     xabortm("xptrfree: Trying to free a NULL pointer");
   }
   ptrfree(p);
+}
+
+ATTR_ARG_NONNULL(1)
+void lptrfree(void **p) {
+  if(!p) {
+    xabortm("lptrfree: Trying to free a NULL pointer");
+  }
+  if(*p) {
+    free(*p);
+    *p = NULL;
+  }
 }
