@@ -138,6 +138,32 @@ static void cplr_show_herald(cplr_t *c, FILE *out) {
 static void cplr_show_version(cplr_t *c, FILE *out) {
 }
 
+static void cplr_optparse_main(cplr_t *c, char *arg) {
+  lh_t *lh = NULL;
+  switch(c->argt) {
+  case CPLR_MAINOPT_STATEMENT:
+    lh = &c->stms;
+    break;
+  case CPLR_MAINOPT_BEFORE:
+    lh = &c->befs;
+    break;
+  case CPLR_MAINOPT_AFTER:
+    lh = &c->afts;
+    break;
+  case CPLR_MAINOPT_TOPLEVEL:
+    lh = &c->tlfs;
+    break;
+  case CPLR_MAINOPT_FILE:
+    lh = &c->srcs;
+    break;
+  default:
+    break;
+  }
+  if(lh) {
+    l_append_str_static(lh, optarg);
+  }
+}
+
 /* option parser */
 int cplr_optparse(cplr_t *c, int argc, char **argv) {
   int opt;
@@ -145,6 +171,9 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
   /* remember argc/argv */
   c->argc = argc;
   c->argv = argv;
+
+  /* initial main arg is statement */
+  c->argt = CPLR_MAINOPT_STATEMENT;
 
   /* parse options */
   optind = 1;
@@ -166,8 +195,8 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       /* internal */
     case 0: /* handled by getopt */
       break;
-    case 1: /* non-option arguments are statements */
-      l_append_str_static(&c->stms, optarg);
+    case 1: /* non-option arguments */
+      cplr_optparse_main(c, optarg);
       break;
 
       /* information */
@@ -235,21 +264,41 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
 
       /* statements */
     case 'e':
-      l_append_str_static(&c->stms, optarg);
+      if(strcmp(":", optarg) == 0) {
+	c->argt = CPLR_MAINOPT_STATEMENT;
+      } else {
+	l_append_str_static(&c->stms, optarg);
+      }
       break;
     case 'b':
-      l_append_str_static(&c->befs, optarg);
+      if(strcmp(":", optarg) == 0) {
+	c->argt = CPLR_MAINOPT_BEFORE;
+      } else {
+	l_append_str_static(&c->befs, optarg);
+      }
       break;
     case 'a':
-      l_append_str_static(&c->afts, optarg);
+      if(strcmp(":", optarg) == 0) {
+	c->argt = CPLR_MAINOPT_AFTER;
+      } else {
+	l_append_str_static(&c->afts, optarg);
+      }
       break;
     case 't':
-      l_append_str_static(&c->tlfs, optarg);
+      if(strcmp(":", optarg) == 0) {
+	c->argt = CPLR_MAINOPT_TOPLEVEL;
+      } else {
+	l_append_str_static(&c->tlfs, optarg);
+      }
       break;
 
       /* input files */
     case 'f':
-      l_append_str_static(&c->srcs, optarg);
+      if(strcmp(":", optarg) == 0) {
+	c->argt = CPLR_MAINOPT_FILE;
+      } else {
+	l_append_str_static(&c->srcs, optarg);
+      }
       break;
 
       /* program arguments */
