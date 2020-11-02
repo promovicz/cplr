@@ -88,75 +88,70 @@ static void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
   }
 }
 
-static int cplr_generate_code(cplr_t *c) {
+static void cplr_generate_section(cplr_t *c,
+				  const char *name,
+				  lh_t *list,
+				  bool reverse, bool minilibs,
+				  const char *fmt) {
   int i;
   ln_t *n;
-  char fn[32];
+  char fn[64];
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Generating section %s\n", name);
+  }
+  CPLR_EMIT_COMMENT(c, "%s", name);
+  if(reverse) {
+    i = l_size(list);
+    L_BACKWARDS(list, n) {
+      snprintf(fn, sizeof(fn), "%s_%d", name, i--);
+      CPLR_EMIT_STATEMENT(c, fn, fmt, n->v.s);
+    }
+    cplr_emit_minilibs(c, name, true);
+  } else {
+    cplr_emit_minilibs(c, name, false);
+    i = 0;
+    L_FORWARD(list, n) {
+      snprintf(fn, sizeof(fn), "%s_%d", name, i++);
+      CPLR_EMIT_PREPROC(c, fn, fmt, n->v.s);
+    }
+  }
+}
+
+static int cplr_generate_code(cplr_t *c) {
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Generating code\n");
+  }
   bool minilibs = !l_empty(&c->mlbs);
   if(minilibs || !l_empty(&c->defsys)) {
-    CPLR_EMIT_COMMENT(c, "defsysinclude");
-    i = 0;
-    L_FORWARD(&c->defsys, n) {
-      snprintf(fn, sizeof(fn), "defsysinclude_%d", i++);
-      CPLR_EMIT_PREPROC(c, fn, "#include <%s>\n", n->v.s);
-    }
+    cplr_generate_section(c, "defsysinclude", &c->defsys,
+			  false, false, "#include <%s>\n");
   }
   if(minilibs || !l_empty(&c->syss)) {
-    CPLR_EMIT_COMMENT(c, "sysinclude");
-    cplr_emit_minilibs(c, "sysinclude", false);
-    i = 0;
-    L_FORWARD(&c->syss, n) {
-      snprintf(fn, sizeof(fn), "sysinclude_%d", i++);
-      CPLR_EMIT_PREPROC(c, fn, "#include <%s>\n", n->v.s);
-    }
+    cplr_generate_section(c, "sysinclude", &c->syss,
+			  false, minilibs, "#include <%s>\n");
   }
   if(minilibs || !l_empty(&c->incs)) {
-    CPLR_EMIT_COMMENT(c, "include");
-    cplr_emit_minilibs(c, "include", false);
-    i = 0;
-    L_FORWARD(&c->incs, n) {
-      snprintf(fn, sizeof(fn), "include_%d", i++);
-      CPLR_EMIT_PREPROC(c, fn, "#include \"%s\"\n", n->v.s);
-    }
+    cplr_generate_section(c, "include", &c->incs,
+			  false, minilibs, "#include <%s>\n");
   }
   if(minilibs || !l_empty(&c->tlfs)) {
-    CPLR_EMIT_COMMENT(c, "toplevel");
-    cplr_emit_minilibs(c, "toplevel", false);
-    i = 0;
-    L_FORWARD(&c->tlfs, n) {
-      snprintf(fn, sizeof(fn), "toplevel_%d", i++);
-      CPLR_EMIT_TOPLEVEL(c, fn, "%s;\n", n->v.s);
-    }
+    cplr_generate_section(c, "toplevel", &c->tlfs,
+			  false, minilibs, "%s;\n");
   }
   CPLR_EMIT_COMMENT(c, "main");
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
   CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
   if(minilibs || !l_empty(&c->befs)) {
-    CPLR_EMIT_COMMENT(c, "before");
-    cplr_emit_minilibs(c, "before", false);
-    i = 0;
-    L_FORWARD(&c->befs, n) {
-      snprintf(fn, sizeof(fn), "before_%d", i++);
-      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
-    }
+    cplr_generate_section(c, "before", &c->befs,
+			  false, minilibs, "    %s;\n");
   }
   if(minilibs || !l_empty(&c->stms)) {
-    CPLR_EMIT_COMMENT(c, "statement");
-    cplr_emit_minilibs(c, "statement", false);
-    i = 0;
-    L_FORWARD(&c->stms, n) {
-      snprintf(fn, sizeof(fn), "statement_%d", i++);
-      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
-    }
+    cplr_generate_section(c, "main", &c->stms,
+			  false, minilibs, "    %s;\n");
   }
   if(minilibs || !l_empty(&c->afts)) {
-    CPLR_EMIT_COMMENT(c, "after");
-    i = l_size(&c->afts);
-    L_BACKWARDS(&c->afts, n) {
-      snprintf(fn, sizeof(fn), "after_%d", i--);
-      CPLR_EMIT_STATEMENT(c, fn, "    %s;\n", n->v.s);
-    }
-    cplr_emit_minilibs(c, "after", true);
+    cplr_generate_section(c, "after", &c->afts,
+			  true, minilibs, "    %s;\n");
   }
   CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
@@ -264,7 +259,7 @@ static void cplr_generate_report(cplr_t *c) {
 int cplr_generate(cplr_t *c) {
   /* say hello */
   if(c->flag & CPLR_FLAG_VERBOSE) {
-    fprintf(stderr, "Generating code\n");
+    fprintf(stderr, "Generation phase\n");
   }
   /* alloc buffers and open streams */
   cplr_generate_open(c);
