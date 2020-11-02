@@ -141,6 +141,9 @@ static int cplr_generate_code(cplr_t *c) {
     fprintf(stderr, "Generating code\n");
   }
   bool minilibs = !l_empty(&c->mlbs);
+  bool havemain = !(l_empty(&c->stms)
+		    && l_empty(&c->befs)
+		    && l_empty(&c->afts));
   if(minilibs || !l_empty(&c->defsys)) {
     cplr_generate_section(c, "defsysinclude", &c->defsys,
 			  false, false, "#include <%s>\n");
@@ -157,24 +160,26 @@ static int cplr_generate_code(cplr_t *c) {
     cplr_generate_section(c, "toplevel", &c->tlfs,
 			  false, minilibs, "%s;\n");
   }
-  CPLR_EMIT_COMMENT(c, "main");
-  CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
-  CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
-  if(minilibs || !l_empty(&c->befs)) {
-    cplr_generate_section(c, "before", &c->befs,
-			  false, minilibs, "    %s;\n");
+  if(havemain) {
+    CPLR_EMIT_COMMENT(c, "main");
+    CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
+    CPLR_EMIT_INTERNAL(c, "int ret = 0;\n");
+    if(minilibs || !l_empty(&c->befs)) {
+      cplr_generate_section(c, "before", &c->befs,
+			    false, minilibs, "    %s;\n");
+    }
+    if(minilibs || !l_empty(&c->stms)) {
+      cplr_generate_section(c, "main", &c->stms,
+			    false, minilibs, "    %s;\n");
+    }
+    if(minilibs || !l_empty(&c->afts)) {
+      cplr_generate_section(c, "after", &c->afts,
+			    true, minilibs, "    %s;\n");
+    }
+    CPLR_EMIT_COMMENT(c, "done");
+    CPLR_EMIT_INTERNAL(c, "return ret;\n");
+    CPLR_EMIT_INTERNAL(c, "}\n");
   }
-  if(minilibs || !l_empty(&c->stms)) {
-    cplr_generate_section(c, "main", &c->stms,
-			  false, minilibs, "    %s;\n");
-  }
-  if(minilibs || !l_empty(&c->afts)) {
-    cplr_generate_section(c, "after", &c->afts,
-			  true, minilibs, "    %s;\n");
-  }
-  CPLR_EMIT_COMMENT(c, "done");
-  CPLR_EMIT_INTERNAL(c, "    return ret;\n");
-  CPLR_EMIT_INTERNAL(c, "}\n");
   return 0;
 }
 
