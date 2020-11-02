@@ -229,9 +229,10 @@ static void cplr_generate_open(cplr_t *c) {
 }
 
 static void cplr_generate_close(cplr_t *c) {
- fclose(c->g_code);
+  fflush(c->g_code);
+  fclose(c->g_code);
   c->g_code = NULL;
-  if(c->flag & CPLR_FLAG_DUMP) {
+  if(c->g_dump) {
     fflush(c->g_dump);
     fclose(c->g_dump);
     c->g_dump = NULL;
