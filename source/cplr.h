@@ -11,6 +11,7 @@
 #include <cext/list.h>
 #include <cext/string.h>
 
+/* cplr flags */
 typedef enum {
    CPLR_FLAG_DUMP = 1,
    CPLR_FLAG_NORUN = 2,
@@ -18,6 +19,7 @@ typedef enum {
    CPLR_FLAG_PRISTINE = 8,
 } cplr_flag_t;
 
+/* code generation state machine */
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
    CPLR_GSTATE_COMMENT = 1,
@@ -28,15 +30,18 @@ typedef enum {
 } cplr_gstate_t;
 
 typedef struct cplr {
+  /* flags */
   cplr_flag_t flag;
 
+  /* compiler arguments */
   int    argc;
-  int    argp;
   char **argv;
+  /* offset of first program argument */
+  int    argp;
 
+  /* the piles */
   lh_t defdef;
   lh_t defsys;
-
   lh_t sysdirs;
   lh_t incdirs;
   lh_t mlbdirs;
@@ -53,14 +58,19 @@ typedef struct cplr {
   lh_t befs;
   lh_t afts;
 
+  /* code generation state */
   cplr_gstate_t g_state;
+  /* state for line numbering */
   int   g_prevline;
   char *g_prevfile;
-  char *g_codebuf;
+  /* output streams */
   FILE *g_code;
-  char *g_dumpbuf;
   FILE *g_dump;
+  /* stream buffers in case of memory streams */
+  char *g_codebuf;
+  char *g_dumpbuf;
 
+  /* compiler state */
   TCCState *tcc;
 } cplr_t;
 
