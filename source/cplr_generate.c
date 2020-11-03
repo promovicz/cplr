@@ -249,12 +249,16 @@ static void cplr_generate_close(cplr_t *c) {
 }
 
 static void cplr_generate_dump(cplr_t *c) {
+  const char *filter = getenv("CPLR_DUMP_FILTER");
+  if(!filter) {
+    filter = "cat -n -";
+  }
   if(c->flag & CPLR_FLAG_DUMP) {
     fprintf(stderr, "%s\n", bar);
     fflush(stderr);
     size_t total = strlen(c->g_dumpbuf);
     char *buf = c->g_dumpbuf;
-    FILE *dumpout = popen("cat -n - 2>&1", "w");
+    FILE *dumpout = popen(filter, "w");
     size_t done = 0;
     while(done < total) {
       size_t step = total - done;
