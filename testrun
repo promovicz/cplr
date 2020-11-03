@@ -13,6 +13,9 @@ T="${D}/tests"
 LIB_SH=true
 . "${D}/lib.sh"
 
+# Override user-specified filter
+export CPLR_DUMP_FILTER="cat -n -"
+
 # runone <name>
 #
 # Run test NAME and check results.
