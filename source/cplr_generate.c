@@ -144,21 +144,25 @@ static int cplr_generate_code(cplr_t *c) {
   bool havemain = !(l_empty(&c->stms)
 		    && l_empty(&c->befs)
 		    && l_empty(&c->afts));
-  if(minilibs || !l_empty(&c->defsys)) {
-    cplr_generate_section(c, "defsysinclude", &c->defsys,
-			  false, false, "#include <%s>\n");
-  }
-  if(minilibs || !l_empty(&c->syss)) {
-    cplr_generate_section(c, "sysinclude", &c->syss,
-			  false, minilibs, "#include <%s>\n");
-  }
-  if(minilibs || !l_empty(&c->incs)) {
-    cplr_generate_section(c, "include", &c->incs,
-			  false, minilibs, "#include <%s>\n");
-  }
-  if(minilibs || !l_empty(&c->tlfs)) {
-    cplr_generate_section(c, "toplevel", &c->tlfs,
-			  false, minilibs, "%s;\n");
+  bool havecode = (minilibs || havemain
+		   || !l_empty(&c->tlfs));
+  if(havecode) {
+    if(minilibs || !l_empty(&c->defsys)) {
+      cplr_generate_section(c, "defsysinclude", &c->defsys,
+			    false, false, "#include <%s>\n");
+    }
+    if(minilibs || !l_empty(&c->syss)) {
+      cplr_generate_section(c, "sysinclude", &c->syss,
+			    false, minilibs, "#include <%s>\n");
+    }
+    if(minilibs || !l_empty(&c->incs)) {
+      cplr_generate_section(c, "include", &c->incs,
+			    false, minilibs, "#include <%s>\n");
+    }
+    if(minilibs || !l_empty(&c->tlfs)) {
+      cplr_generate_section(c, "toplevel", &c->tlfs,
+			    false, minilibs, "%s;\n");
+    }
   }
   if(havemain) {
     CPLR_EMIT_COMMENT(c, "main");
