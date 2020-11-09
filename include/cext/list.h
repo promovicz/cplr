@@ -20,12 +20,19 @@ struct ln {
   value_t v;
 };
 
+ATTR_ARG_NONNULL(1)
+static inline void l_init(lh_t *lh) {
+  lh->c = 0; lh->f = NULL; lh->l = NULL;
+}
+
 ATTR_FUN_PURE
+ATTR_ARG_NONNULL(1)
 static inline bool l_empty(lh_t *lh) {
   return lh->c == 0;
 }
 
 ATTR_FUN_PURE
+ATTR_ARG_NONNULL(1)
 static inline size_t l_size(lh_t *lh) {
   return lh->c;
 }
