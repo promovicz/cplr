@@ -26,6 +26,52 @@ $ alias c=cplr
  * Extra convenience options: -i \<include\>, -S <sysincdir\>, -s \<sysinc\>
  * Adding code: -e \<statement\>, -b \<before\>, -a \<after\>, -t \<toplevel\>
  * Flags: -v (verbose compiler), -d (dump code), -p (pristine env), -n (no execute)
+ * Environment: CPLR_DUMP_FILTER="cat -n -"
+
+### Enabling colored source dumps
+
+Normally cplr will print code using "cat -n", resulting in a simple numbered dump:
+
+```
+$ cplr 'puts("Hello")' -nd
+================================================================================
+     1	/* defsysinclude */
+     2	#include <sys/stat.h>
+     3	#include <sys/types.h>
+     4	#include <assert.h>
+     5	#include <ctype.h>
+     6	#include <errno.h>
+     7	#include <fcntl.h>
+     8	#include <libgen.h>
+     9	#include <limits.h>
+    10	#include <locale.h>
+    11	#include <stdarg.h>
+    12	#include <stdio.h>
+    13	#include <stdint.h>
+    14	#include <stdlib.h>
+    15	#include <string.h>
+    16	#include <termios.h>
+    17	#include <time.h>
+    18	#include <unistd.h>
+    19	#include <wchar.h>
+    20	/* main */
+    21	int main(int argc, char **argv) {
+    22	    int ret = 0;
+    23	/* main */
+    24	    puts("Hello");
+    25	/* done */
+    26	    return ret;
+    27	}
+================================================================================
+Compilation succeeded.
+```
+
+You can set CPLR_DUMP_FILTER to change the filter. I recommend t3highlight:
+
+```
+$ export CPLR_DUMP_FILTER="t3highlight -l c | cat -n -"
+(no demonstration because ANSI color does not paste)
+```
 
 ### Why cplr exists and how to use it
 
