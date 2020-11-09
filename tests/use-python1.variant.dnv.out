@@ -48,7 +48,7 @@ Generating section main
     35	#line 1 "include_0"
     36	#include <Python.h>
     37	/* main */
-    38	#line 161 "internal"
+    38	#line 169 "internal"
     39	int main(int argc, char **argv) {
     40	    int ret = 0;
     41	/* main */
@@ -59,7 +59,7 @@ Generating section main
     46	#line 1 "main_2"
     47	    Py_Finalize();
     48	/* done */
-    49	#line 176 "internal"
+    49	#line 184 "internal"
     50	    return ret;
     51	}
 ================================================================================
