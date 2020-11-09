@@ -8,27 +8,29 @@
      7	#include <fcntl.h>
      8	#include <libgen.h>
      9	#include <limits.h>
-    10	#include <stdarg.h>
-    11	#include <stdio.h>
-    12	#include <stdint.h>
-    13	#include <stdlib.h>
-    14	#include <string.h>
-    15	#include <termios.h>
-    16	#include <time.h>
-    17	#include <unistd.h>
-    18	/* include */
-    19	#include <Python.h>
-    20	/* main */
-    21	int main(int argc, char **argv) {
-    22	    int ret = 0;
-    23	/* before */
-    24	    Py_Initialize();
-    25	/* main */
-    26	    PyRun_SimpleString("print(\"hello\")");
-    27	/* after */
-    28	    Py_Finalize();
-    29	/* done */
-    30	    return ret;
-    31	}
+    10	#include <locale.h>
+    11	#include <stdarg.h>
+    12	#include <stdio.h>
+    13	#include <stdint.h>
+    14	#include <stdlib.h>
+    15	#include <string.h>
+    16	#include <termios.h>
+    17	#include <time.h>
+    18	#include <unistd.h>
+    19	#include <wchar.h>
+    20	/* include */
+    21	#include <Python.h>
+    22	/* main */
+    23	int main(int argc, char **argv) {
+    24	    int ret = 0;
+    25	/* before */
+    26	    Py_Initialize();
+    27	/* main */
+    28	    PyRun_SimpleString("print(\"hello\")");
+    29	/* after */
+    30	    Py_Finalize();
+    31	/* done */
+    32	    return ret;
+    33	}
 ================================================================================
 Compilation succeeded.
