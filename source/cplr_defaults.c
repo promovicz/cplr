@@ -14,6 +14,7 @@ int cplr_defaults(cplr_t *c) {
     l_append_str_static(&c->defsys, "fcntl.h");
     l_append_str_static(&c->defsys, "libgen.h");
     l_append_str_static(&c->defsys, "limits.h");
+    l_append_str_static(&c->defsys, "locale.h");
     l_append_str_static(&c->defsys, "stdarg.h");
     l_append_str_static(&c->defsys, "stdio.h");
     l_append_str_static(&c->defsys, "stdint.h");
@@ -22,6 +23,7 @@ int cplr_defaults(cplr_t *c) {
     l_append_str_static(&c->defsys, "termios.h");
     l_append_str_static(&c->defsys, "time.h");
     l_append_str_static(&c->defsys, "unistd.h");
+    l_append_str_static(&c->defsys, "wchar.h");
   }
   if(c->t_env & CPLR_ENV_LINUX) {
   }
