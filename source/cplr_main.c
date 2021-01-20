@@ -1,7 +1,7 @@
 /*
- * c - utility for running C code
+ * cplr - Utility for running C code
  *
- * Copyright (C) 2020 Ingo Albrecht <copyright@promovicz.org>
+ * Copyright (C) 2020-2021 Ingo Albrecht <copyright@promovicz.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
