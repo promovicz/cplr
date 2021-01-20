@@ -23,15 +23,19 @@
 #include "attr.h"
 #include "value.h"
 
+/* list head */
 typedef struct lh lh_t;
+/* list node */
 typedef struct ln ln_t;
 
+/* structure of list head */
 struct lh {
   size_t c;
   ln_t *f;
   ln_t *l;
 };
 
+/* strcture of list node */
 struct ln {
   lh_t *h;
   ln_t *n;
@@ -39,26 +43,31 @@ struct ln {
   value_t v;
 };
 
+/* initialize list as empty */
 ATTR_ARG_NONNULL(1)
 static inline void l_init(lh_t *lh) {
   lh->c = 0; lh->f = NULL; lh->l = NULL;
 }
 
+/* check if list is empty */
 ATTR_FUN_PURE
 ATTR_ARG_NONNULL(1)
 static inline bool l_empty(lh_t *lh) {
   return lh->c == 0;
 }
 
+/* get length of list */
 ATTR_FUN_PURE
 ATTR_ARG_NONNULL(1)
 static inline size_t l_size(lh_t *lh) {
   return lh->c;
 }
 
+/* clear the list */
 ATTR_ARG_NONNULL(1)
 extern void l_clear(lh_t *lh);
 
+/* append a node to a list */
 ATTR_ARG_NONNULL(1,2)
 extern void l_append(lh_t *lh, ln_t *n);
 
