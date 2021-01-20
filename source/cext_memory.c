@@ -42,7 +42,7 @@ void *xrealloc(void *ptr, size_t s) {
 
 void xfree(void *p) {
   if(!p) {
-    xabortm("xfree: Trying to free a NULL pointer");
+    xaborts("xfree: Trying to free a NULL pointer");
   }
   free(p);
 }
@@ -60,15 +60,18 @@ void ptrfree(void **p) {
 }
 
 void xptrfree(void **p) {
-  if(!(p || *p)) {
-    xabortm("xptrfree: Trying to free a NULL pointer");
+  if(!p) {
+    xaborts("xptrfree: Trying to free a NULL-referenced pointer");
+  }
+  if(!*p) {
+    xaborts("xptrfree: Trying to free a NULL pointer");
   }
   ptrfree(p);
 }
 
 void lptrfree(void **p) {
   if(!p) {
-    xabortm("lptrfree: Trying to free a NULL pointer");
+    xaborts("lptrfree: Trying to free a NULL-referenced pointer");
   }
   if(*p) {
     free(*p);
