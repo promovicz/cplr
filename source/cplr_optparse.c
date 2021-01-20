@@ -129,7 +129,7 @@ static void cplr_show_herald(cplr_t *c, FILE *out) {
   fprintf(out, "May this be as useful for you as it is for me.\n\n");
 
   /* copyright information */
-  fprintf(out, "Copyright (C) 2020 Ingo Albrecht <%s@promovicz.org>.\n", bn);
+  fprintf(out, "Copyright (C) 2020-2021 Ingo Albrecht <cplr@promovicz.org>.\n");
   fprintf(out, "Licensed under the GNU General Public License version 3 or later.\n");
   fprintf(out, "See package file COPYING or https://www.gnu.org/licenses/.\n\n");
 }
