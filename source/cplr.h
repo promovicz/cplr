@@ -36,7 +36,7 @@ typedef enum {
   CPLR_MAINOPT_FILE = 4,
 } cplr_mainopt_t;
 
-/* code generation state machine */
+/* code generation phases */
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
    CPLR_GSTATE_COMMENT = 1,

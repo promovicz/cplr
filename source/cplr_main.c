@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
   int res, ret = 1;
   cplr_t *c = cplr_new();
 
+  /* parse options */
   res = cplr_optparse(c, argc, argv);
   switch(res) {
   case 0:
@@ -48,6 +49,7 @@ int main(int argc, char **argv) {
     goto done;
   }
 
+  /* apply defaults */
   if(!(c->flag & CPLR_FLAG_PRISTINE)) {
     if(cplr_defaults(c)) {
       fprintf(stderr, "Error: Default initialization failed.\n");
@@ -55,25 +57,30 @@ int main(int argc, char **argv) {
     }
   }
 
+  /* prepare compilation */
   if(cplr_prepare(c)) {
     fprintf(stderr, "Error: Prepare failed.\n");
     goto done;
   }
 
+  /* generate code */
   if(cplr_generate(c)) {
     fprintf(stderr, "Error: Code generation failed.\n");
     goto done;
   }
 
+  /* perform compilation */
   if(cplr_compile(c)) {
     fprintf(stderr, "Error: Compilation failed.\n");
     goto done;
   }
 
+  /* report success */
   if(c->flag & (CPLR_FLAG_DUMP | CPLR_FLAG_VERBOSE)) {
     fprintf(stderr, "Compilation succeeded.\n");
   }
 
+  /* execute code */
   if(!(c->flag & CPLR_FLAG_NORUN)) {
     ret = cplr_execute(c);
     if(ret) {
@@ -82,15 +89,19 @@ int main(int argc, char **argv) {
     }
   }
 
+  /* report success */
   if(c->flag & (CPLR_FLAG_VERBOSE)) {
     fprintf(stderr, "Execution succeeded.\n");
   }
 
+  /* overall success */
   ret = 0;
 
  done:
 
+  /* clean up */
   cplr_free(c);
 
+  /* return result */
   return ret;
 }
