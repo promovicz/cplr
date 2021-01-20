@@ -27,15 +27,6 @@ typedef enum {
    CPLR_ENV_LINUX_KERNEL = 4,
 } cplr_env_t;
 
-/* types of main option */
-typedef enum {
-  CPLR_MAINOPT_STATEMENT = 0,
-  CPLR_MAINOPT_BEFORE = 1,
-  CPLR_MAINOPT_AFTER = 2,
-  CPLR_MAINOPT_TOPLEVEL = 3,
-  CPLR_MAINOPT_FILE = 4,
-} cplr_mainopt_t;
-
 /* code generation phases */
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
@@ -52,8 +43,6 @@ typedef struct cplr {
   char **argv;
   /* first program argument */
   int    argp;
-  /* current main option type */
-  cplr_mainopt_t argt;
 
     /* flags */
   cplr_flag_t flag;
