@@ -26,7 +26,7 @@
 
 ATTR_FUN_COLD
 ATTR_FUN_NORETURN
-extern void xabortm(const char *msg);
+extern void xaborts(const char *msg);
 
 ATTR_FUN_COLD
 ATTR_FUN_NORETURN

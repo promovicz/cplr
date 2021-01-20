@@ -24,7 +24,7 @@
 
 ATTR_FUN_COLD
 ATTR_FUN_NORETURN
-void xabortm(const char *msg) {
+void xaborts(const char *msg) {
   fprintf(stderr, "%s\n", msg);
   fflush(stderr);
   abort();
