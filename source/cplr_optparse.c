@@ -6,7 +6,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpD:U:I:i:S:s:L:l:M:m:P:e:b:a:t:f:-";
+const char *shortopts = "-:hHVvdnpD:U:I:i:S:s:L:l:M:m:P:e:b:a:t:o:f:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -41,6 +41,7 @@ const struct option longopts[] = {
   {NULL,    1, NULL, 'a'},
   {NULL,    1, NULL, 't'},
 
+  {NULL,    1, NULL, 'o'},
   {NULL,    1, NULL, 'f'},
 
   {NULL,    0, NULL, '-'},
@@ -78,6 +79,7 @@ const char *longhelp[] = {
   "add after statement",
   "add toplevel statement",
 
+  "output object file instead of executing",
   "add file (source, object, archive)",
 
   "begin program arguments",
@@ -290,6 +292,10 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       } else {
 	l_append_str_static(&c->tlfs, optarg);
       }
+      break;
+
+      /* output file */
+    case 'o':
       break;
 
       /* input files */
