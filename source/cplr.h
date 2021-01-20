@@ -47,19 +47,33 @@ typedef enum {
 } cplr_gstate_t;
 
 typedef struct cplr {
-  /* flags */
-  cplr_flag_t flag;
-
-  /* target environment (posix, linux...) */
-  cplr_env_t t_env;
-
-  /* arguments */
+  /* all arguments */
   int    argc;
   char **argv;
-  /* offset of first program argument */
+  /* first program argument */
   int    argp;
   /* current main option type */
   cplr_mainopt_t argt;
+
+    /* flags */
+  cplr_flag_t flag;
+  /* target environment (posix, linux...) */
+  cplr_env_t t_env;
+
+  /* compiler state */
+  TCCState *tcc;
+
+  /* code generation state */
+  cplr_gstate_t g_state;
+  /* state for line numbering */
+  int   g_prevline;
+  char *g_prevfile;
+  /* output streams */
+  FILE *g_code;
+  FILE *g_dump;
+  /* stream buffers in case of memory streams */
+  char *g_codebuf;
+  char *g_dumpbuf;
 
   /* the piles */
   lh_t defdef;
@@ -80,20 +94,6 @@ typedef struct cplr {
   lh_t befs;
   lh_t afts;
 
-  /* code generation state */
-  cplr_gstate_t g_state;
-  /* state for line numbering */
-  int   g_prevline;
-  char *g_prevfile;
-  /* output streams */
-  FILE *g_code;
-  FILE *g_dump;
-  /* stream buffers in case of memory streams */
-  char *g_codebuf;
-  char *g_dumpbuf;
-
-  /* compiler state */
-  TCCState *tcc;
 } cplr_t;
 
 extern cplr_t *cplr_new(void);
