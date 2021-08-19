@@ -49,11 +49,6 @@ int cplr_prepare(cplr_t *c) {
     return 1;
   }
 
-  /* define minilib dirs as include dirs */
-  L_FORWARD(&c->mlbdirs, i) {
-    l_append_str(&c->incdirs, value_get_str(&i->v));
-  }
-
   /* packages */
   L_FORWARD(&c->pkgs, i) {
     if(cplr_prepare_package(c, value_get_str(&i->v))) {

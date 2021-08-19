@@ -94,37 +94,10 @@ static void cplr_emit(cplr_t *c,
   cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,       \
 	    1, fmt, ##__VA_ARGS__)
 
-static void cplr_emit_minilib(cplr_t *c, const char *phase, const char *mlb, int count) {
-  if(c->flag & CPLR_FLAG_VERBOSE) {
-    fprintf(stderr, "Emitting minilib '%s' phase '%s'\n", mlb, phase);
-  }
-  char *fn = msprintf("%s_mlib_%d", phase, count);
-  CPLR_EMIT_PREPROC(c, fn, "#define minilib_%s\n", phase);
-  CPLR_EMIT_PREPROC(c, fn, "#include \"%s.m\"\n", mlb);
-  CPLR_EMIT_PREPROC(c, fn, "#undef minilib_%s\n", phase);
-  ptrfree((void**)&fn);
-}
-
-static void cplr_emit_minilibs(cplr_t *c, const char *phase, bool reverse) {
-  int i;
-  ln_t *n;
-  if(reverse) {
-    i = l_size(&c->mlbs);
-    L_BACKWARDS(&c->mlbs, n) {
-      cplr_emit_minilib(c, phase, value_get_str(&n->v), i--);
-    }
-  } else {
-    i = 0;
-    L_FORWARD(&c->mlbs, n) {
-      cplr_emit_minilib(c, phase, value_get_str(&n->v), i++);
-    }
-  }
-}
-
 static void cplr_generate_section(cplr_t *c,
 				  const char *name,
 				  lh_t *list,
-				  bool reverse, bool minilibs,
+				  bool reverse,
 				  const char *fmt) {
   int i;
   ln_t *n;
@@ -139,13 +112,7 @@ static void cplr_generate_section(cplr_t *c,
       snprintf(fn, sizeof(fn), "%s_%d", name, i--);
       CPLR_EMIT_STATEMENT(c, fn, fmt, value_get_str(&n->v));
     }
-    if(minilibs) {
-      cplr_emit_minilibs(c, name, true);
-    }
   } else {
-    if(minilibs) {
-      cplr_emit_minilibs(c, name, false);
-    }
     i = 0;
     L_FORWARD(list, n) {
       snprintf(fn, sizeof(fn), "%s_%d", name, i++);
@@ -158,50 +125,43 @@ static int cplr_generate_code(cplr_t *c) {
   if(c->flag & CPLR_FLAG_VERBOSE) {
     fprintf(stderr, "Generating code\n");
   }
-  bool minilibs = !l_empty(&c->mlbs);
-  bool havemain = !(l_empty(&c->stms)
-		    && l_empty(&c->befs)
-		    && l_empty(&c->afts));
-  bool havecode = (minilibs || havemain
-		   || !l_empty(&c->tlfs));
-  if(havecode) {
-    if(minilibs || !l_empty(&c->defsys)) {
-      cplr_generate_section(c, "defsysinclude", &c->defsys,
-			    false, false, "#include <%s>\n");
-    }
-    if(minilibs || !l_empty(&c->syss)) {
-      cplr_generate_section(c, "sysinclude", &c->syss,
-			    false, minilibs, "#include <%s>\n");
-    }
-    if(minilibs || !l_empty(&c->incs)) {
-      cplr_generate_section(c, "include", &c->incs,
-			    false, minilibs, "#include <%s>\n");
-    }
-    if(minilibs || !l_empty(&c->tlfs)) {
-      cplr_generate_section(c, "toplevel", &c->tlfs,
-			    false, minilibs, "%s;\n");
-    }
+  /* includes */
+  if(!l_empty(&c->defsys)) {
+    cplr_generate_section(c, "defsysinclude", &c->defsys,
+			  false, "#include <%s>\n");
   }
-  if(havemain) {
-    CPLR_EMIT_COMMENT(c, "main");
-    CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
-    CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
-    if(minilibs || !l_empty(&c->befs)) {
-      cplr_generate_section(c, "before", &c->befs,
-			    false, minilibs, "    %s;\n");
-    }
-    if(minilibs || !l_empty(&c->stms)) {
-      cplr_generate_section(c, "main", &c->stms,
-			    false, minilibs, "    %s;\n");
-    }
-    if(minilibs || !l_empty(&c->afts)) {
-      cplr_generate_section(c, "after", &c->afts,
-			    true, minilibs, "    %s;\n");
-    }
-    CPLR_EMIT_COMMENT(c, "done");
-    CPLR_EMIT_INTERNAL(c, "    return ret;\n");
-    CPLR_EMIT_INTERNAL(c, "}\n");
+  if(!l_empty(&c->syss)) {
+    cplr_generate_section(c, "sysinclude", &c->syss,
+			  false, "#include <%s>\n");
   }
+  if(!l_empty(&c->incs)) {
+    cplr_generate_section(c, "include", &c->incs,
+			  false, "#include <%s>\n");
+  }
+  /* toplevel statements */
+  if(!l_empty(&c->tlfs)) {
+    cplr_generate_section(c, "toplevel", &c->tlfs,
+			  false, "%s;\n");
+  }
+  /* main function */
+  CPLR_EMIT_COMMENT(c, "main");
+  CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
+  CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
+  if(!l_empty(&c->befs)) {
+    cplr_generate_section(c, "before", &c->befs,
+			  false, "    %s;\n");
+  }
+  if(!l_empty(&c->stms)) {
+    cplr_generate_section(c, "main", &c->stms,
+			  false, "    %s;\n");
+  }
+  if(!l_empty(&c->afts)) {
+    cplr_generate_section(c, "after", &c->afts,
+			  true, "    %s;\n");
+  }
+  CPLR_EMIT_COMMENT(c, "done");
+  CPLR_EMIT_INTERNAL(c, "    return ret;\n");
+  CPLR_EMIT_INTERNAL(c, "}\n");
   return 0;
 }
 

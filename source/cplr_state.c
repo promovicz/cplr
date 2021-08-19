@@ -40,12 +40,10 @@ void cplr_free(cplr_t *c) {
   l_clear(&c->defsys);
   l_clear(&c->sysdirs);
   l_clear(&c->incdirs);
-  l_clear(&c->mlbdirs);
   l_clear(&c->libdirs);
   l_clear(&c->defs);
   l_clear(&c->syss);
   l_clear(&c->incs);
-  l_clear(&c->mlbs);
   l_clear(&c->libs);
   l_clear(&c->pkgs);
   l_clear(&c->srcs);

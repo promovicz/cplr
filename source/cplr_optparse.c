@@ -24,7 +24,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpD:U:I:i:S:s:L:l:M:m:P:e:b:a:t:o:f:-";
+const char *shortopts = "-:hHVvdnpD:U:I:i:S:s:L:l:P:e:b:a:t:o:f:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -48,9 +48,6 @@ const struct option longopts[] = {
 
   {NULL,    1, NULL, 'L'},
   {NULL,    1, NULL, 'l'},
-
-  {NULL,    1, NULL, 'M'},
-  {NULL,    1, NULL, 'm'},
 
   {NULL,    1, NULL, 'P'},
 
@@ -86,9 +83,6 @@ const char *longhelp[] = {
 
   "add library directory",
   "add library",
-
-  "add minilib directory",
-  "add minilib",
 
   "add pkg-config library",
 
@@ -238,14 +232,6 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
     case 'l':
       l_append_str_static(&c->libs, optarg);
-      break;
-
-      /* minilibs */
-    case 'M':
-      l_append_str_static(&c->mlbdirs, optarg);
-      break;
-    case 'm':
-      l_append_str_static(&c->mlbs, optarg);
       break;
 
       /* pkg-config */

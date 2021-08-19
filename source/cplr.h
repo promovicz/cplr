@@ -89,12 +89,10 @@ typedef struct cplr {
   lh_t defsys;
   lh_t sysdirs;
   lh_t incdirs;
-  lh_t mlbdirs;
   lh_t libdirs;
   lh_t defs;
   lh_t syss;
   lh_t incs;
-  lh_t mlbs;
   lh_t libs;
   lh_t pkgs;
   lh_t srcs;
