@@ -25,6 +25,7 @@ static void cplr_tcc_error(cplr_t *c, const char *msg) {
 }
 
 int cplr_prepare(cplr_t *c) {
+  int otype;
   ln_t *i;
   TCCState *t;
 
@@ -45,7 +46,13 @@ int cplr_prepare(cplr_t *c) {
   //tcc_set_options(t, "-g");
 
   /* set output type */
-  if(tcc_set_output_type(c->tcc, TCC_OUTPUT_MEMORY)) {
+  if(c->out == NULL) {
+    otype = TCC_OUTPUT_MEMORY;
+  } else {
+    otype = TCC_OUTPUT_EXE;
+  }
+  if(tcc_set_output_type(c->tcc, otype)) {
+    fprintf(stderr, "Failed to set output type %d\n", otype);
     return 1;
   }
 

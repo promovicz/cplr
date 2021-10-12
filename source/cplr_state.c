@@ -34,6 +34,7 @@ void cplr_free(cplr_t *c) {
     tcc_delete(c->tcc);
     c->tcc = NULL;
   }
+  lptrfree((void*)&c->out);
   lptrfree((void*)&c->g_codebuf);
   lptrfree((void*)&c->g_dumpbuf);
   l_clear(&c->defdef);

@@ -68,6 +68,8 @@ typedef struct cplr {
   cplr_flag_t flag;
   /* target environment (posix, linux...) */
   cplr_env_t t_env;
+  /* output filename (memory if NULL) */
+  char *out;
 
   /* compiler state */
   TCCState *tcc;

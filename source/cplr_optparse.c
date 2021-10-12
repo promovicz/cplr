@@ -255,6 +255,8 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
 
       /* output file */
     case 'o':
+      c->flag |= CPLR_FLAG_NORUN;
+      c->out = strdup(optarg);
       break;
 
       /* input files */
