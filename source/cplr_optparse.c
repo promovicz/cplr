@@ -91,7 +91,7 @@ const char *longhelp[] = {
   "add after statement",
   "add toplevel statement",
 
-  "output object file instead of executing",
+  "output executable",
   "add file (source, object, archive)",
 
   "begin program arguments",
