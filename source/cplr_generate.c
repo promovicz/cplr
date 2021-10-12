@@ -174,7 +174,8 @@ static ssize_t code_stream_write(void *cp, const char *buf, size_t size) {
   size_t nl = ol + size + 1;
   char *n = xrealloc(c->g_codebuf, nl);
   c->g_codebuf = n;
-  strncpy(n + ol, buf, size + 1);
+  strncpy(n + ol, buf, size);
+  (n+ol)[size] = 0;
   return size;
 }
 static cookie_io_functions_t code_stream_functions = {
@@ -188,7 +189,8 @@ static ssize_t dump_stream_write(void *cp, const char *buf, size_t size) {
   size_t nl = ol + size + 1;
   char *n = xrealloc(c->g_dumpbuf, nl);
   c->g_dumpbuf = n;
-  strncpy(n + ol, buf, size + 1);
+  strncpy(n + ol, buf, size);
+  (n+ol)[size] = 0;
   return size;
 }
 static cookie_io_functions_t dump_stream_functions = {
