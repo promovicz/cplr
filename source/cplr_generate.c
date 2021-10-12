@@ -241,12 +241,12 @@ static void cplr_generate_dump(cplr_t *c) {
     while(done < total) {
       size_t step = total - done;
       if(step > sizeof(buf)) {
-	step = sizeof(buf);
+        step = sizeof(buf);
       }
       size_t n = fwrite(buf + done, 1, step, dumpout);
       if(n < step) {
-	perror("fwrite");
-	exit(1);
+        perror("fwrite");
+        exit(1);
       }
       done += n;
     }
