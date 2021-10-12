@@ -10,5 +10,4 @@
 ================================================================================
 Compiler condition:
 main_0:1: warning: implicit declaration of function 'puts'
-Compilation succeeded.
 Hello.
