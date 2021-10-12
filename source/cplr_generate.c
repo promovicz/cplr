@@ -216,9 +216,11 @@ static void cplr_generate_open(cplr_t *c) {
 }
 
 static void cplr_generate_close(cplr_t *c) {
-  fflush(c->g_code);
-  fclose(c->g_code);
-  c->g_code = NULL;
+  if(c->g_code) {
+    fflush(c->g_code);
+    fclose(c->g_code);
+    c->g_code = NULL;
+  }
   if(c->g_dump) {
     fflush(c->g_dump);
     fclose(c->g_dump);
