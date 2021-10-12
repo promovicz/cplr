@@ -21,6 +21,10 @@
 
 int cplr_execute(cplr_t *c) {
   int i, ret;
+  /* report status */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Execution phase\n");
+  }
   /* copy arguments */
   int argc = 1 + (c->argc - c->argp);
   char **argv = xcalloc(sizeof(char*), argc+1);
@@ -32,5 +36,9 @@ int cplr_execute(cplr_t *c) {
   ret = tcc_run(c->tcc, argc, argv);
   /* free arguments */
   xfree(argv);
+  /* report progress */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Execution finished (ret=%d).\n", ret);
+  }
   return ret;
 }

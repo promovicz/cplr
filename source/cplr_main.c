@@ -75,11 +75,6 @@ int main(int argc, char **argv) {
     goto done;
   }
 
-  /* report success */
-  if(c->flag & (CPLR_FLAG_DUMP | CPLR_FLAG_VERBOSE)) {
-    fprintf(stderr, "Compilation succeeded.\n");
-  }
-
   /* execute code */
   if(!(c->flag & CPLR_FLAG_NORUN)) {
     /* perform execution */
@@ -88,11 +83,6 @@ int main(int argc, char **argv) {
       ret = 1;
       goto done;
     }
-  }
-
-  /* report success */
-  if(c->flag & (CPLR_FLAG_VERBOSE)) {
-    fprintf(stderr, "Execution succeeded.\n");
   }
 
   /* overall success */

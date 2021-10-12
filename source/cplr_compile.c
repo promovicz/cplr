@@ -20,7 +20,11 @@
 #include "cplr.h"
 
 int cplr_compile(cplr_t *c) {
-
+  /* report status */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Compilation phase\n");
+  }
+  /* compile the code */
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
   }
@@ -31,5 +35,10 @@ int cplr_compile(cplr_t *c) {
       return 1;
     }
   }
+  /* report success */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Compilation succeeded\n");
+  }
+  /* done */
   return 0;
 }
