@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
 
   /* execute code */
   if(!(c->flag & CPLR_FLAG_NORUN)) {
+    /* perform execution */
     ret = cplr_execute(c);
     if(ret) {
       ret = 1;

@@ -64,7 +64,7 @@ typedef struct cplr {
   /* first program argument */
   int    argp;
 
-    /* flags */
+  /* flags */
   cplr_flag_t flag;
   /* target environment (posix, linux...) */
   cplr_env_t t_env;

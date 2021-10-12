@@ -264,7 +264,7 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       l_append_str_static(&c->srcs, optarg);
       break;
 
-      /* program arguments */
+      /* start of program arguments */
     case '-':
       goto done;
 
