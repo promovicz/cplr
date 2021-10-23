@@ -145,6 +145,10 @@ ATTR_ARG_NONNULL(1)
 extern void value_clear(value_t *vp);
 
 ATTR_ARG_NONNULL(1)
+ATTR_ARG_NONNULL(2)
+extern void value_clone(value_t *vsrc, value_t *vdst);
+
+ATTR_ARG_NONNULL(1)
 static inline bool value_has_type(value_t *vp, vtype_t vt) {
   return ((vp->type & VTEQ_MASK) == (vt & VTEQ_MASK));
 }

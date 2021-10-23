@@ -31,6 +31,20 @@ void value_clear(value_t *vp) {
   memset(vp, 0, sizeof(value_t));
 }
 
+ATTR_ARG_NONNULL(1)
+ATTR_ARG_NONNULL(2)
+void value_clone(value_t *vsrc, value_t *vdst) {
+  memcpy(vdst, vsrc, sizeof(value_t));
+  if(value_has_type(vdst, VT_STRING)) {
+    vdst->str = strdup(vsrc->str);
+    vdst->type |= VTM_OWNED;
+  } else if(vdst->type & VTF_POINTER) {
+    if(vdst->type & VTM_OWNED) {
+      xaborts("Cloning owned raw pointer");
+    }
+  }
+}
+
 VALUE_SIMPLE_DEFINE_SETTER(bool, bool, b, VT_BOOL);
 VALUE_SIMPLE_DEFINE_SETTER(char, char, c, VT_CHAR);
 VALUE_SIMPLE_DEFINE_SETTER(short, short, s, VT_SHORT);
