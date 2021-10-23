@@ -29,8 +29,8 @@ void *xmalloc(size_t s) {
 ATTR_FUN_MALLOC
 ATTR_FUN_RETURNS_NONNULL
 ATTR_ARG_ALLOC_SIZE(1, 2)
-void *xcalloc(size_t s, size_t n) {
-  X_VOIDPTR_NOTNULL(calloc, "Allocation of %zu objects of size %zu failed", s, n);
+void *xcalloc(size_t n, size_t s) {
+  X_VOIDPTR_NOTNULL(calloc, "Allocation of %zu objects of size %zu failed", n, s);
 }
 
 ATTR_ARG_NONNULL(1)

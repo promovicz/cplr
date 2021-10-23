@@ -59,14 +59,14 @@ void l_append(lh_t *lh, ln_t *n) {
 
 ATTR_ARG_NONNULL(1,2)
 void l_append_str(lh_t *lh, char *s) {
-  ln_t *n = xcalloc(sizeof(ln_t), 1);
+  ln_t *n = xcalloc(1, sizeof(ln_t));
   value_set_str(&n->v, s);
   l_append(lh, n);
 }
 
 ATTR_ARG_NONNULL(1,2)
 void l_append_str_owned(lh_t *lh, char *s) {
-  ln_t *n = xcalloc(sizeof(ln_t), 1);
+  ln_t *n = xcalloc(1, sizeof(ln_t));
   value_set_str_owned(&n->v, s);
   l_append(lh, n);
 }

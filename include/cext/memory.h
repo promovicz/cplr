@@ -40,7 +40,7 @@ extern void *xmalloc(size_t s);
 ATTR_FUN_MALLOC
 ATTR_FUN_RETURNS_NONNULL
 ATTR_ARG_ALLOC_SIZE(1, 2)
-extern void *xcalloc(size_t s, size_t n);
+extern void *xcalloc(size_t n, size_t s);
 
 ATTR_ARG_NONNULL(1)
 ATTR_FUN_RETURNS_NONNULL
