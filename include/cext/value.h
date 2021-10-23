@@ -145,8 +145,13 @@ ATTR_ARG_NONNULL(1)
 extern void value_clear(value_t *vp);
 
 ATTR_ARG_NONNULL(1)
+static inline bool value_has_type(value_t *vp, vtype_t vt) {
+  return ((vp->type & VTEQ_MASK) == (vt & VTEQ_MASK));
+}
+
+ATTR_ARG_NONNULL(1)
 static inline void value_assert_type(value_t *vp, vtype_t vt) {
-  if((vp->type & VTEQ_MASK) != (vt & VTEQ_MASK)) {
+  if(!value_has_type(vp, vt)) {
     xabortf("Value type error: expected XXX got YYY\n");
   }
 }
