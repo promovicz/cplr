@@ -56,8 +56,11 @@ typedef enum {
    CPLR_GSTATE_STATEMENT = 5,
 } cplr_gstate_t;
 
+struct cplr;
+typedef struct cplr cplr_t;
+
 /* main state structure */
-typedef struct cplr {
+struct cplr {
   /* all arguments */
   int    argc;
   char **argv;
@@ -102,7 +105,7 @@ typedef struct cplr {
   lh_t stms;
   lh_t befs;
   lh_t afts;
-} cplr_t;
+};
 
 extern cplr_t *cplr_new(void);
 extern void cplr_free(cplr_t *c);
