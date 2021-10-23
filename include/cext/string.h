@@ -25,6 +25,8 @@
 
 #include "attr.h"
 
+extern char *xstrdup(char *s);
+
 ATTR_FUN_FORMAT(printf, 2, 0)
 ATTR_ARG_FORMAT(2)
 extern char *vmsnprintf(size_t limit, const char *fmt, va_list a);
