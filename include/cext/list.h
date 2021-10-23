@@ -67,6 +67,10 @@ static inline size_t l_size(lh_t *lh) {
 ATTR_ARG_NONNULL(1)
 extern void l_clear(lh_t *lh);
 
+/* clone a list */
+ATTR_ARG_NONNULL(1)
+void l_clone(lh_t *lsrc, lh_t *ldst);
+
 /* append a node to a list */
 ATTR_ARG_NONNULL(1,2)
 extern void l_append(lh_t *lh, ln_t *n);

@@ -38,6 +38,37 @@ void l_clear(lh_t *lh) {
   lh->l = NULL;
 }
 
+ATTR_ARG_NONNULL(1)
+void l_clone(lh_t *lsrc, lh_t *ldst) {
+  ln_t *nsrc, *ndst = NULL, *fdst = NULL, *pdst;
+  /* copy nodes */
+  nsrc = lsrc->f;
+  while(nsrc) {
+    /* determine the previous node */
+    pdst = ndst;
+    /* alloc new node */
+    ndst = xcalloc(1, sizeof(ln_t));
+    /* initialize the node */
+    ndst->h = ldst;
+    ndst->p = pdst;
+    /* capture the first node */
+    if(!fdst) {
+      fdst = ndst;
+    }
+    /* patch the previous node */
+    if(pdst) {
+      pdst->n = ndst;
+    }
+    /* clone the value */
+    value_clone(&nsrc->v, &ndst->v);
+    /* next node */
+    nsrc = nsrc->n;
+  }
+  /* initialize the head */
+  ldst->c = lsrc->c;
+  ldst->f = fdst;
+  ldst->l = ndst;
+}
 
 ATTR_ARG_NONNULL(1,2)
 void l_append(lh_t *lh, ln_t *n) {
