@@ -198,6 +198,7 @@ VALUE_SIMPLE_INLINE_GETTER(ssize, ssize_t, ssz, VT_SSIZE);
 #define VALUE_SIMPLE_DECLARE_SETTER(_name, _type)	\
   ATTR_ARG_NONNULL(1)					\
   void value_set_##_name(value_t *vp, _type v);
+
 #define VALUE_SIMPLE_DEFINE_SETTER(_name, _type, _field, _vtype)	\
   ATTR_ARG_NONNULL(1)							\
   void value_set_##_name(value_t *vp, _type v) {			\
@@ -239,6 +240,7 @@ VALUE_SIMPLE_DECLARE_SETTER(ssize, ssize_t);
   _type *value_get_##_name(value_t *vp);			\
   ATTR_ARG_NONNULL(1)						\
   _type *value_ref_##_name(value_t *vp);
+
 #define VALUE_POINTER_DEFINE_GETTERS(_name, _type, _field, _vtype, _ref) \
   ATTR_FUN_PURE							\
   ATTR_ARG_NONNULL(1)							\
