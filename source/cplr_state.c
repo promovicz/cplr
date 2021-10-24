@@ -54,3 +54,31 @@ void cplr_free(cplr_t *c) {
   l_clear(&c->afts);
   xfree(c);
 }
+
+cplr_t *cplr_clone(cplr_t *c) {
+  cplr_t *r = cplr_new();
+  r->argc = c->argc;
+  r->argv = c->argv;
+  r->argp = c->argp;
+  r->flag = c->flag;
+  r->t_env = c->t_env;
+  r->out = NULL;
+  r->g_codebuf = NULL;
+  r->g_dumpbuf = NULL;
+  l_clone(&c->defdef, &r->defdef);
+  l_clone(&c->defsys, &r->defsys);
+  l_clone(&c->sysdirs, &r->sysdirs);
+  l_clone(&c->incdirs, &r->incdirs);
+  l_clone(&c->libdirs, &r->libdirs);
+  l_clone(&c->defs, &r->defs);
+  l_clone(&c->syss, &r->syss);
+  l_clone(&c->incs, &r->incs);
+  l_clone(&c->libs, &r->libs);
+  l_clone(&c->pkgs, &r->pkgs);
+  l_clone(&c->srcs, &r->srcs);
+  l_clone(&c->tlfs, &r->tlfs);
+  l_clone(&c->stms, &r->stms);
+  l_clone(&c->befs, &r->befs);
+  l_clone(&c->afts, &r->afts);
+  return r;
+}
