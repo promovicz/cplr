@@ -20,8 +20,14 @@
 #include "cplr.h"
 
 static void cplr_tcc_error(cplr_t *c, const char *msg) {
-  fprintf(stderr, "Compiler condition:\n%s\n", msg);
-  /* TODO split and indent */
+  char *clone = strdup(msg);
+  char *cur, *save;
+  fprintf(stderr, "Compiler condition:\n");
+  cur = strtok_r(clone, "\n", &save);
+  do {
+    fprintf(stderr, "  %s\n", cur);
+  } while((cur = strtok_r(NULL, "\n", &save)));
+  free(clone);
 }
 
 int cplr_prepare(cplr_t *c) {
