@@ -35,6 +35,11 @@ int cplr_prepare(cplr_t *c) {
   ln_t *i;
   TCCState *t;
 
+  /* say hello */
+  if(c->flag & CPLR_FLAG_VERBOSE) {
+    fprintf(stderr, "Preparation phase\n");
+  }
+
   /* new compiler */
   t = tcc_new();
   if(!t) {
