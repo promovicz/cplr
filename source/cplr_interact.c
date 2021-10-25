@@ -27,6 +27,7 @@ cplr_t *cplr_interact(cplr_t *c) {
   char *line;
   char *prompt = "> ";
 
+  l_clear(&c->srcs);
   l_clear(&c->tlfs);
   l_clear(&c->stms);
   l_clear(&c->befs);
