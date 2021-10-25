@@ -53,6 +53,7 @@ int cplr_prepare(cplr_t *c) {
   /* basic options */
   tcc_set_options(t, "-Wall");
   tcc_set_options(t, "-bt");
+  tcc_set_options(t, "-I.");
 
   /* set output type */
   if(c->out == NULL) {
