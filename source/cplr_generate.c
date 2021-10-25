@@ -152,7 +152,7 @@ static int cplr_generate_code(cplr_t *c) {
 			  false, "    %s;\n");
   }
   if(!l_empty(&c->stms)) {
-    cplr_generate_section(c, "main", &c->stms,
+    cplr_generate_section(c, "statements", &c->stms,
 			  false, "    %s;\n");
   }
   if(!l_empty(&c->afts)) {
@@ -162,6 +162,7 @@ static int cplr_generate_code(cplr_t *c) {
   CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
   CPLR_EMIT_INTERNAL(c, "}\n");
+
   return 0;
 }
 
