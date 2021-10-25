@@ -43,11 +43,6 @@ cplr_t *cplr_interact(cplr_t *c) {
 
     add_history(line);
 
-    if(line[0] == '.') {
-      l_append_str_owned(&new->tlfs, strdup(line+1));
-      break;
-    }
-
     if(line[0] == '^') {
       l_append_str_owned(&new->tlfs, strdup(line+1));
       continue;
@@ -58,6 +53,10 @@ cplr_t *cplr_interact(cplr_t *c) {
     }
     if(line[0] == '>') {
       l_append_str_owned(&new->afts, strdup(line+1));
+      continue;
+    }
+    if(line[0] == '.') {
+      l_append_str_owned(&new->stms, strdup(line+1));
       continue;
     }
 
