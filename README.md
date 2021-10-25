@@ -202,6 +202,46 @@ This sure needs some documentation and maybe some small additional features.
 
 Happy hacking!
 
+### Simple examples
+
+Imagine you want to try something using readline:
+
+```
+$ bin/cplr -lreadline -ireadline/readline.h 'printf("Input: %s\n", readline("& "))'
+& hello
+Input: hello
+```
+
+You can also run simple libraries straight from source:
+
+```
+$ bin/cplr -f linenoise.c -i linenoise.h
+> puts(linenoise("% "))
+% hello
+hello
+>
+```
+
+Another good use is getting low-level information:
+
+```
+$ bin/cplr 'printf("sizeof(struct stat) = %u\n", sizeof(struct stat))'
+sizeof(struct stat) = 144
+```
+
+You can also smash together a quick executable:
+
+```
+$ bin/cplr -o realpath \
+  'char *res' \
+  'if(argc != 2) { printf("Usage: %s <path>\n", argv[0]); return 1; }' \
+  'res = realpath(argv[1], NULL)' \
+  'if(!res) { fprintf(stderr, "error: %s\n", strerror(errno)); return 1; }' \
+  'puts(res)' 'free(res)'
+$ ./realpath /bin/ls
+/usr/bin/ls
+```
+
 ### Examples using Python
 
 You can do all sorts of things with cplr:
@@ -292,4 +332,23 @@ $ bin/cplr -P gtk+-3.0 -i gtk/gtk.h \
    'gtk_main()' \
    -p "$@"
 \<app exits when window is closed\>
+```
+
+### Examples using Tcl
+
+```
+$ c -Ptcl -itcl/tcl.h \
+   'int i, res' \
+   'Tcl_Interp *interp' \
+   'Tcl_FindExecutable(argv[0])' \
+   'if(!(interp = Tcl_CreateInterp())) abort()' \
+   'if(Tcl_Init(interp) != TCL_OK) abort()' \
+   'for(i = 1; i < argc; i++) { printf("> %s\n", argv[i]); if(Tcl_Eval(interp, argv[i]) != TCL_OK) abort(); }' \
+   'Tcl_DeleteInterp(interp)' \
+   'Tcl_Finalize()' \
+   -- 'set a 123' 'puts $a'
+> set a 123
+> puts $a
+123
+$
 ```
