@@ -76,6 +76,9 @@ struct cplr {
   /* output filename (memory if NULL) */
   char *out;
 
+  /* previous instance in loop mode */
+  cplr_t *prev;
+
   /* compiler state */
   TCCState *tcc;
 
@@ -119,6 +122,7 @@ extern int cplr_prepare(cplr_t *c);
 extern int cplr_generate(cplr_t *c);
 extern int cplr_compile(cplr_t *c);
 extern int cplr_execute(cplr_t *c);
+extern cplr_t *cplr_interact(cplr_t *c);
 
 extern int cplr_prepare_package(cplr_t *c, const char *name);
 extern int cplr_add_package(cplr_t *c, const char *name, const char *args);

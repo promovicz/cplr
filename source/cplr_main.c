@@ -30,6 +30,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #include "cplr.h"
 
@@ -57,37 +58,79 @@ int main(int argc, char **argv) {
     }
   }
 
-  /* prepare compilation */
-  if(cplr_prepare(c)) {
-    fprintf(stderr, "Error: Prepare failed.\n");
-    goto done;
+  /* switch to interactive when no statement and on a tty */
+  if(l_empty(&c->stms) && (isatty(0) == 1) && (isatty(1) == 1)) {
+    c->flag |= CPLR_FLAG_INTERACTIVE;
+    c->flag |= CPLR_FLAG_LOOP;
   }
 
-  /* generate code */
-  if(cplr_generate(c)) {
-    fprintf(stderr, "Error: Code generation failed.\n");
-    goto done;
-  }
+  /* main loop */
+  do {
+    /* assume failure */
+    ret = 1;
 
-  /* perform compilation */
-  if(cplr_compile(c)) {
-    fprintf(stderr, "Error: Compilation failed.\n");
-    goto done;
-  }
-
-  /* execute code */
-  if(!(c->flag & CPLR_FLAG_NORUN)) {
-    /* perform execution */
-    ret = cplr_execute(c);
-    if(ret) {
-      ret = 1;
-      goto done;
+    /* prepare compilation */
+    if(cplr_prepare(c)) {
+      fprintf(stderr, "Error: Prepare failed.\n");
+      goto stepback;
     }
-  }
 
-  /* overall success */
-  ret = 0;
+    /* generate code */
+    if(cplr_generate(c)) {
+      fprintf(stderr, "Error: Code generation failed.\n");
+      goto stepback;
+    }
 
+    /* perform compilation */
+    if(cplr_compile(c)) {
+      fprintf(stderr, "Error: Compilation failed.\n");
+      goto stepback;
+    }
+
+    /* execute code */
+    if(!(c->flag & CPLR_FLAG_NORUN)) {
+      /* perform execution */
+      ret = cplr_execute(c);
+      if(ret) {
+	if(c->flag & CPLR_FLAG_INTERACTIVE) {
+	  fprintf(stderr, "Program returned %d.\n", ret);
+	}
+	/* preserving ret */
+	goto next;
+      }
+    }
+
+    /* run has succeeded */
+    ret = 0;
+
+    goto next;
+
+  stepback:
+    /* XXX temporary fix for symbol chaining until we implement symbol search !?°^%& */
+    if(c->prev) {
+      c = c->prev;
+    }
+
+  next:
+
+    if(c->flag & CPLR_FLAG_INTERACTIVE) {
+      /* start interacting after initial run */
+      cplr_t *new = cplr_interact(c);
+      if(!new) {
+	goto done;
+      }
+      c = new;
+    } else {
+      /* in non-interactive mode errors are terminal */
+      if(ret) {
+	goto done;
+      }
+    }
+
+    /* fall through to next iteration */
+  } while(c->flag & CPLR_FLAG_LOOP);
+
+  /* we get here when execution is finished */
  done:
 
   /* clean up */
