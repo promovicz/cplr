@@ -24,7 +24,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpD:U:I:i:S:s:L:l:P:e:b:a:t:o:f:-";
+const char *shortopts = "-:hHVvdnpyD:U:I:i:S:s:L:l:P:e:b:a:t:o:f:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -34,10 +34,11 @@ const struct option longopts[] = {
   {"herald",   0, NULL, 'H'},
   {"version",  0, NULL, 'V'},
 
-  {"verbose",  0, NULL, 'v'},
-  {"dump",     0, NULL, 'd'},
-  {"noexec",   0, NULL, 'n'},
-  {"pristine", 0, NULL, 'p'},
+  {"verbose",     0, NULL, 'v'},
+  {"dump",        0, NULL, 'd'},
+  {"noexec",      0, NULL, 'n'},
+  {"pristine",    0, NULL, 'p'},
+  {"interactive", 0, NULL, 'y'},
 
   {NULL,    1, NULL, 'D'},
   {NULL,    1, NULL, 'U'},
@@ -73,6 +74,7 @@ const char *longhelp[] = {
   "dump generated code",
   "do not run, just compile",
   "use pristine environment",
+  "run compiler shell",
 
   "define cpp symbol",
   "undefine cpp symbol",
@@ -204,6 +206,9 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
     case 'p': /* enable pristine */
       c->flag |= CPLR_FLAG_PRISTINE;
+      break;
+    case 'y': /* enable interactive */
+      c->flag |= CPLR_FLAG_INTERACTIVE;
       break;
 
       /* preprocessor */
