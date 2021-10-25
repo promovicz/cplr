@@ -45,8 +45,6 @@ int cplr_prepare(cplr_t *c) {
   if(!t) {
     fprintf(stderr, "Failed to create compiler instance\n");
   }
-
-  /* remember the compiler */
   c->tcc = t;
 
   /* error handling */
