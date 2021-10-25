@@ -19,6 +19,31 @@
 
 #include "cplr.h"
 
+static bool hassuffix(const char *str, const char *suf)
+{
+  if (!str || !suf)
+    return 0;
+  size_t lenstr = strlen(str);
+  size_t lensuf = strlen(suf);
+  if (lensuf >  lenstr)
+    return 0;
+  return strncmp(str + lenstr - lensuf, suf, lensuf) == 0;
+}
+
+static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
+  cplr_t *c = (cplr_t *)ctx;
+  if(name[0] == '_') {
+    return;
+  }
+  if(strcmp(name, "main") == 0) {
+    return;
+  }
+  if(hassuffix(name, "@plt")) {
+    return;
+  }
+  tcc_add_symbol(c->tcc, name, val);
+}
+
 int cplr_compile(cplr_t *c) {
   /* report status */
   if(c->flag & CPLR_FLAG_VERBOSE) {
@@ -27,6 +52,10 @@ int cplr_compile(cplr_t *c) {
   /* compile the code */
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
+  }
+  /* redefine symbols */
+  if(c->prev && c->prev->tcc) {
+    tcc_list_symbols(c->prev->tcc, c, &cplr_redefsym_cb);
   }
   /* produce output if requested */
   if(c->out != NULL) {
