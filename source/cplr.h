@@ -57,6 +57,7 @@ typedef enum {
    CPLR_GSTATE_STATEMENT = 5,
 } cplr_gstate_t;
 
+/* forward declarations */
 struct cplr;
 typedef struct cplr cplr_t;
 
