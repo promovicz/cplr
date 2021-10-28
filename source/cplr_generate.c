@@ -59,7 +59,7 @@ static void cplr_emit(cplr_t *c,
   }
 
   if(c->g_dump) {
-    if(needline && (c->flag & CPLR_FLAG_VERBOSE))
+    if(needline && (c->verbosity >= 2))
       fwrite(sline, 1, strlen(sline), c->g_dump);
     fwrite(sfmt, 1, strlen(sfmt), c->g_dump);
   }

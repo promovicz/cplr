@@ -34,7 +34,6 @@
 typedef enum {
    CPLR_FLAG_DUMP = (1 << 1),
    CPLR_FLAG_NORUN = (1 << 2),
-   CPLR_FLAG_VERBOSE = (1 << 3),
    CPLR_FLAG_PRISTINE = (1 << 4),
    CPLR_FLAG_LOOP = (1 << 5),
    CPLR_FLAG_INTERACTIVE = (1 << 6),

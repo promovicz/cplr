@@ -196,7 +196,6 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
 
       /* flags */
     case 'v': /* enable verbose */
-      c->flag |= CPLR_FLAG_VERBOSE;
       c->verbosity++;
       break;
     case 'd': /* enable dump */
