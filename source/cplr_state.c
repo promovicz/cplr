@@ -62,6 +62,7 @@ cplr_t *cplr_clone(cplr_t *c) {
   r->argp = c->argp;
   r->flag = c->flag;
   r->t_env = c->t_env;
+  r->verbosity = c->verbosity;
   r->out = NULL;
   r->g_codebuf = NULL;
   r->g_dumpbuf = NULL;
