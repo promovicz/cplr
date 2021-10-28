@@ -77,8 +77,12 @@ struct cplr {
   /* output filename (memory if NULL) */
   char *out;
 
+  /* index of this state in loop mode */
+  int lindex;
   /* previous instance in loop mode */
-  cplr_t *prev;
+  cplr_t *lprev;
+  /* next instance in loop mode */
+  cplr_t *lnext;
 
   /* compiler state */
   TCCState *tcc;

@@ -34,7 +34,11 @@ cplr_t *cplr_interact(cplr_t *c) {
   l_clear(&c->afts);
 
   new = cplr_clone(c);
-  new->prev = c;
+
+  /* chain the states */
+  c->lnext = new;
+  new->lindex = c->lindex + 1;
+  new->lprev = c;
 
   while((line = readline(prompt))) {
     if(!strlen(line)) {

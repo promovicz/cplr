@@ -54,11 +54,11 @@ int cplr_compile(cplr_t *c) {
     return 1;
   }
   /* redefine symbols */
-  if(c->prev && c->prev->tcc) {
+  if(c->lprev && c->lprev->tcc) {
     if(c->verbosity >= 2) {
       fprintf(stderr, "Redefining symbols\n");
     }
-    tcc_list_symbols(c->prev->tcc, c, &cplr_redefsym_cb);
+    tcc_list_symbols(c->lprev->tcc, c, &cplr_redefsym_cb);
   }
   /* produce output if requested */
   if(c->out != NULL) {

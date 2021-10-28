@@ -107,8 +107,8 @@ int main(int argc, char **argv) {
 
   stepback:
     /* XXX temporary fix for symbol chaining until we implement symbol search !?°^%& */
-    if(c->prev) {
-      c = c->prev;
+    if(c->lprev) {
+      c = c->lprev;
     }
 
   next:
