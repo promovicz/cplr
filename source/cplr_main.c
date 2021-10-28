@@ -92,11 +92,11 @@ int main(int argc, char **argv) {
       /* perform execution */
       ret = cplr_execute(c);
       if(ret) {
-	if(c->flag & CPLR_FLAG_INTERACTIVE) {
-	  fprintf(stderr, "Program returned %d.\n", ret);
-	}
-	/* preserving ret */
-	goto next;
+        if(c->flag & CPLR_FLAG_INTERACTIVE) {
+          fprintf(stderr, "Program returned %d.\n", ret);
+        }
+        /* preserving ret */
+        goto next;
       }
     }
 
@@ -117,13 +117,14 @@ int main(int argc, char **argv) {
       /* start interacting after initial run */
       cplr_t *new = cplr_interact(c);
       if(!new) {
-	goto done;
+        fprintf(stderr, "\n");
+        goto done;
       }
       c = new;
     } else {
       /* in non-interactive mode errors are terminal */
       if(ret) {
-	goto done;
+        goto done;
       }
     }
 

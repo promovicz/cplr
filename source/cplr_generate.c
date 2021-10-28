@@ -28,9 +28,9 @@ static const char *bar =
   "========================================";
 
 static void cplr_emit(cplr_t *c,
-		      cplr_gstate_t nstate,
-		      const char * file, int line,
-		      const char *fmt, ...) {
+                      cplr_gstate_t nstate,
+                      const char * file, int line,
+                      const char *fmt, ...) {
   bool needline = false;
   char *sline, *sfmt;
   va_list a;
@@ -78,27 +78,27 @@ static void cplr_emit(cplr_t *c,
   }
 }
 
-#define CPLR_EMIT_COMMENT(c, fmt, ...)			\
-  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,		\
-	    1, "/* " fmt " */\n", ##__VA_ARGS__)
-#define CPLR_EMIT_PREPROC(c, fn, fmt, ...)		\
-  cplr_emit(c, CPLR_GSTATE_PREPROC, fn,			\
-	    1, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...)     \
-  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,	\
-	    1, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_INTERNAL(c, fmt, ...)			\
-  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal",	\
-	    __LINE__, fmt, ##__VA_ARGS__)
-#define CPLR_EMIT_STATEMENT(c, fn, fmt, ...)    \
-  cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,       \
-	    1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_COMMENT(c, fmt, ...)          \
+  cplr_emit(c, CPLR_GSTATE_COMMENT, NULL,       \
+            1, "/* " fmt " */\n", ##__VA_ARGS__)
+#define CPLR_EMIT_PREPROC(c, fn, fmt, ...) \
+  cplr_emit(c, CPLR_GSTATE_PREPROC, fn,    \
+            1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_TOPLEVEL(c, fn, fmt, ...) \
+  cplr_emit(c, CPLR_GSTATE_TOPLEVEL, fn,    \
+            1, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_INTERNAL(c, fmt, ...)          \
+  cplr_emit(c, CPLR_GSTATE_INTERNAL, "internal", \
+            __LINE__, fmt, ##__VA_ARGS__)
+#define CPLR_EMIT_STATEMENT(c, fn, fmt, ...) \
+  cplr_emit(c, CPLR_GSTATE_STATEMENT, fn,    \
+            1, fmt, ##__VA_ARGS__)
 
 static void cplr_generate_section(cplr_t *c,
-				  const char *name,
-				  lh_t *list,
-				  bool reverse,
-				  const char *fmt) {
+                                  const char *name,
+                                  lh_t *list,
+                                  bool reverse,
+                                  const char *fmt) {
   int i;
   ln_t *n;
   char fn[64];
@@ -128,20 +128,20 @@ static int cplr_generate_code(cplr_t *c) {
   /* includes */
   if(!l_empty(&c->defsys)) {
     cplr_generate_section(c, "defsysinclude", &c->defsys,
-			  false, "#include <%s>\n");
+                          false, "#include <%s>\n");
   }
   if(!l_empty(&c->syss)) {
     cplr_generate_section(c, "sysinclude", &c->syss,
-			  false, "#include <%s>\n");
+                          false, "#include <%s>\n");
   }
   if(!l_empty(&c->incs)) {
     cplr_generate_section(c, "include", &c->incs,
-			  false, "#include <%s>\n");
+                          false, "#include <%s>\n");
   }
   /* toplevel statements */
   if(!l_empty(&c->tlfs)) {
     cplr_generate_section(c, "toplevel", &c->tlfs,
-			  false, "%s;\n");
+                          false, "%s;\n");
   }
   /* main function */
   CPLR_EMIT_COMMENT(c, "main");
@@ -149,15 +149,15 @@ static int cplr_generate_code(cplr_t *c) {
   CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
   if(!l_empty(&c->befs)) {
     cplr_generate_section(c, "before", &c->befs,
-			  false, "    %s;\n");
+                          false, "    %s;\n");
   }
   if(!l_empty(&c->stms)) {
     cplr_generate_section(c, "statements", &c->stms,
-			  false, "    %s;\n");
+                          false, "    %s;\n");
   }
   if(!l_empty(&c->afts)) {
     cplr_generate_section(c, "after", &c->afts,
-			  true, "    %s;\n");
+                          true, "    %s;\n");
   }
   CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "    return ret;\n");
