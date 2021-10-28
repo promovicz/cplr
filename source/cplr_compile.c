@@ -55,7 +55,7 @@ int cplr_compile(cplr_t *c) {
   }
   /* redefine symbols */
   if(c->lprev && c->lprev->tcc) {
-    if(c->verbosity >= 2) {
+    if(c->verbosity >= 3) {
       fprintf(stderr, "Redefining symbols\n");
     }
     tcc_list_symbols(c->lprev->tcc, c, &cplr_redefsym_cb);
