@@ -32,7 +32,7 @@ static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
   if(strcmp(name, "exit") == 0) {
     return;
   }
-  if(strcmp(name, "tcc_backtrace") == 0) {
+  if(strprefix(name, "tcc_")) {
     return;
   }
   if(strsuffix(name, "@plt")) {
