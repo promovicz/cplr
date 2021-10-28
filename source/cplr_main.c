@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <readline/history.h>
 
 #include "cplr.h"
 
@@ -62,6 +63,11 @@ int main(int argc, char **argv) {
   if(l_empty(&c->stms) && (isatty(0) == 1) && (isatty(1) == 1)) {
     c->flag |= CPLR_FLAG_INTERACTIVE;
     c->flag |= CPLR_FLAG_LOOP;
+    /* read history */
+    if(c->verbosity >= 2) {
+      fprintf(stderr, "Reading history\n");
+    }
+    read_history(realpath("~/.cplr_history", NULL));
   }
 
   /* main loop */
@@ -133,6 +139,12 @@ int main(int argc, char **argv) {
 
   /* we get here when execution is finished */
  done:
+
+  /* save history */
+  if(c->verbosity >= 2) {
+    fprintf(stderr, "Writing history\n");
+  }
+  write_history(realpath("~/.cplr_history", NULL));
 
   /* clean up */
   cplr_free(c);
