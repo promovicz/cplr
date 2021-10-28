@@ -72,10 +72,11 @@ struct cplr {
   /* output filename (memory if NULL) */
   char *out;
 
-  /* all arguments */
+  /* complete argument count */
   int    argc;
+  /* complete argument vector */
   char **argv;
-  /* first program argument */
+  /* index of first program argument */
   int    argp;
 
   /* index of this state in loop mode */
