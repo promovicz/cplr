@@ -231,6 +231,15 @@ static void cplr_generate_close(cplr_t *c) {
   }
 }
 
+static void cplr_generate_free(cplr_t *c) {
+  if(c->g_codebuf) {
+    xptrfree((void**)&c->g_codebuf);
+  }
+  if(c->g_dumpbuf) {
+    xptrfree((void**)&c->g_dumpbuf);
+  }
+}
+
 static void cplr_generate_dump(cplr_t *c) {
   const char *filter = getenv("CPLR_DUMP_FILTER");
   if(!filter) {
@@ -283,6 +292,10 @@ int cplr_generate(cplr_t *c) {
   if(c->verbosity >= 1) {
     fprintf(stderr, "Generation phase\n");
   }
+  /* close any previous streams */
+  cplr_generate_close(c);
+  /* free previous buffers */
+  cplr_generate_free(c);
   /* alloc buffers and open streams */
   cplr_generate_open(c);
   /* perform code generation */
