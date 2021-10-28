@@ -22,57 +22,307 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef int (*command_cb_t)(cplr_t *c, int argc, char **argv);
+
+struct command {
+  char *name;
+  char *help;
+  command_cb_t handler;
+};
+
+typedef struct command command_t;
+
+static void print_help(void);
+static int cmd_help(cplr_t *c, int argc, char **argv);
+static int cmd_hist(cplr_t *c, int argc, char **argv);
+static int cmd_code(cplr_t *c, int argc, char **argv);
+static int cmd_dump(cplr_t *c, int argc, char **argv);
+static int cmd_stat(cplr_t *c, int argc, char **argv);
+static int cmd_syms(cplr_t *c, int argc, char **argv);
+
+static command_t commands[] = {
+{ "help", "Show help", cmd_help },
+{ "hist", "Show history", cmd_hist },
+{ "code", "Show current code", cmd_code },
+{ "dump", "Show current output", cmd_dump },
+{ "stat", "Show current status", cmd_stat },
+{ "syms", "Show symbol table", cmd_syms },
+#if 0
+{ "prev", "Switch to previous piler", cmd_prev },
+{ "next", "Switch to next piler", cmd_next },
+#endif
+{ NULL, NULL, NULL },
+};
+
+static void print_help(void) {
+  command_t *ci;
+
+  /* title */
+  fprintf(stderr, "\n");
+
+  /* line types */
+  fprintf(stderr, "Line types: \n\n");
+  fprintf(stderr, "  STM   Run statement\n");
+  fprintf(stderr, "  :CMD  Run command\n");
+  fprintf(stderr, "  .STM  Push statement\n");
+  fprintf(stderr, "  ^STM  Push top statement\n");
+  fprintf(stderr, "  <STM  Push before statement\n");
+  fprintf(stderr, "  >STM  Push after statement\n");
+  fprintf(stderr, "  #CPP  Push CPP line\n");
+  /* fprintf(stderr, "  ?     Show help\n"); */
+  fprintf(stderr, "\n");
+
+  /* command summary */
+  fprintf(stderr, "Commands: \n\n");
+  ci = &commands[0];
+  while(ci->name) {
+    fprintf(stderr, "  :%-8s %s\n", ci->name, ci->help);
+    ci++;
+  }
+  fprintf(stderr, "\n");
+}
+
+static int cmd_help(cplr_t *c, int argc, char **argv) {
+  print_help();
+  return 0;
+}
+
+static int cmd_hist(cplr_t *c, int argc, char **argv) {
+  printf("History\n");
+  return 0;
+}
+
+static void print_section(cplr_t *c, const char *name, lh_t *list) {
+  int i;
+  ln_t *n;
+
+  if(l_empty(list)) {
+    return;
+  }
+
+  i = 0;
+  L_FORWARD(list, n) {
+    fprintf(stderr, "  %s[%d]: %s\n", name, i, value_get_str(&n->v));
+    i++;
+  }
+}
+
+static int cmd_code(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Current code:\n");
+  print_section(c, "top", &c->tlfs);
+  print_section(c, "bef", &c->befs);
+  print_section(c, "stm", &c->stms);
+  print_section(c, "aft", &c->afts);
+  return 0;
+}
+
+static int cmd_dump(cplr_t *c, int argc, char **argv) {
+  cplr_flag_t flagsave = c->flag;
+  c->flag |= CPLR_FLAG_DUMP;
+  cplr_generate(c);
+  c->flag = flagsave;
+  return 0;
+}
+
+static int cmd_stat(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Piler status:\n\n");
+  return 0;
+}
+
+static void print_sym_cb(void *ctx, const char *name, const void *val) {
+  if(name[0] == '_') {
+    return;
+  }
+  if(strprefix(name, "tcc_")) {
+    return;
+  }
+  if(strsuffix(name, "@plt")) {
+    return;
+  }
+  fprintf(stderr, "  %-12s\t%p\n", name, val);
+}
+
+static int cmd_syms(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Symbol table:\n");
+  tcc_list_symbols(c->lprev->tcc, c, &print_sym_cb);
+  return 0;
+}
+
+static int cplr_interact_command(cplr_t *c, const char *line) {
+  int ret = 0;
+  int argc, argn;
+  char **argv = NULL;
+  char *tokline;
+  char *token;
+  char *toksave;
+  char *cmd;
+  command_t *ci;
+
+  /* count arguments */
+  tokline = strdup(line);
+  argn = 0;
+  while((token = strtok_r(tokline, " \t\r\n", &toksave))) {
+    size_t len;
+    tokline = NULL;
+    len = strlen(token);
+    if(!len) {
+      continue;
+    }
+    argn++;
+  }
+  argc = argn;
+  free(tokline);
+
+  /* split arguments */
+  tokline = strdup(line);
+  argn = 0;
+  argv = xcalloc(argc + 1, sizeof(char*));
+  argv[argc] = NULL;
+  while((token = strtok_r(tokline, " \t\r\n", &toksave))) {
+    tokline = NULL;
+    argv[argn] = strdup(token);
+    if(c->verbosity >= 3) {
+      fprintf(stderr, "cmd[%d] = %s\n", argn, argv[argn]);
+    }
+    argn++;
+  }
+  free(tokline);
+
+  /* check for command */
+  if(argc == 0) {
+    fprintf(stderr, "No command.\n");
+    ret = 1;
+    goto out;
+  }
+
+  /* get command */
+  cmd = argv[0];
+
+  /* find and run command */
+  ci = &commands[0];
+  while(ci->name) {
+    if(!strcmp(ci->name, cmd)) {
+      ret = ci->handler(c, argc - 1, argv + 1);
+      goto out;
+    }
+    ci++;
+  }
+
+  /* unknown command */
+  fprintf(stderr, "Unknown command \"%s\".\n", cmd);
+  ret = 1;
+
+ out:
+  /* clean up */
+  if(argv) {
+    for(argn = 0; argn < argc; argn++) {
+      xfree(argv[argn]);
+    }
+    free(argv);
+  }
+  /* return */
+  return ret;
+}
+
+static int cplr_interact_help(cplr_t *c, const char *cline) {
+  print_help();
+  return 0;
+}
+
+static int cplr_interact_cpp(cplr_t *c, const char *line) {
+  l_append_str_owned(&c->tlfs, strdup(line));
+  return 0;
+}
+
 cplr_t *cplr_interact(cplr_t *c) {
-  cplr_t *new;
+  cplr_t *prev = c;
   char *line;
   char *prompt = "> ";
+  bool backslash;
 
+  /* create new state */
+  c = cplr_clone(prev);
+
+  /* clear source piles */
   l_clear(&c->srcs);
   l_clear(&c->tlfs);
   l_clear(&c->stms);
   l_clear(&c->befs);
   l_clear(&c->afts);
 
-  new = cplr_clone(c);
-
   /* chain the states */
-  c->lnext = new;
-  new->lindex = c->lindex + 1;
-  new->lprev = c;
+  prev->lnext = c;
+  c->lindex = prev->lindex + 1;
+  c->lprev = prev;
 
+  /* command loop */
   while((line = readline(prompt))) {
     if(!strlen(line)) {
       continue;
     }
 
+    /* all lines end up in history */
     add_history(line);
 
+    /* detect and splat trailing backslash */
+    backslash = strsuffix(line, "\\");
+    if(backslash) {
+      line[strlen(line) - 1] = 0;
+    }
+
+    /* handle various prefix characters */
     if(line[0] == '^') {
-      l_append_str_owned(&new->tlfs, strdup(line+1));
+      l_append_str_owned(&c->tlfs, strdup(line+1));
       continue;
     }
     if(line[0] == '<') {
-      l_append_str_owned(&new->befs, strdup(line+1));
+      l_append_str_owned(&c->befs, strdup(line+1));
       continue;
     }
     if(line[0] == '>') {
-      l_append_str_owned(&new->afts, strdup(line+1));
+      l_append_str_owned(&c->afts, strdup(line+1));
       continue;
     }
     if(line[0] == '.') {
-      l_append_str_owned(&new->stms, strdup(line+1));
+      if(strlen(line+1)) {
+        l_append_str_owned(&c->stms, strdup(line+1));
+        continue;
+      } else {
+        break;
+      }
+    }
+    if(line[0] == '#') {
+      cplr_interact_cpp(c, line+1);
+      continue;
+    }
+    if(line[0] == ':') {
+      cplr_interact_command(c, line+1);
+      continue;
+    }
+    if(line[0] == '?') {
+      cplr_interact_help(c, line+1);
+      continue;
+    }
+    if(line[0] == '!') {
+      system(line+1);
       continue;
     }
 
-    l_append_str_owned(&new->stms, strdup(line));
+    /* add the line as a statement */
+    l_append_str_owned(&c->stms, strdup(line));
 
-    break;
+    /* done unless next line follows */
+    if(!backslash) {
+      break;
+    }
   }
 
+  /* clean up on error */
   if(!line) {
-    cplr_free(new);
+    cplr_free(c);
     return NULL;
   }
 
-  return new;
+  /* return the new state */
+  return c;
 }
