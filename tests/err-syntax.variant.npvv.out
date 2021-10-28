@@ -1,0 +1,9 @@
+Preparation phase
+Generation phase
+Generating code
+Generating section statements
+Generated: 181 bytes code, 0 bytes dump
+Compilation phase
+Compiler condition:
+  statements_0:1: error: declaration expected
+Error: Compilation failed.

@@ -1,14 +1,10 @@
+Preparation phase
 Running "pkg-config --exists python3"
 Package python3 found
 Running "pkg-config --cflags --libs python3"
 Package definitions for python3: -I/usr/include/python3.7m -I/usr/include/x86_64-linux-gnu/python3.7m -lpython3.7m
-Package python3 include dir: /usr/include/python3.7m
-Package python3 include dir: /usr/include/x86_64-linux-gnu/python3.7m
-Package python3 library: python3.7m
 Generation phase
 Generating code
-Generating section include
-Generating section main
 ================================================================================
      1	/* include */
      2	#line 1 "include_0"
@@ -17,19 +13,19 @@ Generating section main
      5	#line 148 "internal"
      6	int main(int argc, char **argv) {
      7	    int ret = 0;
-     8	/* main */
-     9	#line 1 "main_0"
+     8	/* statements */
+     9	#line 1 "statements_0"
     10	    Py_Initialize();
-    11	#line 1 "main_1"
+    11	#line 1 "statements_1"
     12	    PyRun_SimpleString("print(\"hello\")");
-    13	#line 1 "main_2"
+    13	#line 1 "statements_2"
     14	    Py_Finalize();
     15	/* done */
     16	#line 163 "internal"
     17	    return ret;
     18	}
 ================================================================================
-Generated: 333 bytes code, 333 bytes dump
+Generated: 357 bytes code, 357 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase

@@ -25,7 +25,7 @@
     24	    int ret = 0;
     25	/* before */
     26	    Py_Initialize();
-    27	/* main */
+    27	/* statements */
     28	    PyRun_SimpleString("print(\"hello\")");
     29	/* after */
     30	    Py_Finalize();

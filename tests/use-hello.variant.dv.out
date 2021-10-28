@@ -1,7 +1,6 @@
+Preparation phase
 Generation phase
 Generating code
-Generating section defsysinclude
-Generating section main
 ================================================================================
      1	/* defsysinclude */
      2	#line 1 "defsysinclude_0"
@@ -44,15 +43,15 @@ Generating section main
     39	#line 148 "internal"
     40	int main(int argc, char **argv) {
     41	    int ret = 0;
-    42	/* main */
-    43	#line 1 "main_0"
+    42	/* statements */
+    43	#line 1 "statements_0"
     44	    puts("Hello.");
     45	/* done */
     46	#line 163 "internal"
     47	    return ret;
     48	}
 ================================================================================
-Generated: 1036 bytes code, 1036 bytes dump
+Generated: 1048 bytes code, 1048 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase

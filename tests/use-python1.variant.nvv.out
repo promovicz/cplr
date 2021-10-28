@@ -1,0 +1,16 @@
+Preparation phase
+Running "pkg-config --exists python3"
+Package python3 found
+Running "pkg-config --cflags --libs python3"
+Package definitions for python3: -I/usr/include/python3.7m -I/usr/include/x86_64-linux-gnu/python3.7m -lpython3.7m
+Package python3 include dir: /usr/include/python3.7m
+Package python3 include dir: /usr/include/x86_64-linux-gnu/python3.7m
+Package python3 library: python3.7m
+Generation phase
+Generating code
+Generating section defsysinclude
+Generating section include
+Generating section statements
+Generated: 1212 bytes code, 0 bytes dump
+Compilation phase
+Compilation succeeded

@@ -1,19 +1,19 @@
+Preparation phase
 Generation phase
 Generating code
-Generating section main
 ================================================================================
      1	/* main */
      2	#line 148 "internal"
      3	int main(int argc, char **argv) {
      4	    int ret = 0;
-     5	/* main */
-     6	#line 1 "main_0"
+     5	/* statements */
+     6	#line 1 "statements_0"
      7	    ret = 69;
      8	/* done */
      9	#line 163 "internal"
     10	    return ret;
     11	}
 ================================================================================
-Generated: 175 bytes code, 175 bytes dump
+Generated: 187 bytes code, 187 bytes dump
 Compilation phase
 Compilation succeeded

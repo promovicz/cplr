@@ -4,7 +4,7 @@
      3	/* main */
      4	int main(int argc, char **argv) {
      5	    int ret = 0;
-     6	/* main */
+     6	/* statements */
      7	    Py_Initialize();
      8	    PyRun_SimpleString("print(\"hello\")");
      9	    Py_Finalize();

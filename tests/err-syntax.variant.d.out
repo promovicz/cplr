@@ -21,12 +21,12 @@
     20	/* main */
     21	int main(int argc, char **argv) {
     22	    int ret = 0;
-    23	/* main */
+    23	/* statements */
     24	    }{;
     25	/* done */
     26	    return ret;
     27	}
 ================================================================================
 Compiler condition:
-main_0:1: error: declaration expected
+  statements_0:1: error: declaration expected
 Error: Compilation failed.

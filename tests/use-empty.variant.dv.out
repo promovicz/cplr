@@ -1,6 +1,6 @@
+Preparation phase
 Generation phase
 Generating code
-Generating section defsysinclude
 ================================================================================
      1	/* defsysinclude */
      2	#line 1 "defsysinclude_0"

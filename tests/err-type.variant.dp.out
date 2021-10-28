@@ -2,11 +2,11 @@
      1	/* main */
      2	int main(int argc, char **argv) {
      3	    int ret = 0;
-     4	/* main */
+     4	/* statements */
      5	    puts(1);
      6	/* done */
      7	    return ret;
      8	}
 ================================================================================
 Compiler condition:
-main_0:1: warning: implicit declaration of function 'puts'
+  statements_0:1: warning: implicit declaration of function 'puts'

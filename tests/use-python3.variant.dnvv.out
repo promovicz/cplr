@@ -1,0 +1,77 @@
+Preparation phase
+Running "pkg-config --exists python3"
+Package python3 found
+Running "pkg-config --cflags --libs python3"
+Package definitions for python3: -I/usr/include/python3.7m -I/usr/include/x86_64-linux-gnu/python3.7m -lpython3.7m
+Package python3 include dir: /usr/include/python3.7m
+Package python3 include dir: /usr/include/x86_64-linux-gnu/python3.7m
+Package python3 library: python3.7m
+Generation phase
+Generating code
+Generating section defsysinclude
+Generating section include
+Generating section before
+Generating section statements
+Generating section after
+================================================================================
+     1	/* defsysinclude */
+     2	#line 1 "defsysinclude_0"
+     3	#include <sys/stat.h>
+     4	#line 1 "defsysinclude_1"
+     5	#include <sys/types.h>
+     6	#line 1 "defsysinclude_2"
+     7	#include <assert.h>
+     8	#line 1 "defsysinclude_3"
+     9	#include <ctype.h>
+    10	#line 1 "defsysinclude_4"
+    11	#include <errno.h>
+    12	#line 1 "defsysinclude_5"
+    13	#include <fcntl.h>
+    14	#line 1 "defsysinclude_6"
+    15	#include <libgen.h>
+    16	#line 1 "defsysinclude_7"
+    17	#include <limits.h>
+    18	#line 1 "defsysinclude_8"
+    19	#include <locale.h>
+    20	#line 1 "defsysinclude_9"
+    21	#include <stdarg.h>
+    22	#line 1 "defsysinclude_10"
+    23	#include <stdio.h>
+    24	#line 1 "defsysinclude_11"
+    25	#include <stdint.h>
+    26	#line 1 "defsysinclude_12"
+    27	#include <stdlib.h>
+    28	#line 1 "defsysinclude_13"
+    29	#include <string.h>
+    30	#line 1 "defsysinclude_14"
+    31	#include <termios.h>
+    32	#line 1 "defsysinclude_15"
+    33	#include <time.h>
+    34	#line 1 "defsysinclude_16"
+    35	#include <unistd.h>
+    36	#line 1 "defsysinclude_17"
+    37	#include <wchar.h>
+    38	/* include */
+    39	#line 1 "include_0"
+    40	#include <Python.h>
+    41	/* main */
+    42	#line 148 "internal"
+    43	int main(int argc, char **argv) {
+    44	    int ret = 0;
+    45	/* before */
+    46	#line 1 "before_0"
+    47	    Py_Initialize();
+    48	/* statements */
+    49	#line 1 "statements_0"
+    50	    for(int i = 1; i < argc; i++) PyRun_SimpleString(argv[i]);
+    51	/* after */
+    52	#line 1 "after_1"
+    53	    Py_Finalize();
+    54	/* done */
+    55	#line 163 "internal"
+    56	    return ret;
+    57	}
+================================================================================
+Generated: 1247 bytes code, 1247 bytes dump
+Compilation phase
+Compilation succeeded
