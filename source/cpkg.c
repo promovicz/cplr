@@ -38,9 +38,6 @@ bool cpkg_exists(const char *name, bool verbose) {
   } else if(res) {
     fprintf(stderr, "Error: Package %s not present\n", name);
   } else {
-    if(verbose) {
-      fprintf(stderr, "Package %s found\n", name);
-    }
     ret = true;
   }
   xfree(cmd);

@@ -45,6 +45,10 @@ int cplr_prepare_package(cplr_t *c, const char *name) {
     }
     free(s);
 
+    if(c->verbosity >= 1) {
+      fprintf(stderr, "Package %s found\n", name);
+    }
+
     return 0;
 }
 
