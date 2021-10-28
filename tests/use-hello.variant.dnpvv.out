@@ -20,3 +20,4 @@ Compilation phase
 Compiler condition:
   statements_0:1: warning: implicit declaration of function 'puts'
 Compilation succeeded
+Writing history

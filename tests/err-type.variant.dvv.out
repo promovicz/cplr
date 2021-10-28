@@ -58,3 +58,4 @@ Compilation phase
 Compiler condition:
   statements_0:1: warning: assignment makes pointer from integer without a cast
 Compilation succeeded
+Writing history
