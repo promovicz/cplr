@@ -141,10 +141,12 @@ int main(int argc, char **argv) {
  done:
 
   /* save history */
-  if(c->verbosity >= 3) {
-    fprintf(stderr, "Writing history\n");
+  if(c->flag & CPLR_FLAG_INTERACTIVE) {
+    if(c->verbosity >= 3) {
+      fprintf(stderr, "Writing history\n");
+    }
+    write_history(realpath("~/.cplr_history", NULL));
   }
-  write_history(realpath("~/.cplr_history", NULL));
 
   /* clean up */
   cplr_free(c);
