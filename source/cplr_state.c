@@ -24,7 +24,7 @@
 cplr_t *cplr_new(void) {
   cplr_t *res = xcalloc(sizeof(cplr_t), 1);
 
-  res->t_env = CPLR_ENV_POSIX;
+  res->target = CPLR_TARGET_POSIX;
 
   return res;
 }
@@ -61,8 +61,8 @@ cplr_t *cplr_clone(cplr_t *c) {
   r->argv = c->argv;
   r->argp = c->argp;
   r->flag = c->flag;
-  r->t_env = c->t_env;
   r->verbosity = c->verbosity;
+  r->target = c->target;
   r->out = NULL;
   r->g_codebuf = NULL;
   r->g_dumpbuf = NULL;

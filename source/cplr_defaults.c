@@ -23,10 +23,10 @@ static void cplr_defaults_posix(cplr_t *c);
 static void cplr_defaults_linux(cplr_t *c);
 
 int cplr_defaults(cplr_t *c) {
-  if(c->t_env & CPLR_ENV_POSIX) {
+  if(c->target & CPLR_TARGET_POSIX) {
     cplr_defaults_posix(c);
   }
-  if(c->t_env & CPLR_ENV_LINUX) {
+  if(c->target & CPLR_TARGET_LINUX) {
     cplr_defaults_linux(c);
   }
   return 0;

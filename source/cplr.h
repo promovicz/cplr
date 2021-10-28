@@ -41,11 +41,11 @@ typedef enum {
 
 /* target environment */
 typedef enum {
-   CPLR_ENV_NONE = 0,
-   CPLR_ENV_POSIX = 1,
-   CPLR_ENV_LINUX = (2 | CPLR_ENV_POSIX),
-   CPLR_ENV_LINUX_KERNEL = 4,
-} cplr_env_t;
+   CPLR_TARGET_NONE = 0,
+   CPLR_TARGET_POSIX = 1,
+   CPLR_TARGET_LINUX = (2 | CPLR_TARGET_POSIX),
+   CPLR_TARGET_LINUX_KERNEL = 4,
+} cplr_target_t;
 
 /* code generation phases */
 typedef enum {
@@ -73,7 +73,7 @@ struct cplr {
   /* verbosity level */
   int verbosity;
   /* target environment (posix, linux...) */
-  cplr_env_t t_env;
+  cplr_target_t target;
   /* output filename (memory if NULL) */
   char *out;
 
