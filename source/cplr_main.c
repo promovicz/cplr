@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
     c->flag |= CPLR_FLAG_INTERACTIVE;
     c->flag |= CPLR_FLAG_LOOP;
     /* read history */
-    if(c->verbosity >= 2) {
+    if(c->verbosity >= 3) {
       fprintf(stderr, "Reading history\n");
     }
     read_history(realpath("~/.cplr_history", NULL));
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
  done:
 
   /* save history */
-  if(c->verbosity >= 2) {
+  if(c->verbosity >= 3) {
     fprintf(stderr, "Writing history\n");
   }
   write_history(realpath("~/.cplr_history", NULL));
