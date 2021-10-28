@@ -83,7 +83,7 @@ gentest() {
     for d in "" d; do
         for n in "" n; do
             for p in "" p; do
-                for v in "" v; do
+                for v in "" v vv; do
                     # determine name and options
                     opts="$d$n$p$v"
                     vopts=""
