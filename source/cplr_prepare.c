@@ -22,7 +22,10 @@
 static void cplr_tcc_error(cplr_t *c, const char *msg) {
   char *clone = strdup(msg);
   char *cur, *save;
-  fprintf(stderr, "Compiler condition:\n");
+  if(!c->tccerr) {
+    c->tccerr = true;
+    fprintf(stderr, "Compiler condition:\n");
+  }
   cur = strtok_r(clone, "\n", &save);
   do {
     fprintf(stderr, "  %s\n", cur);

@@ -87,6 +87,8 @@ struct cplr {
 
   /* compiler state */
   TCCState *tcc;
+  /* flag set on first compiler condition */
+  bool tccerr;
 
   /* code generation state */
   cplr_gstate_t g_state;
