@@ -19,16 +19,7 @@
 
 #include "cplr.h"
 
-static bool hassuffix(const char *str, const char *suf)
-{
-  if (!str || !suf)
-    return 0;
-  size_t lenstr = strlen(str);
-  size_t lensuf = strlen(suf);
-  if (lensuf >  lenstr)
-    return 0;
-  return strncmp(str + lenstr - lensuf, suf, lensuf) == 0;
-}
+#include <cext/string.h>
 
 static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
   cplr_t *c = (cplr_t *)ctx;
@@ -38,8 +29,17 @@ static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
   if(strcmp(name, "main") == 0) {
     return;
   }
-  if(hassuffix(name, "@plt")) {
+  if(strcmp(name, "exit") == 0) {
     return;
+  }
+  if(strcmp(name, "tcc_backtrace") == 0) {
+    return;
+  }
+  if(strsuffix(name, "@plt")) {
+    return;
+  }
+  if(c->verbosity >= 3) {
+    fprintf(stderr, "Redefining symbol %s as %p\n", name, val);
   }
   tcc_add_symbol(c->tcc, name, val);
 }
@@ -55,6 +55,9 @@ int cplr_compile(cplr_t *c) {
   }
   /* redefine symbols */
   if(c->prev && c->prev->tcc) {
+    if(c->verbosity >= 2) {
+      fprintf(stderr, "Redefining symbols\n");
+    }
     tcc_list_symbols(c->prev->tcc, c, &cplr_redefsym_cb);
   }
   /* produce output if requested */
