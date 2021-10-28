@@ -62,12 +62,6 @@ typedef struct cplr cplr_t;
 
 /* main state structure */
 struct cplr {
-  /* all arguments */
-  int    argc;
-  char **argv;
-  /* first program argument */
-  int    argp;
-
   /* flags */
   cplr_flag_t flag;
   /* verbosity level */
@@ -76,6 +70,12 @@ struct cplr {
   cplr_target_t target;
   /* output filename (memory if NULL) */
   char *out;
+
+  /* all arguments */
+  int    argc;
+  char **argv;
+  /* first program argument */
+  int    argp;
 
   /* index of this state in loop mode */
   int lindex;
