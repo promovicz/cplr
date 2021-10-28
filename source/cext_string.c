@@ -34,6 +34,21 @@ char *xstrdup(char *s) {
   return res;
 }
 
+bool strprefix(const char *str, const char *pfx) {
+  return strncmp(str, pfx, strlen(pfx)) == 0;
+}
+
+bool strsuffix(const char *str, const char *suf)
+{
+  if (!str || !suf)
+    return 0;
+  size_t lenstr = strlen(str);
+  size_t lensuf = strlen(suf);
+  if (lensuf >  lenstr)
+    return 0;
+  return strncmp(str + lenstr - lensuf, suf, lensuf) == 0;
+}
+
 ATTR_FUN_FORMAT(printf, 2, 0)
 ATTR_ARG_FORMAT(2)
 char *vmsnprintf(size_t limit, const char *fmt, va_list a) {

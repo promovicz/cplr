@@ -21,11 +21,15 @@
 #define CPLR_STRING_H
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <string.h>
 
 #include "attr.h"
 
 extern char *xstrdup(char *s);
+
+extern bool strprefix(const char *str, const char *pfx);
+extern bool strsuffix(const char *str, const char *suf);
 
 ATTR_FUN_FORMAT(printf, 2, 0)
 ATTR_ARG_FORMAT(2)
