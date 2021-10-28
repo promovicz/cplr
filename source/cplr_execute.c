@@ -22,7 +22,7 @@
 int cplr_execute(cplr_t *c) {
   int i, ret;
   /* report status */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Execution phase\n");
   }
   /* copy arguments */
@@ -37,7 +37,7 @@ int cplr_execute(cplr_t *c) {
   /* free arguments */
   xfree(argv);
   /* report progress */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Execution finished (ret=%d).\n", ret);
   }
   return ret;

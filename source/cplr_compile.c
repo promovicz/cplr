@@ -46,7 +46,7 @@ static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
 
 int cplr_compile(cplr_t *c) {
   /* report status */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Compilation phase\n");
   }
   /* compile the code */
@@ -65,7 +65,7 @@ int cplr_compile(cplr_t *c) {
     }
   }
   /* report success */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Compilation succeeded\n");
   }
   /* done */

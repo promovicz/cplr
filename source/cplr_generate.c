@@ -102,7 +102,7 @@ static void cplr_generate_section(cplr_t *c,
   int i;
   ln_t *n;
   char fn[64];
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 2) {
     fprintf(stderr, "Generating section %s\n", name);
   }
   CPLR_EMIT_COMMENT(c, "%s", name);
@@ -122,7 +122,7 @@ static void cplr_generate_section(cplr_t *c,
 }
 
 static int cplr_generate_code(cplr_t *c) {
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Generating code\n");
   }
   /* includes */
@@ -262,7 +262,7 @@ static void cplr_generate_dump(cplr_t *c) {
 }
 
 static void cplr_generate_report(cplr_t *c) {
- if(c->flag & CPLR_FLAG_VERBOSE) {
+ if(c->verbosity >= 1) {
     size_t cl = 0, dl = 0;
     if(c->g_codebuf)
       cl = strlen(c->g_codebuf);
@@ -280,7 +280,7 @@ static void cplr_generate_finish(cplr_t *c) {
 
 int cplr_generate(cplr_t *c) {
   /* say hello */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Generation phase\n");
   }
   /* alloc buffers and open streams */

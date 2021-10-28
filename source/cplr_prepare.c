@@ -36,7 +36,7 @@ int cplr_prepare(cplr_t *c) {
   TCCState *t;
 
   /* say hello */
-  if(c->flag & CPLR_FLAG_VERBOSE) {
+  if(c->verbosity >= 1) {
     fprintf(stderr, "Preparation phase\n");
   }
 

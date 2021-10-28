@@ -23,7 +23,7 @@
 
 int cplr_prepare_package(cplr_t *c, const char *name) {
     char *s;
-    bool verbose = c->flag & CPLR_FLAG_VERBOSE;
+    bool verbose = (c->verbosity >= 2);
     TCCState *t = c->tcc;
 
     if(!cpkg_exists(name, verbose)) {
@@ -33,6 +33,7 @@ int cplr_prepare_package(cplr_t *c, const char *name) {
 
     s = cpkg_retrieve(name, "--cflags --libs", verbose);
     if(!s) {
+      fprintf(stderr, "Error: Could not get options for package %s\n", name);
       return 1;
     }
     if(verbose)
@@ -65,22 +66,22 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
       case 'U':
 	l_append_str_owned(&c->defs, msprintf("-%c%s", opt, s));
 	xfree(s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
+	if(c->verbosity >= 2)
 	  fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
 	break;
       case 'I':
 	l_append_str_owned(&c->incdirs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
+	if(c->verbosity >= 2)
 	  fprintf(stderr, "Package %s include dir: %s\n", name, s);
 	break;
       case 'L':
 	l_append_str_owned(&c->libdirs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
+	if(c->verbosity >= 2)
 	  fprintf(stderr, "Package %s library dir: %s\n", name, s);
 	break;
       case 'l':
 	l_append_str_owned(&c->libs, s);
-	if(c->flag & CPLR_FLAG_VERBOSE)
+	if(c->verbosity >= 2)
 	  fprintf(stderr, "Package %s library: %s\n", name, s);
 	break;
       default:
@@ -99,7 +100,7 @@ int cplr_add_package(cplr_t *c, const char *name, const char *args) {
 	break;
       case 'p':
 	if(strstr(o, "pthread") == o) {
-	  if(c->flag & CPLR_FLAG_VERBOSE)
+	  if(c->verbosity >= 2)
 	    fprintf(stderr, "Package %s uses pthreads.\n", name);
 	  tcc_set_options(c->tcc, "-pthread");
 	  o += 6;

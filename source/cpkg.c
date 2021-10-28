@@ -34,13 +34,9 @@ bool cpkg_exists(const char *name, bool verbose) {
   }
   res = system(cmd);
   if(res == -1 || res == 127) {
-    if(verbose) {
-      fprintf(stderr, "Error: Could not execute \"%s\"\n", cmd);
-    }
+    fprintf(stderr, "Error: Could not execute \"%s\"\n", cmd);
   } else if(res) {
-    if(verbose) {
-      fprintf(stderr, "Error: Package %s not present\n", name);
-    }
+    fprintf(stderr, "Error: Package %s not present\n", name);
   } else {
     if(verbose) {
       fprintf(stderr, "Package %s found\n", name);
@@ -62,22 +58,16 @@ char *cpkg_retrieve(const char *name, const char *what, bool verbose) {
   }
   ps = popen(cmd, "r");
   if(!ps) {
-    if(verbose) {
-      fprintf(stderr, "Error: Could not popen \"%s\"\n", cmd);
-    }
+    fprintf(stderr, "Error: Could not popen \"%s\"\n", cmd);
     goto err;
   }
   res = fread(rbuf, 1, sizeof(rbuf), ps);
   if(res < 0) {
-    if(verbose) {
-      fprintf(stderr, "Error: Failed to read from \"%s\"\n", cmd);
-    }
+    fprintf(stderr, "Error: Failed to read from \"%s\"\n", cmd);
     goto err;
   }
   if(res == sizeof(rbuf)) {
-    if(verbose) {
-      fprintf(stderr, "Error: Package options for %s are to long.\n", name);
-    }
+    fprintf(stderr, "Error: Package options for %s are too long.\n", name);
     goto err;
   }
   rbuf[res] = 0;

@@ -71,6 +71,8 @@ struct cplr {
 
   /* flags */
   cplr_flag_t flag;
+  /* verbosity level */
+  int verbosity;
   /* target environment (posix, linux...) */
   cplr_env_t t_env;
   /* output filename (memory if NULL) */
