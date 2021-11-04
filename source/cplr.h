@@ -115,6 +115,7 @@ struct cplr {
   lh_t libs;
   lh_t pkgs;
   lh_t srcs;
+  lh_t tlds;
   lh_t tlfs;
   lh_t stms;
   lh_t befs;

@@ -48,6 +48,7 @@ void cplr_free(cplr_t *c) {
   l_clear(&c->libs);
   l_clear(&c->pkgs);
   l_clear(&c->srcs);
+  l_clear(&c->tlds);
   l_clear(&c->tlfs);
   l_clear(&c->stms);
   l_clear(&c->befs);
@@ -77,6 +78,7 @@ cplr_t *cplr_clone(cplr_t *c) {
   l_clone(&c->libs, &r->libs);
   l_clone(&c->pkgs, &r->pkgs);
   l_clone(&c->srcs, &r->srcs);
+  l_clone(&c->tlds, &r->tlds);
   l_clone(&c->tlfs, &r->tlfs);
   l_clone(&c->stms, &r->stms);
   l_clone(&c->befs, &r->befs);
