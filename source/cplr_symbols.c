@@ -19,43 +19,16 @@
 
 #include "cplr.h"
 
-#include <readline/readline.h>
-#include <readline/history.h>
+TCCState *cplr_find_syms(cplr_t *c) {
+  TCCState *res = NULL;
 
-cplr_t *cplr_interact(cplr_t *c) {
-  cplr_t *n = c;
-  char *line;
-  char *prompt = "> ";
-  bool backslash;
-
-  /* command loop */
-  while((line = readline(prompt))) {
-    if(!strlen(line)) {
-      continue;
+  while(c) {
+    if(c->flag & CPLR_FLAG_EVALUATED) {
+      res = c->tcc;
+      break;
     }
-
-    /* all lines end up in history */
-    add_history(line);
-
-    /* detect and splat trailing backslash */
-    // XXX do backslash somehow
-    //backslash = strsuffix(line, "\\");
-    //if(backslash) {
-    //  line[strlen(line) - 1] = 0;
-    //}
-
-    /* run the command */
-    n = cplr_command_interactive(c, line);
-
-    /* finish on zero return */
-    if(!n) {
-      return c;
-    }
-
-    c = n;
-
+    c = c->lprev;
   }
 
-  /* return the new state */
-  return n;
+  return res;
 }

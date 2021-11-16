@@ -93,6 +93,8 @@ int main(int argc, char **argv) {
       goto stepback;
     }
 
+    c->flag |= CPLR_FLAG_EVALUATED;
+
     /* execute code */
     if(!(c->flag & CPLR_FLAG_NORUN)) {
       /* perform execution */

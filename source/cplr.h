@@ -37,6 +37,7 @@ typedef enum {
    CPLR_FLAG_PRISTINE = (1 << 4),
    CPLR_FLAG_LOOP = (1 << 5),
    CPLR_FLAG_INTERACTIVE = (1 << 6),
+   CPLR_FLAG_EVALUATED = (1 << 7),
 } cplr_flag_t;
 
 /* target environment */
@@ -135,13 +136,23 @@ extern int cplr_prepare(cplr_t *c);
 extern int cplr_generate(cplr_t *c);
 extern int cplr_compile(cplr_t *c);
 extern int cplr_execute(cplr_t *c);
+
+/* cplr_evaluate.c - c program execution */
+extern cplr_t *cplr_evaluate(cplr_t *c);
+
+/* cplr_interactive.c - c interactor */
 extern cplr_t *cplr_interact(cplr_t *c);
 
-extern int cplr_prepare_package(cplr_t *c, const char *name);
-extern int cplr_add_package(cplr_t *c, const char *name, const char *args);
+/* cplr_command.c - command handling */
+extern cplr_t *cplr_evaluate(cplr_t *c);
+extern cplr_t *cplr_command_batch(cplr_t *c, const char *line);
+extern cplr_t *cplr_command_interactive(cplr_t *c, const char *line);
 
 /* cplr_package.c - pkg-config routines */
 extern int cplr_pkgconfig_prepare(cplr_t *c, const char *name);
 extern int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args);
+
+/* cplr_symbols.c - symbol management */
+extern TCCState *cplr_find_syms(cplr_t *c);
 
 #endif /* CPLR_PRIVATE_H */
