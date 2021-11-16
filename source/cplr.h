@@ -122,11 +122,14 @@ struct cplr {
   lh_t afts;
 };
 
+/* cplr_state.c - piler state management */
 extern cplr_t *cplr_new(void);
 extern void cplr_free(cplr_t *c);
 extern cplr_t *cplr_clone(cplr_t *c);
 
+/* cplr_optparse.c - command-line option parser */
 extern int cplr_optparse(cplr_t *c, int argc, char **argv);
+
 extern int cplr_defaults(cplr_t *c);
 extern int cplr_prepare(cplr_t *c);
 extern int cplr_generate(cplr_t *c);
