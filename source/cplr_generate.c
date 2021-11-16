@@ -138,6 +138,11 @@ static int cplr_generate_code(cplr_t *c) {
     cplr_generate_section(c, "include", &c->incs,
                           false, "#include <%s>\n");
   }
+  /* toplevel declarations */
+  if(!l_empty(&c->tlds)) {
+    cplr_generate_section(c, "declarations", &c->tlds,
+                          false, "%s;\n");
+  }
   /* toplevel statements */
   if(!l_empty(&c->tlds)) {
     cplr_generate_section(c, "definition", &c->tlds,
