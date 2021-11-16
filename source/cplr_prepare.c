@@ -71,7 +71,7 @@ int cplr_prepare(cplr_t *c) {
 
   /* packages */
   L_FORWARD(&c->pkgs, i) {
-    if(cplr_prepare_package(c, value_get_str(&i->v))) {
+    if(cplr_pkgconfig_prepare(c, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to prepare package %s\n", value_get_str(&i->v));
       return 1;
     }

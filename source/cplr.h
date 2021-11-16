@@ -137,4 +137,8 @@ extern cplr_t *cplr_interact(cplr_t *c);
 extern int cplr_prepare_package(cplr_t *c, const char *name);
 extern int cplr_add_package(cplr_t *c, const char *name, const char *args);
 
+/* cplr_package.c - pkg-config routines */
+extern int cplr_pkgconfig_prepare(cplr_t *c, const char *name);
+extern int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args);
+
 #endif /* CPLR_PRIVATE_H */

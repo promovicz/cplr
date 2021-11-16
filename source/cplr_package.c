@@ -21,7 +21,7 @@
 
 #include "cplr.h"
 
-int cplr_prepare_package(cplr_t *c, const char *name) {
+int cplr_pkgconfig_prepare(cplr_t *c, const char *name) {
     char *s;
     bool verbose = (c->verbosity >= 2);
     TCCState *t = c->tcc;
@@ -39,7 +39,7 @@ int cplr_prepare_package(cplr_t *c, const char *name) {
     if(verbose)
       fprintf(stderr, "Package definitions for %s: %s\n", name, s);
     tcc_set_options(t, s);
-    if(cplr_add_package(c, name, s)) {
+    if(cplr_pkgconfig_add(c, name, s)) {
       fprintf(stderr, "Error: Failed to process package %s.\n", name);
       return 1;
     }
@@ -52,7 +52,7 @@ int cplr_prepare_package(cplr_t *c, const char *name) {
     return 0;
 }
 
-int cplr_add_package(cplr_t *c, const char *name, const char *args) {
+int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args) {
   bool dash = false;
   char opt = 0;
   char *o = (char*)args, *b, *s;
