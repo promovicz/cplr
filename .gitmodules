@@ -1,0 +1,8 @@
+[submodule "deps/tinycc"]
+	path = deps/tinycc
+	url = git@github.com:promovicz/tinycc.git
+	branch = promovicz/mob
+[submodule "deps/udis86"]
+	path = deps/udis86
+	url = git@github.com:promovicz/udis86.git
+	branch = promovicz/master
