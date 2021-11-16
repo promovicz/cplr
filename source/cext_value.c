@@ -70,7 +70,7 @@ VALUE_SIMPLE_DEFINE_SETTER(size, size_t, sz, VT_SIZE);
 VALUE_SIMPLE_DEFINE_SETTER(ssize, ssize_t, ssz, VT_SSIZE);
 
 static void *ptr_fault(void *p) {
-  xabortf("Cannot clone or reference void pointer\n");
+  xaborts("Cannot clone or reference void pointer\n");
 }
 
 VALUE_POINTER_DEFINE_GETTERS(ptr, void, ptr, VT_POINTER, ptr_fault);
