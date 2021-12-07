@@ -1,26 +1,24 @@
 #!/bin/sh
 
-CC=cc
+CC=gcc
+
+TCC=/usr/local
 
 CFLAGS_LANGUAGE="-std=c99 -pthread"
-CFLAGS_OPTIMIZE="-Os"
+CFLAGS_OPTIMIZE="-O0"
 CFLAGS_DEBUG="-g"
 CFLAGS_WARNINGS="-Wall -Wextra -Wno-unused"
 CFLAGS_SOURCE="-D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L"
-CFLAGS_INCLUDE="-Iinclude -I/usr/local/include"
-
-CFLAGS_BASE="${CFLAGS_LANGUAGE} ${CFLAGS_OPTIMIZE} ${CFLAGS_DEBUG} ${CFLAGS_WARNINGS} ${CFLAGS_SOURCE} ${CFLAGS_INCLUDE}"
-
-LDFLAGS="-L/usr/local/lib -ldl -ltcc"
-
-LIBTCC_I="-I/usr/local/include"
-
-CFLAGS="${CFLAGS_BASE} ${LIBTCC_I}"
+CFLAGS_INCLUDE="-Iinclude -I${TCC}/include"
+CFLAGS="${CFLAGS_LANGUAGE} ${CFLAGS_OPTIMIZE} ${CFLAGS_DEBUG} ${CFLAGS_WARNINGS} ${CFLAGS_SOURCE} ${CFLAGS_INCLUDE}"
+LDFLAGS="-L/usr/local/lib"
+LIBS="-ldl -lreadline ${TCC}/lib/libtcc.a"
 
 run() {
     echo "Run: $*"
     "$@"
 }
 
-run ${CC} ${CFLAGS} ${LDFLAGS} -o bin/cplr source/cplr*.c source/cext*.c source/cpkg.c
+mkdir -p bin
+run ${CC} ${CFLAGS} ${LDFLAGS} -o bin/cplr source/cplr*.c source/cext*.c source/cpkg.c ${LIBS}
 
