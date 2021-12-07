@@ -63,12 +63,12 @@ static void print_help(void) {
   fprintf(stderr, "Prefixes: \n\n");
   fprintf(stderr, "  :CMD  Run piler command\n");
   fprintf(stderr, "  !CMD  Run system command\n");
-  fprintf(stderr, "  #CPP  Push tld for cpp\n");
-  fprintf(stderr, "  ^STM  Push tld statement\n");
-  fprintf(stderr, "  $STM  Push tlf statement\n");
-  fprintf(stderr, "  <STM  Push bef statement\n");
-  fprintf(stderr, "  >STM  Push aft statement\n");
-  fprintf(stderr, "  .STM  Push statement\n");
+  fprintf(stderr, "  #CPP  Push top-level line for cpp\n");
+  fprintf(stderr, "  ^STM  Push top-level definition\n");
+  fprintf(stderr, "  $STM  Push top-level statement\n");
+  fprintf(stderr, "  <STM  Push before statement\n");
+  fprintf(stderr, "  >STM  Push after statement\n");
+  fprintf(stderr, "  .STM  Push normal statement\n");
   fprintf(stderr, "  .     Run the pile\n");
   fprintf(stderr, "  STM   Push statement and run pile\n");
   fprintf(stderr, "  ?     Show help\n");
@@ -258,11 +258,11 @@ cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
     l_append_str_owned(&c->tlds, strdup(line));
     goto out;
     /* toplevel declarations */
-  case '^':
+  case '$':
     l_append_str_owned(&c->tlds, strdup(line+1));
     goto out;
     /* toplevel statements (definitions) */
-  case '$':
+  case '^':
     l_append_str_owned(&c->tlfs, strdup(line+1));
     goto out;
     /* before and after statements */
