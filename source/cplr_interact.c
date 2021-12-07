@@ -37,13 +37,6 @@ cplr_t *cplr_interact(cplr_t *c) {
     /* all lines end up in history */
     add_history(line);
 
-    /* detect and splat trailing backslash */
-    // XXX do backslash somehow
-    //backslash = strsuffix(line, "\\");
-    //if(backslash) {
-    //  line[strlen(line) - 1] = 0;
-    //}
-
     /* run the command */
     n = cplr_command_interactive(c, line);
 
