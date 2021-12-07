@@ -231,7 +231,7 @@ cplr_t *cplr_command_batch(cplr_t *c, const char *line) {
 
 cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
 
-  while(*line && isspace(*line)) { line++; };
+  while(*line && (isspace(*line) || iscntrl(*line))) { line++; };
 
   if(strlen(line) == 0) {
     return c;
