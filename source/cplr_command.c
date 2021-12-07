@@ -286,7 +286,7 @@ cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
     break;
   }
 
-  return cplr_evaluate(c);
+  return cplr_run(c);
 
  out:
   return c;

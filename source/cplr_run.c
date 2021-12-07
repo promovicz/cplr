@@ -1,7 +1,7 @@
 
 #include "cplr.h"
 
-cplr_t *cplr_evaluate(cplr_t *c) {
+cplr_t *cplr_run(cplr_t *c) {
   int ret;
   cplr_t *n;
 

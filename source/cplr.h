@@ -137,14 +137,13 @@ extern int cplr_generate(cplr_t *c);
 extern int cplr_compile(cplr_t *c);
 extern int cplr_execute(cplr_t *c);
 
-/* cplr_evaluate.c - c program execution */
-extern cplr_t *cplr_evaluate(cplr_t *c);
+/* cplr_run.c -  prepare, generate, execute */
+extern cplr_t *cplr_run(cplr_t *c);
 
 /* cplr_interactive.c - c interactor */
 extern cplr_t *cplr_interact(cplr_t *c);
 
 /* cplr_command.c - command handling */
-extern cplr_t *cplr_evaluate(cplr_t *c);
 extern cplr_t *cplr_command_batch(cplr_t *c, const char *line);
 extern cplr_t *cplr_command_interactive(cplr_t *c, const char *line);
 
