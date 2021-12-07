@@ -131,16 +131,25 @@ extern cplr_t *cplr_clone(cplr_t *c);
 /* cplr_optparse.c - command-line option parser */
 extern int cplr_optparse(cplr_t *c, int argc, char **argv);
 
+/* cplr_defaults.c - compiler defaults */
 extern int cplr_defaults(cplr_t *c);
+
+/* cplr_prepare.c - prepare the compiler for compilation */
 extern int cplr_prepare(cplr_t *c);
+
+/* cplr_prepare.c - generate C code*/
 extern int cplr_generate(cplr_t *c);
+
+/* cplr_compile.c - compile generated C code */
 extern int cplr_compile(cplr_t *c);
+
+/* cplr_execute.c - execute compiled code */
 extern int cplr_execute(cplr_t *c);
 
 /* cplr_run.c -  prepare, generate, execute */
 extern cplr_t *cplr_run(cplr_t *c);
 
-/* cplr_interactive.c - c interactor */
+/* cplr_interactive.c - interactor */
 extern cplr_t *cplr_interact(cplr_t *c);
 
 /* cplr_command.c - command handling */
