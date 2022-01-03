@@ -48,15 +48,14 @@ const struct option longopts[] = {
   {NULL,    1, NULL, 'x'},
   {NULL,    1, NULL, 'L'},
   {NULL,    1, NULL, 'l'},
-
   {NULL,    1, NULL, 'P'},
 
   {NULL,    1, NULL, 'b'},
   {NULL,    1, NULL, 'a'},
   {NULL,    1, NULL, 't'},
+  {NULL,    1, NULL, 'f'},
 
   {NULL,    1, NULL, 'o'},
-  {NULL,    1, NULL, 'f'},
 
   {NULL,    0, NULL, '-'},
 
@@ -68,30 +67,29 @@ const char *longhelp[] = {
   "show herald message",
   "show version string",
 
-  "verbose cplr output",
-  "dump generated code",
-  "do not run, just compile",
-  "use pristine environment",
-  "run compiler shell",
+  "increase verbosity level",
+  "increase dump level",
+  "inhibit execution",
+  "inhibit defaults",
+  "run interactor",
 
   "define cpp symbol",
   "undefine cpp symbol",
   "add include directory",
   "add include",
-
   "add system include directory",
   "add system include",
   "add library directory",
   "add library",
-
-  "add pkg-config library",
+  "add pkg-config package",
 
   "add before statement",
   "add after statement",
   "add toplevel statement",
 
-  "output executable",
   "add file (source, object, archive)",
+
+  "output executable",
 
   "begin program arguments",
   NULL,
@@ -100,7 +98,7 @@ const char *longhelp[] = {
 
 
 static void cplr_show_summary(cplr_t *c, FILE*out) {
-  fprintf(out, "Usage: %s [-vdnphHV] <statement>...\n", c->argv[0]);
+  fprintf(out, "Usage: %s [options] <statement>...\n", c->argv[0]);
   fprintf(out, "The C piler: a tool for executing C code\n\n");
 }
 
@@ -114,13 +112,13 @@ static void cplr_show_help(cplr_t *c, FILE *out) {
   for(i = 0; longhelp[i]; i++) {
     if(longopts[i].name) {
       fprintf(out, "  -%c, --%-10s\t%s\n",
-	      (char)longopts[i].val,
-	      longopts[i].name,
-	      longhelp[i]);
+              (char)longopts[i].val,
+              longopts[i].name,
+              longhelp[i]);
     } else {
       fprintf(out, "  -%c\t\t\t%s\n",
-	      (char)longopts[i].val,
-	      longhelp[i]);
+              (char)longopts[i].val,
+              longhelp[i]);
     }
   }
   fprintf(out, "\n");
@@ -142,7 +140,7 @@ static void cplr_show_herald(cplr_t *c, FILE *out) {
   fprintf(out, "May this be as useful for you as it is for me.\n\n");
 
   /* copyright information */
-  fprintf(out, "Copyright (C) 2020-2021 Ingo Albrecht <cplr@promovicz.org>.\n");
+  fprintf(out, "Copyright (C) 2020-2022 Ingo Albrecht <cplr@promovicz.org>.\n");
   fprintf(out, "Licensed under the GNU General Public License version 3 or later.\n");
   fprintf(out, "See package file COPYING or https://www.gnu.org/licenses/.\n\n");
 }
