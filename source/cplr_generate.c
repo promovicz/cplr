@@ -98,12 +98,12 @@ static void cplr_generate_section(cplr_t *c,
                                   const char *name,
                                   lh_t *list,
                                   bool reverse,
-                                  const char *fmt) {
+                                  const char *fmt, ...) {
   int i;
   ln_t *n;
   char fn[64];
   if(c->verbosity >= 2) {
-    fprintf(stderr, "Generating section %s\n", name);
+    fprintf(stderr, "Generating %s\n", name);
   }
   CPLR_EMIT_COMMENT(c, "%s", name);
   if(reverse) {
@@ -117,6 +117,35 @@ static void cplr_generate_section(cplr_t *c,
     L_FORWARD(list, n) {
       snprintf(fn, sizeof(fn), "%s_%d", name, i++);
       CPLR_EMIT_PREPROC(c, fn, fmt, value_get_str(&n->v));
+    }
+  }
+}
+
+static void cplr_generate_labeled(cplr_t *c,
+                                  const char *name,
+                                  lh_t *list,
+                                  bool reverse,
+                                  const char *fmt, ...) {
+  int i, j;
+  ln_t *n;
+  char fn[64];
+  if(c->verbosity >= 2) {
+    fprintf(stderr, "Generating labeled %s\n", name);
+  }
+  CPLR_EMIT_COMMENT(c, "%s", name);
+  if(reverse) {
+    i = l_size(list); j = 0;
+    L_BACKWARDS(list, n) {
+      snprintf(fn, sizeof(fn), "%s_%d", name, i);
+      CPLR_EMIT_STATEMENT(c, fn, fmt, j, value_get_str(&n->v));
+      i--; j++;
+    }
+  } else {
+    i = 0; j = 0;
+    L_FORWARD(list, n) {
+      snprintf(fn, sizeof(fn), "%s_%d", name, i);
+      CPLR_EMIT_PREPROC(c, fn, fmt, j, value_get_str(&n->v));
+      i++; j++;
     }
   }
 }
@@ -155,21 +184,21 @@ static int cplr_generate_code(cplr_t *c) {
   /* main function */
   CPLR_EMIT_COMMENT(c, "main");
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
-  CPLR_EMIT_INTERNAL(c, "    int ret = 0;\n");
+  CPLR_EMIT_INTERNAL(c, "\tint ret = 0;\n");
   if(!l_empty(&c->befs)) {
-    cplr_generate_section(c, "before", &c->befs,
-                          false, "    %s;\n");
+    cplr_generate_labeled(c, "before", &c->befs,
+                          false, " b%d:\t%s;\n");
   }
   if(!l_empty(&c->stms)) {
-    cplr_generate_section(c, "statements", &c->stms,
-                          false, "    %s;\n");
+    cplr_generate_labeled(c, "statements", &c->stms,
+                          false, " s%d:\t%s;\n");
   }
   if(!l_empty(&c->afts)) {
-    cplr_generate_section(c, "after", &c->afts,
-                          true, "    %s;\n");
+    cplr_generate_labeled(c, "after", &c->afts,
+                          true, " a%d:\t%s;\n");
   }
   CPLR_EMIT_COMMENT(c, "done");
-  CPLR_EMIT_INTERNAL(c, "    return ret;\n");
+  CPLR_EMIT_INTERNAL(c, "\treturn ret;\n");
   CPLR_EMIT_INTERNAL(c, "}\n");
 
   return 0;
