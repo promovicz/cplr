@@ -24,7 +24,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpyD:U:I:i:S:s:L:l:P:b:a:t:o:f:-";
+const char *shortopts = "-:hHVvdnpyD:U:I:i:X:x:L:l:P:b:a:t:f:o:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -44,9 +44,8 @@ const struct option longopts[] = {
   {NULL,    1, NULL, 'U'},
   {NULL,    1, NULL, 'I'},
   {NULL,    1, NULL, 'i'},
-  {NULL,    1, NULL, 'S'},
-  {NULL,    1, NULL, 's'},
-
+  {NULL,    1, NULL, 'X'},
+  {NULL,    1, NULL, 'x'},
   {NULL,    1, NULL, 'L'},
   {NULL,    1, NULL, 'l'},
 
@@ -79,9 +78,9 @@ const char *longhelp[] = {
   "undefine cpp symbol",
   "add include directory",
   "add include",
-  "add sysinclude directory",
-  "add sysinclude",
 
+  "add system include directory",
+  "add system include",
   "add library directory",
   "add library",
 
