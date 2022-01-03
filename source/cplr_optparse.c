@@ -240,9 +240,6 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
 
       /* statements */
-    case 'e':
-      l_append_str_static(&c->stms, optarg);
-      break;
     case 'b':
       l_append_str_static(&c->befs, optarg);
       break;
