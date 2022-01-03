@@ -81,12 +81,10 @@ struct cplr {
   /* index of first program argument */
   int    argp;
 
-  /* index of this state in chain */
-  int lindex;
+  /* index in chain */
+  int c_index;
   /* previous in chain */
-  cplr_t *lprev;
-  /* next in chain */
-  cplr_t *lnext;
+  cplr_t *c_prev;
 
   /* compiler state */
   TCCState *tcc;
@@ -105,7 +103,7 @@ struct cplr {
   char *g_codebuf;
   char *g_dumpbuf;
 
-  /* the piles */
+  /* stable piles (kept in chaining) */
   lh_t defdef;
   lh_t defsys;
   lh_t sysdirs;
@@ -116,8 +114,10 @@ struct cplr {
   lh_t incs;
   lh_t libs;
   lh_t pkgs;
-  lh_t srcs;
   lh_t tlds;
+
+  /* volatile piles (cleared in chaining) */
+  lh_t srcs;
   lh_t tlfs;
   lh_t stms;
   lh_t befs;

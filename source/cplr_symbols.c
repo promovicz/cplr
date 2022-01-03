@@ -27,7 +27,7 @@ TCCState *cplr_find_syms(cplr_t *c) {
       res = c->tcc;
       break;
     }
-    c = c->lprev;
+    c = c->c_prev;
   }
 
   return res;

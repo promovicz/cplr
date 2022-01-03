@@ -92,9 +92,12 @@ cplr_t *cplr_chain(cplr_t *c) {
 
   /* clone the context */
   n = cplr_clone(c);
-  n->lindex = c->lindex + 1;
-  c->lnext = n;
-  n->lprev = c;
+
+  /* establish chaining */
+  n->c_index = c->c_index + 1;
+  n->c_prev = c;
+
+  /* reset flags */
   n->flag &= ~CPLR_FLAG_EVALUATED;
 
   /* clear statement piles */
