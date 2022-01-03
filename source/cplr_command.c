@@ -19,141 +19,56 @@
 
 #include "cplr.h"
 
+/* Internal types */
+
 typedef int (*command_cb_t)(cplr_t *c, int argc, char **argv);
 
-struct command {
+typedef struct {
   char *name;
   char *help;
   command_cb_t handler;
-};
+} command_t;
 
-typedef struct command command_t;
+/* Internal functions */
 
 static void print_help(void);
+
+/* Command definitions */
+
 static int cmd_help(cplr_t *c, int argc, char **argv);
-static int cmd_hist(cplr_t *c, int argc, char **argv);
-static int cmd_code(cplr_t *c, int argc, char **argv);
+static int cmd_history(cplr_t *c, int argc, char **argv);
+static int cmd_chain(cplr_t *c, int argc, char **argv);
+static int cmd_piles(cplr_t *c, int argc, char **argv);
 static int cmd_dump(cplr_t *c, int argc, char **argv);
-static int cmd_stat(cplr_t *c, int argc, char **argv);
-static int cmd_libs(cplr_t *c, int argc, char **argv);
-static int cmd_syms(cplr_t *c, int argc, char **argv);
+static int cmd_library(cplr_t *c, int argc, char **argv);
+static int cmd_memory(cplr_t *c, int argc, char **argv);
+static int cmd_package(cplr_t *c, int argc, char **argv);
+static int cmd_state(cplr_t *c, int argc, char **argv);
+static int cmd_symbol(cplr_t *c, int argc, char **argv);
+static int cmd_quit(cplr_t *c, int argc, char **argv);
 
 static command_t commands[] = {
-{ "help", "Show help", cmd_help },
-{ "hist", "Show history", cmd_hist },
-{ "code", "Show current code", cmd_code },
-{ "dump", "Show current output", cmd_dump },
-{ "stat", "Show current status", cmd_stat },
-{ "libs", "Show library table", cmd_libs },
-{ "syms", "Show symbol table", cmd_syms },
+{ "?", "Show help", cmd_help },
+{ "h", "Show history", cmd_history },
+{ "c", "Show chain", cmd_chain },
+{ "p", "Show piles", cmd_piles },
 #if 0
-{ "prev", "Switch to previous piler", cmd_prev },
-{ "next", "Switch to next piler", cmd_next },
+{ "u", "Move up in chain", cmd_up },
+{ "d", "Move down in chain", cmd_down },
 #endif
+{ "D", "Show dump", cmd_dump },
+{ "L", "Show libraries", cmd_library },
+{ "M", "Show memory", cmd_memory },
+{ "P", "Show packages", cmd_package },
+{ "S", "Show state", cmd_state },
+{ "Y", "Show symbols", cmd_symbol },
+{ "q", "Quit", cmd_quit },
 { NULL, NULL, NULL },
 };
 
-static void print_help(void) {
-  command_t *ci;
+/* Exported functions */
 
-  /* title */
-  fprintf(stderr, "\n");
-
-  /* line types */
-  fprintf(stderr, "Prefixes: \n\n");
-  fprintf(stderr, "  :CMD  Run piler command\n");
-  fprintf(stderr, "  !CMD  Run system command\n");
-  fprintf(stderr, "  #CPP  Push top-level line for cpp\n");
-  fprintf(stderr, "  ^STM  Push top-level definition\n");
-  fprintf(stderr, "  $STM  Push top-level statement\n");
-  fprintf(stderr, "  <STM  Push before statement\n");
-  fprintf(stderr, "  >STM  Push after statement\n");
-  fprintf(stderr, "  .STM  Push normal statement\n");
-  fprintf(stderr, "  .     Run the pile\n");
-  fprintf(stderr, "  STM   Push statement and run pile\n");
-  fprintf(stderr, "  ?     Show help\n");
-  fprintf(stderr, "\n");
-
-  /* command summary */
-  fprintf(stderr, "Commands: \n\n");
-  ci = &commands[0];
-  while(ci->name) {
-    fprintf(stderr, "  :%-8s %s\n", ci->name, ci->help);
-    ci++;
-  }
-  fprintf(stderr, "\n");
-}
-
-static int cmd_help(cplr_t *c, int argc, char **argv) {
-  print_help();
-  return 0;
-}
-
-static int cmd_hist(cplr_t *c, int argc, char **argv) {
-  printf("History\n");
-  return 0;
-}
-
-static void print_section(cplr_t *c, const char *name, lh_t *list) {
-  int i;
-  ln_t *n;
-
-  if(l_empty(list)) {
-    return;
-  }
-
-  i = 0;
-  L_FORWARD(list, n) {
-    fprintf(stderr, "  %s[%d]: %s\n", name, i, value_get_str(&n->v));
-    i++;
-  }
-}
-
-static int cmd_code(cplr_t *c, int argc, char **argv) {
-  print_section(c, "tld", &c->tlds);
-  print_section(c, "tlf", &c->tlfs);
-  print_section(c, "bef", &c->befs);
-  print_section(c, "stm", &c->stms);
-  print_section(c, "aft", &c->afts);
-  return 0;
-}
-
-static int cmd_dump(cplr_t *c, int argc, char **argv) {
-  int dumpsave = c->dump;
-  c->dump = 1;
-  cplr_generate(c);
-  c->dump = dumpsave;
-  return 0;
-}
-
-static int cmd_stat(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Piler status:\n\n");
-  return 0;
-}
-
-static void print_sym_cb(void *ctx, const char *name, const void *val) {
-  if(name[0] == '_') {
-    return;
-  }
-  if(strprefix(name, "tcc_")) {
-    return;
-  }
-  if(strsuffix(name, "@plt")) {
-    return;
-  }
-  fprintf(stderr, "  %-12s\t%p\n", name, val);
-}
-
-static int cmd_libs(cplr_t *c, int argc, char **argv) {
-  return 0;
-}
-
-static int cmd_syms(cplr_t *c, int argc, char **argv) {
-  tcc_list_symbols(cplr_find_syms(c), c, &print_sym_cb);
-  return 0;
-}
-
-int cplr_command_batch(cplr_t *c, const char *line) {
+static int cplr_command_internal(cplr_t *c, const char *line) {
   int ret = 1;
   int argc, argn;
   char **argv = NULL;
@@ -195,7 +110,12 @@ int cplr_command_batch(cplr_t *c, const char *line) {
 
   /* check for command */
   if(argc == 0) {
-    fprintf(stderr, "No command.\n");
+    if(c->flag & CPLR_FLAG_INTERACTIVE) {
+      print_help();
+      ret = 0;
+    } else {
+      fprintf(stderr, "No command.\n");
+    }
     goto out;
   }
 
@@ -228,7 +148,7 @@ int cplr_command_batch(cplr_t *c, const char *line) {
   return ret;
 }
 
-int cplr_command_interactive(cplr_t *c, const char *line) {
+int cplr_command(cplr_t *c, const char *line) {
   int res, ret = 0;
 
   /* skip initial whitespace */
@@ -245,37 +165,37 @@ int cplr_command_interactive(cplr_t *c, const char *line) {
     print_help();
     goto out;
 
-    /* piler command */
-  case ':':
-    ret = cplr_command_batch(c, line+1);
+    /* internal command */
+  case '\\':
+    ret = cplr_command_internal(c, line+1);
     goto out;
 
     /* system command */
   case '!':
+    if(strlen(line+1) == 0) {
+      fprintf(stderr, "Must provide command.\n");
+      goto out;
+    }
     system(line+1);
     goto out;
 
-    /* cpp must go to toplevel */
-  case '#':
-    l_append_str_owned(&c->tlds, strdup(line));
-    goto out;
-    /* toplevel declarations */
-  case '$':
+    /* declaration */
+  case '@':
     l_append_str_owned(&c->tlds, strdup(line+1));
     goto out;
-    /* toplevel statements (definitions) */
+    /* toplevel */
   case '^':
     l_append_str_owned(&c->tlfs, strdup(line+1));
     goto out;
-    /* before and after statements */
+    /* before */
   case '<':
     l_append_str_owned(&c->befs, strdup(line+1));
     goto out;
+    /* after */
   case '>':
     l_append_str_owned(&c->afts, strdup(line+1));
     goto out;
-
-    /* append statements */
+    /* statement */
   case '.':
     if(strlen(line+1)) {
       l_append_str_owned(&c->stms, strdup(line+1));
@@ -297,4 +217,126 @@ int cplr_command_interactive(cplr_t *c, const char *line) {
  out:
   /* always succeed */
   return ret;
+}
+
+/* Command implementations */
+
+static int cmd_help(cplr_t *c, int argc, char **argv) {
+  print_help();
+  return 0;
+}
+
+static int cmd_history(cplr_t *c, int argc, char **argv) {
+  printf("History\n");
+  return 0;
+}
+
+static int cmd_chain(cplr_t *c, int argc, char **argv) {
+  printf("Chain\n");
+  return 0;
+}
+
+static void print_pile(cplr_t *c, const char *name, lh_t *list) {
+  int i;
+  ln_t *n;
+
+  if(l_empty(list)) {
+    return;
+  }
+
+  i = 0;
+  L_FORWARD(list, n) {
+    fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
+    i++;
+  }
+}
+
+static int cmd_piles(cplr_t *c, int argc, char **argv) {
+  print_pile(c, "d", &c->tlds);
+  print_pile(c, "t", &c->tlfs);
+  print_pile(c, "b", &c->befs);
+  print_pile(c, "s", &c->stms);
+  print_pile(c, "a", &c->afts);
+  return 0;
+}
+
+static int cmd_dump(cplr_t *c, int argc, char **argv) {
+  int dumpsave = c->dump;
+  c->dump = 1;
+  cplr_generate(c);
+  c->dump = dumpsave;
+  return 0;
+}
+
+static int cmd_library(cplr_t *c, int argc, char **argv) {
+  return 0;
+}
+
+static int cmd_memory(cplr_t *c, int argc, char **argv) {
+  return 0;
+}
+
+static int cmd_package(cplr_t *c, int argc, char **argv) {
+  return 0;
+}
+
+static int cmd_state(cplr_t *c, int argc, char **argv) {
+  return 0;
+}
+
+static void print_sym_cb(void *ctx, const char *name, const void *val) {
+  if(name[0] == '_') {
+    return;
+  }
+  if(strprefix(name, "tcc_")) {
+    return;
+  }
+  if(strsuffix(name, "@plt")) {
+    return;
+  }
+  fprintf(stderr, "  %-12s\t%p\n", name, val);
+}
+
+static int cmd_symbol(cplr_t *c, int argc, char **argv) {
+  if(!c->tcc) {
+    fprintf(stderr, "No symbols.\n");
+  }
+  tcc_list_symbols(cplr_find_syms(c), c, &print_sym_cb);
+  return 0;
+}
+
+static int cmd_quit(cplr_t *c, int argc, char **argv) {
+  return 1;
+}
+
+/* Internal functions */
+
+static void print_help(void) {
+  command_t *ci;
+
+  /* title */
+  fprintf(stderr, "\n");
+
+  /* line types */
+  fprintf(stderr, "Prefixes: \n");
+  fprintf(stderr, "  \\C   Piler command\n");
+  fprintf(stderr, "  !C   System command\n");
+  fprintf(stderr, "  @S   Push declaration\n");
+  fprintf(stderr, "  ^S   Push toplevel\n");
+  fprintf(stderr, "  <S   Push before\n");
+  fprintf(stderr, "  >S   Push after\n");
+  fprintf(stderr, "  .S   Push statement\n");
+  fprintf(stderr, "  .    Run the pile\n");
+  fprintf(stderr, "  S    Push and run\n");
+  fprintf(stderr, "  ?    Show help\n");
+  fprintf(stderr, "\n");
+
+  /* command summary */
+  fprintf(stderr, "Commands: \n");
+  ci = &commands[0];
+  while(ci->name) {
+    fprintf(stderr, "  \\%-4s %s\n", ci->name, ci->help);
+    ci++;
+  }
+  fprintf(stderr, "\n");
 }

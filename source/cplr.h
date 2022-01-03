@@ -155,8 +155,7 @@ extern int cplr_run(cplr_t *c);
 extern int cplr_interact(cplr_t *c);
 
 /* cplr_command.c - command handling */
-extern int cplr_command_batch(cplr_t *c, const char *line);
-extern int cplr_command_interactive(cplr_t *c, const char *line);
+extern int cplr_command(cplr_t *c, const char *line);
 
 /* cplr_package.c - pkg-config routines */
 extern int cplr_pkgconfig_prepare(cplr_t *c, const char *name);

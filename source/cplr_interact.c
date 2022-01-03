@@ -23,7 +23,7 @@
 #include <readline/history.h>
 
 int cplr_interact(cplr_t *b) {
-  int res,ret=0;
+  int ret = 0;
   cplr_t *c = b;
   char *line;
   char *prompt = "> ";
@@ -40,8 +40,12 @@ int cplr_interact(cplr_t *b) {
     add_history(line);
 
     /* run the command */
-    res = cplr_command_interactive(c, line);
-    if(res != 0) {
+    ret = cplr_command(c, line);
+    if(ret != 0) {
+      /* Fix return code */
+      if(ret >= 1) {
+        ret -= 1;
+      }
       goto out;
     }
 
