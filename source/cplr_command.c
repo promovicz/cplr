@@ -19,6 +19,9 @@
 
 #include "cplr.h"
 
+#include <limits.h>
+#include <unistd.h>
+
 /* Internal types */
 
 typedef int (*command_cb_t)(cplr_t *c, int argc, char **argv);
@@ -36,6 +39,7 @@ static void print_help(void);
 /* Command definitions */
 
 static int cmd_help(cplr_t *c, int argc, char **argv);
+static int cmd_cwd(cplr_t *c, int argc, char **argv);
 static int cmd_history(cplr_t *c, int argc, char **argv);
 static int cmd_chain(cplr_t *c, int argc, char **argv);
 static int cmd_piles(cplr_t *c, int argc, char **argv);
@@ -52,6 +56,7 @@ static command_t commands[] = {
 { "h", "Show history", cmd_history },
 { "c", "Show chain", cmd_chain },
 { "p", "Show piles", cmd_piles },
+{ "w", "Show cwd", cmd_cwd },
 #if 0
 { "u", "Move up in chain", cmd_up },
 { "d", "Move down in chain", cmd_down },
@@ -227,6 +232,12 @@ int cplr_command(cplr_t *c, const char *line) {
 
 static int cmd_help(cplr_t *c, int argc, char **argv) {
   print_help();
+  return 0;
+}
+
+static int cmd_cwd(cplr_t *c, int argc, char **argv) {
+  char cwd[PATH_MAX];
+  printf("%s\n", getcwd(cwd, sizeof(cwd)));
   return 0;
 }
 
