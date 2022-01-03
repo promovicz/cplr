@@ -119,10 +119,10 @@ static int cmd_code(cplr_t *c, int argc, char **argv) {
 }
 
 static int cmd_dump(cplr_t *c, int argc, char **argv) {
-  cplr_flag_t flagsave = c->flag;
-  c->flag |= CPLR_FLAG_DUMP;
+  int dumpsave = c->dump;
+  c->dump = 1;
   cplr_generate(c);
-  c->flag = flagsave;
+  c->dump = dumpsave;
   return 0;
 }
 

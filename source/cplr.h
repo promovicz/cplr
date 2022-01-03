@@ -32,7 +32,6 @@
 
 /* cplr flags */
 typedef enum {
-   CPLR_FLAG_DUMP = (1 << 1),
    CPLR_FLAG_NORUN = (1 << 2),
    CPLR_FLAG_PRISTINE = (1 << 4),
    CPLR_FLAG_LOOP = (1 << 5),
@@ -66,6 +65,8 @@ typedef struct cplr cplr_t;
 struct cplr {
   /* flags */
   cplr_flag_t flag;
+  /* dump level */
+  int dump;
   /* verbosity level */
   int verbosity;
   /* target environment (posix, linux...) */

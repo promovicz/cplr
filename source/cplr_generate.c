@@ -59,7 +59,7 @@ static void cplr_emit(cplr_t *c,
   }
 
   if(c->g_dump) {
-    if(needline && (c->verbosity >= 2))
+    if(needline && (c->dump > 1))
       fwrite(sline, 1, strlen(sline), c->g_dump);
     fwrite(sfmt, 1, strlen(sfmt), c->g_dump);
   }
@@ -216,7 +216,7 @@ static void cplr_generate_open(cplr_t *c) {
   c->g_codebuf = xcalloc(2^16, 1);
   c->g_code = fmemopen(c->g_codebuf, 2^16, "w");
 #endif
-  if(c->flag & CPLR_FLAG_DUMP) {
+  if(c->dump > 0) {
 #ifdef _GNU_SOURCE
     c->g_dumpbuf = strdup("");
     c->g_dump = fopencookie(c, "w", dump_stream_functions);
@@ -254,7 +254,7 @@ static void cplr_generate_dump(cplr_t *c) {
   if(!filter) {
     filter = "cat -n -";
   }
-  if(c->flag & CPLR_FLAG_DUMP) {
+  if(c->dump > 0) {
     fprintf(stderr, "%s\n", bar);
     fflush(stderr);
     size_t total = strlen(c->g_dumpbuf);

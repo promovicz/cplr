@@ -193,11 +193,11 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       goto version;
 
       /* flags */
-    case 'v': /* enable verbose */
+    case 'v': /* increase verbosity level */
       c->verbosity++;
       break;
-    case 'd': /* enable dump */
-      c->flag |= CPLR_FLAG_DUMP;
+    case 'd': /* increase dump level */
+      c->dump++;
       break;
     case 'n': /* enable norun */
       c->flag |= CPLR_FLAG_NORUN;
