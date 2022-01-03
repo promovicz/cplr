@@ -24,7 +24,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpyD:U:I:i:S:s:L:l:P:e:b:a:t:o:f:-";
+const char *shortopts = "-:hHVvdnpyD:U:I:i:S:s:L:l:P:b:a:t:o:f:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -52,7 +52,6 @@ const struct option longopts[] = {
 
   {NULL,    1, NULL, 'P'},
 
-  {NULL,    1, NULL, 'e'},
   {NULL,    1, NULL, 'b'},
   {NULL,    1, NULL, 'a'},
   {NULL,    1, NULL, 't'},
@@ -88,7 +87,6 @@ const char *longhelp[] = {
 
   "add pkg-config library",
 
-  "add main statement",
   "add before statement",
   "add after statement",
   "add toplevel statement",
