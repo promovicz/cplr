@@ -236,27 +236,40 @@ static int cmd_chain(cplr_t *c, int argc, char **argv) {
   return 0;
 }
 
-static void print_pile(cplr_t *c, const char *name, lh_t *list) {
+static bool print_pile(cplr_t *c, const char *name, lh_t *list, bool reverse) {
   int i;
   ln_t *n;
 
   if(l_empty(list)) {
-    return;
+    return false;
   }
 
-  i = 0;
-  L_FORWARD(list, n) {
-    fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
-    i++;
+  if(reverse) {
+    i = 0;
+    L_BACKWARDS(list, n) {
+      fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
+      i++;
+    }
+  } else {
+    i = 0;
+    L_FORWARD(list, n) {
+      fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
+      i++;
+    }
   }
+
+  return true;
 }
 
 static int cmd_piles(cplr_t *c, int argc, char **argv) {
-  print_pile(c, "d", &c->tlds);
-  print_pile(c, "t", &c->tlfs);
-  print_pile(c, "b", &c->befs);
-  print_pile(c, "s", &c->stms);
-  print_pile(c, "a", &c->afts);
+  bool any = false;
+  any |= print_pile(c, "d", &c->tlds, false);
+  any |= print_pile(c, "t", &c->tlfs, false);
+  if(any)
+    fprintf(stderr, "\n");
+  print_pile(c, "b", &c->befs, false);
+  print_pile(c, "s", &c->stms, false);
+  print_pile(c, "a", &c->afts, true);
   return 0;
 }
 
