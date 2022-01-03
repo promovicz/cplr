@@ -78,6 +78,11 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
   char *cmd;
   command_t *ci;
 
+  /* fail less when interactive */
+  if(c->flag & CPLR_FLAG_INTERACTIVE) {
+    ret = 0;
+  }
+
   /* count arguments */
   tokline = strdup(line);
   argn = 0;
@@ -112,7 +117,6 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
   if(argc == 0) {
     if(c->flag & CPLR_FLAG_INTERACTIVE) {
       print_help();
-      ret = 0;
     } else {
       fprintf(stderr, "No command.\n");
     }
