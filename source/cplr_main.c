@@ -70,74 +70,11 @@ int main(int argc, char **argv) {
     read_history(realpath("~/.cplr_history", NULL));
   }
 
-  /* main loop */
-  do {
-    /* assume failure */
-    ret = 1;
-
-    /* prepare compilation */
-    if(cplr_prepare(c)) {
-      fprintf(stderr, "Error: Prepare failed.\n");
-      goto stepback;
-    }
-
-    /* generate code */
-    if(cplr_generate(c)) {
-      fprintf(stderr, "Error: Code generation failed.\n");
-      goto stepback;
-    }
-
-    /* perform compilation */
-    if(cplr_compile(c)) {
-      fprintf(stderr, "Error: Compilation failed.\n");
-      goto stepback;
-    }
-
-    c->flag |= CPLR_FLAG_EVALUATED;
-
-    /* execute code */
-    if(!(c->flag & CPLR_FLAG_NORUN)) {
-      /* perform execution */
-      ret = cplr_execute(c);
-      if(ret) {
-        if(c->flag & CPLR_FLAG_INTERACTIVE) {
-          fprintf(stderr, "Program returned %d.\n", ret);
-        }
-        /* preserving ret */
-        goto next;
-      }
-    }
-
-    /* run has succeeded */
-    ret = 0;
-
-    goto next;
-
-  stepback:
-    /* XXX temporary fix for symbol chaining until we implement symbol search !?°^%& */
-    if(c->lprev) {
-      c = c->lprev;
-    }
-
-  next:
-
-    if(c->flag & CPLR_FLAG_INTERACTIVE) {
-      /* start interacting after initial run */
-      cplr_t *new = cplr_interact(c);
-      if(!new) {
-        fprintf(stderr, "\n");
-        goto done;
-      }
-      c = new;
-    } else {
-      /* in non-interactive mode errors are terminal */
-      if(ret) {
-        goto done;
-      }
-    }
-
-    /* fall through to next iteration */
-  } while(c->flag & CPLR_FLAG_LOOP);
+  if(c->flag & CPLR_FLAG_INTERACTIVE) {
+    ret = cplr_interact(c);
+  } else {
+    ret = cplr_run(c);
+  }
 
   /* we get here when execution is finished */
  done:

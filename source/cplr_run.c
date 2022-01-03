@@ -1,8 +1,8 @@
 
 #include "cplr.h"
 
-cplr_t *cplr_run(cplr_t *c) {
-  int ret;
+int cplr_run(cplr_t *c) {
+  int res, ret = 1;
   cplr_t *n;
 
   /* prepare compilation */
@@ -26,10 +26,10 @@ cplr_t *cplr_run(cplr_t *c) {
   /* execute code */
   if(!(c->flag & CPLR_FLAG_NORUN)) {
     /* perform execution */
-    ret = cplr_execute(c);
-    if(ret) {
+    res = cplr_execute(c);
+    if(res) {
         if(c->flag & CPLR_FLAG_INTERACTIVE) {
-          fprintf(stderr, "Program returned %d.\n", ret);
+          fprintf(stderr, "Program returned %d.\n", res);
         }
         /* XXX preserving ret, exiting !? */
     }
@@ -37,22 +37,8 @@ cplr_t *cplr_run(cplr_t *c) {
 
   c->flag |= CPLR_FLAG_EVALUATED;
 
+  ret = 0;
+
  out:
-
-  /* clone the context */
-  n = cplr_clone(c);
-  n->lindex = c->lindex + 1;
-  c->lnext = n;
-  n->lprev = c;
-  n->flag &= ~CPLR_FLAG_EVALUATED;
-
-  /* clear statement piles */
-  l_clear(&n->srcs);
-  l_clear(&n->tlfs);
-  l_clear(&n->stms);
-  l_clear(&n->befs);
-  l_clear(&n->afts);
-
-  /* return the new state */
-  return n;
+  return ret;
 }

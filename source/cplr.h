@@ -48,7 +48,7 @@ typedef enum {
    CPLR_TARGET_LINUX_KERNEL = 4,
 } cplr_target_t;
 
-/* code generation phases */
+/* code generation states */
 typedef enum {
    CPLR_GSTATE_INITIAL = 0,
    CPLR_GSTATE_COMMENT = 1,
@@ -80,11 +80,11 @@ struct cplr {
   /* index of first program argument */
   int    argp;
 
-  /* index of this state in loop mode */
+  /* index of this state in chain */
   int lindex;
-  /* previous instance in loop mode */
+  /* previous in chain */
   cplr_t *lprev;
-  /* next instance in loop mode */
+  /* next in chain */
   cplr_t *lnext;
 
   /* compiler state */
@@ -127,6 +127,7 @@ struct cplr {
 extern cplr_t *cplr_new(void);
 extern void cplr_free(cplr_t *c);
 extern cplr_t *cplr_clone(cplr_t *c);
+extern cplr_t *cplr_chain(cplr_t *c);
 
 /* cplr_optparse.c - command-line option parser */
 extern int cplr_optparse(cplr_t *c, int argc, char **argv);
@@ -146,15 +147,15 @@ extern int cplr_compile(cplr_t *c);
 /* cplr_execute.c - execute compiled code */
 extern int cplr_execute(cplr_t *c);
 
-/* cplr_run.c -  prepare, generate, execute */
-extern cplr_t *cplr_run(cplr_t *c);
+/* cplr_run.c -  prepare, generate, compile, execute */
+extern int cplr_run(cplr_t *c);
 
 /* cplr_interactive.c - interactor */
-extern cplr_t *cplr_interact(cplr_t *c);
+extern int cplr_interact(cplr_t *c);
 
 /* cplr_command.c - command handling */
-extern cplr_t *cplr_command_batch(cplr_t *c, const char *line);
-extern cplr_t *cplr_command_interactive(cplr_t *c, const char *line);
+extern int cplr_command_batch(cplr_t *c, const char *line);
+extern int cplr_command_interactive(cplr_t *c, const char *line);
 
 /* cplr_package.c - pkg-config routines */
 extern int cplr_pkgconfig_prepare(cplr_t *c, const char *name);

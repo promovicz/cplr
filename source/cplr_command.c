@@ -153,8 +153,8 @@ static int cmd_syms(cplr_t *c, int argc, char **argv) {
   return 0;
 }
 
-cplr_t *cplr_command_batch(cplr_t *c, const char *line) {
-  int ret = 0;
+int cplr_command_batch(cplr_t *c, const char *line) {
+  int ret = 1;
   int argc, argn;
   char **argv = NULL;
   char *tokline;
@@ -196,7 +196,6 @@ cplr_t *cplr_command_batch(cplr_t *c, const char *line) {
   /* check for command */
   if(argc == 0) {
     fprintf(stderr, "No command.\n");
-    ret = 1;
     goto out;
   }
 
@@ -215,7 +214,6 @@ cplr_t *cplr_command_batch(cplr_t *c, const char *line) {
 
   /* unknown command */
   fprintf(stderr, "Unknown command \"%s\".\n", cmd);
-  ret = 1;
 
  out:
   /* clean up */
@@ -225,16 +223,20 @@ cplr_t *cplr_command_batch(cplr_t *c, const char *line) {
     }
     free(argv);
   }
+
   /* return */
-  return c;
+  return ret;
 }
 
-cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
+int cplr_command_interactive(cplr_t *c, const char *line) {
+  int res, ret = 0;
 
+  /* skip initial whitespace */
   while(*line && (isspace(*line) || iscntrl(*line))) { line++; };
 
+  /* ignore empty lines */
   if(strlen(line) == 0) {
-    return c;
+    goto out;
   }
 
   switch(line[0]) {
@@ -245,7 +247,7 @@ cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
 
     /* piler command */
   case ':':
-    cplr_command_batch(c, line+1);
+    ret = cplr_command_batch(c, line+1);
     goto out;
 
     /* system command */
@@ -286,8 +288,13 @@ cplr_t *cplr_command_interactive(cplr_t *c, const char *line) {
     break;
   }
 
-  return cplr_run(c);
+  /* run the pile */
+  res = cplr_run(c);
+  if(res) {
+    fprintf(stderr, "Run failed\n");
+  }
 
  out:
-  return c;
+  /* always succeed */
+  return ret;
 }

@@ -85,3 +85,24 @@ cplr_t *cplr_clone(cplr_t *c) {
   l_clone(&c->afts, &r->afts);
   return r;
 }
+
+cplr_t *cplr_chain(cplr_t *c) {
+  cplr_t *n;
+
+  /* clone the context */
+  n = cplr_clone(c);
+  n->lindex = c->lindex + 1;
+  c->lnext = n;
+  n->lprev = c;
+  n->flag &= ~CPLR_FLAG_EVALUATED;
+
+  /* clear statement piles */
+  l_clear(&n->srcs);
+  l_clear(&n->tlfs);
+  l_clear(&n->stms);
+  l_clear(&n->befs);
+  l_clear(&n->afts);
+
+  /* return the new state */
+  return n;
+}

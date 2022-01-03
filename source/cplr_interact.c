@@ -22,33 +22,35 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-cplr_t *cplr_interact(cplr_t *c) {
-  cplr_t *n = c;
+int cplr_interact(cplr_t *b) {
+  int res,ret=0;
+  cplr_t *c = b;
   char *line;
   char *prompt = "> ";
   bool backslash;
 
   /* command loop */
   while((line = readline(prompt))) {
+    /* ignore empty lines */
     if(!strlen(line)) {
       continue;
     }
 
-    /* all lines end up in history */
+    /* add to readline history */
     add_history(line);
 
     /* run the command */
-    n = cplr_command_interactive(c, line);
-
-    /* finish on zero return */
-    if(!n) {
-      return c;
+    res = cplr_command_interactive(c, line);
+    if(res != 0) {
+      goto out;
     }
 
-    c = n;
-
+    /* create a new state */
+    if(c->flag & CPLR_FLAG_EVALUATED) {
+      c = cplr_chain(c);
+    }
   }
 
-  /* return the new state */
-  return n;
+ out:
+  return ret;
 }
