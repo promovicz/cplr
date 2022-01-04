@@ -33,18 +33,11 @@ static void cplr_tcc_error(cplr_t *c, const char *msg) {
   free(clone);
 }
 
-int cplr_prepare(cplr_t *c) {
+static int cplr_tcc_prepare(cplr_t *c) {
+  int ret = 1;
+  TCCState *t;
   int otype;
   ln_t *i;
-  TCCState *t;
-
-  /* say hello */
-  if(c->verbosity >= 1) {
-    fprintf(stderr, "Preparation phase\n");
-  }
-
-  /* flag the context */
-  c->flag |= CPLR_FLAG_PREPARED;
 
   /* new compiler */
   t = tcc_new();
@@ -69,14 +62,14 @@ int cplr_prepare(cplr_t *c) {
   }
   if(tcc_set_output_type(c->tcc, otype)) {
     fprintf(stderr, "Failed to set output type %d\n", otype);
-    return 1;
+    goto out;
   }
 
   /* packages */
   L_FORWARD(&c->pkgs, i) {
     if(cplr_pkgconfig_prepare(c, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to prepare package %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
@@ -94,7 +87,7 @@ int cplr_prepare(cplr_t *c) {
   L_FORWARD(&c->sysdirs, i) {
     if(tcc_add_sysinclude_path(t, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to add sysinclude path %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
@@ -102,7 +95,7 @@ int cplr_prepare(cplr_t *c) {
   L_FORWARD(&c->incdirs, i) {
     if(tcc_add_include_path(t, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to add include path %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
@@ -110,7 +103,7 @@ int cplr_prepare(cplr_t *c) {
   L_FORWARD(&c->libdirs, i) {
     if(tcc_add_library_path(t, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to add library path %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
@@ -118,7 +111,7 @@ int cplr_prepare(cplr_t *c) {
   L_FORWARD(&c->libs, i) {
     if(tcc_add_library(t, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to add library %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
@@ -126,10 +119,36 @@ int cplr_prepare(cplr_t *c) {
   L_FORWARD(&c->srcs, i) {
     if(tcc_add_file(t, value_get_str(&i->v))) {
       fprintf(stderr, "Failed to add file %s\n", value_get_str(&i->v));
-      return 1;
+      goto out;
     }
   }
 
   /* done */
-  return 0;
+  ret = 0;
+
+ out:
+
+  return ret;
+}
+
+int cplr_prepare(cplr_t *c) {
+  int ret = 1;
+
+  /* report */
+  if(c->verbosity >= 1) {
+    fprintf(stderr, "Preparation phase\n");
+  }
+
+  /* call backend method */
+  switch(c->backend) {
+  case CPLR_BACKEND_LIBTCC:
+    ret = cplr_tcc_prepare(c);
+    break;
+  }
+
+  /* flag the context */
+  c->flag |= CPLR_FLAG_PREPARED;
+
+  /* done */
+  return ret;
 }
