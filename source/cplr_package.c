@@ -68,29 +68,29 @@ int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args) {
       switch(opt) {
       case 'D':
       case 'U':
-	l_append_str_owned(&c->defs, msprintf("-%c%s", opt, s));
-	xfree(s);
-	if(c->verbosity >= 2)
-	  fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
-	break;
+        l_append_str_owned(&c->defs, msprintf("-%c%s", opt, s));
+        xfree(s);
+        if(c->verbosity >= 2)
+          fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
+        break;
       case 'I':
-	l_append_str_owned(&c->incdirs, s);
-	if(c->verbosity >= 2)
-	  fprintf(stderr, "Package %s include dir: %s\n", name, s);
-	break;
+        l_append_str_owned(&c->incdirs, s);
+        if(c->verbosity >= 2)
+          fprintf(stderr, "Package %s include dir: %s\n", name, s);
+        break;
       case 'L':
-	l_append_str_owned(&c->libdirs, s);
-	if(c->verbosity >= 2)
-	  fprintf(stderr, "Package %s library dir: %s\n", name, s);
-	break;
+        l_append_str_owned(&c->libdirs, s);
+        if(c->verbosity >= 2)
+          fprintf(stderr, "Package %s library dir: %s\n", name, s);
+        break;
       case 'l':
-	l_append_str_owned(&c->libs, s);
-	if(c->verbosity >= 2)
-	  fprintf(stderr, "Package %s library: %s\n", name, s);
-	break;
+        l_append_str_owned(&c->libs, s);
+        if(c->verbosity >= 2)
+          fprintf(stderr, "Package %s library: %s\n", name, s);
+        break;
       default:
-	xfree(s);
-	break;
+        xfree(s);
+        break;
       }
       opt = 0;
     } else if(dash) {
@@ -99,32 +99,32 @@ int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args) {
       case 'I':
       case 'L':
       case 'l':
-	opt = n;
-	while(*o && isspace(*o)) o++;
-	break;
+        opt = n;
+        while(*o && isspace(*o)) o++;
+        break;
       case 'p':
-	if(strstr(o, "pthread") == o) {
-	  if(c->verbosity >= 2)
-	    fprintf(stderr, "Package %s uses pthreads.\n", name);
-	  tcc_set_options(c->tcc, "-pthread");
-	  o += 6;
-	  break;
-	}
-	/* fall through */
+        if(strstr(o, "pthread") == o) {
+          if(c->verbosity >= 2)
+            fprintf(stderr, "Package %s uses pthreads.\n", name);
+          tcc_set_options(c->tcc, "-pthread");
+          o += 6;
+          break;
+        }
+        /* fall through */
       default:
-	fprintf(stderr, "Warning: unhandled option -%c in package %s: %s\n", n, name, o-1);
-	while(*o && isgraph(*o)) o++;
-	//return 1;
+        fprintf(stderr, "Warning: unhandled option -%c in package %s: %s\n", n, name, o-1);
+        while(*o && isgraph(*o)) o++;
+        //return 1;
       }
       dash = false;
     } else {
       if(n == '-') {
-	dash = true;
+        dash = true;
       } else if(isspace(n)) {
-	continue;
+        continue;
       } else {
-	fprintf(stderr, "Invalid string in package %s: %s\n", name, o);
-	return 1;
+        fprintf(stderr, "Invalid string in package %s: %s\n", name, o);
+        return 1;
       }
     }
   } while(*o++);
