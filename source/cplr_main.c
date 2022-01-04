@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   }
 
   /* apply defaults */
-  if(!(c->flag & CPLR_FLAG_PRISTINE)) {
+  if(!(c->flag & CPLR_FLAG_NODEFAULTS)) {
     if(cplr_defaults(c)) {
       fprintf(stderr, "Error: Default initialization failed.\n");
       goto done;
@@ -62,7 +62,6 @@ int main(int argc, char **argv) {
   /* switch to interactive when no statement and on a tty */
   if(l_empty(&c->stms) && (isatty(0) == 1) && (isatty(1) == 1)) {
     c->flag |= CPLR_FLAG_INTERACTIVE;
-    c->flag |= CPLR_FLAG_LOOP;
     /* read history */
     if(c->verbosity >= 3) {
       fprintf(stderr, "Reading history\n");
@@ -70,6 +69,7 @@ int main(int argc, char **argv) {
     read_history(realpath("~/.cplr_history", NULL));
   }
 
+  /* perform main action */
   if(c->flag & CPLR_FLAG_INTERACTIVE) {
     ret = cplr_interact(c);
   } else {

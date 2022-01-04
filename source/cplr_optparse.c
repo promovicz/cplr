@@ -200,7 +200,7 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       c->flag |= CPLR_FLAG_NORUN;
       break;
     case 'p': /* enable pristine */
-      c->flag |= CPLR_FLAG_PRISTINE;
+      c->flag |= CPLR_FLAG_NODEFAULTS;
       break;
     case 'y': /* enable interactive */
       c->flag |= CPLR_FLAG_INTERACTIVE;

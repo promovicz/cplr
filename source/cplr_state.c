@@ -98,7 +98,11 @@ cplr_t *cplr_chain(cplr_t *c) {
   n->c_prev = c;
 
   /* reset flags */
-  n->flag &= ~CPLR_FLAG_EVALUATED;
+  n->flag &= ~(CPLR_FLAG_PREPARED
+               |CPLR_FLAG_COMPILED
+               |CPLR_FLAG_LOADED
+               |CPLR_FLAG_EXECUTED
+               |CPLR_FLAG_FINISHED);
 
   /* clear statement piles */
   l_clear(&n->srcs);

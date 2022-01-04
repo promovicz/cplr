@@ -43,6 +43,9 @@ int cplr_prepare(cplr_t *c) {
     fprintf(stderr, "Preparation phase\n");
   }
 
+  /* flag the context */
+  c->flag |= CPLR_FLAG_PREPARED;
+
   /* new compiler */
   t = tcc_new();
   if(!t) {

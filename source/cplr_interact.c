@@ -49,8 +49,8 @@ int cplr_interact(cplr_t *b) {
       goto out;
     }
 
-    /* create a new state */
-    if(c->flag & CPLR_FLAG_EVALUATED) {
+    /* create a new state when needed */
+    if(c->flag & CPLR_FLAG_LOADED) {
       c = cplr_chain(c);
     }
   }

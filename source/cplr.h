@@ -32,11 +32,19 @@
 
 /* cplr flags */
 typedef enum {
-   CPLR_FLAG_NORUN = (1 << 2),
-   CPLR_FLAG_PRISTINE = (1 << 4),
-   CPLR_FLAG_LOOP = (1 << 5),
-   CPLR_FLAG_INTERACTIVE = (1 << 6),
-   CPLR_FLAG_EVALUATED = (1 << 7),
+   CPLR_FLAG_NODEFAULTS = (1<<1),
+   CPLR_FLAG_NOCOMPILE = (1<<2),
+   CPLR_FLAG_NOLINK = (1<<3),
+   CPLR_FLAG_NORUN = (1<<4),
+   CPLR_FLAG_FORK = (1<<5),
+   CPLR_FLAG_INTERACTIVE = (1<<6),
+
+   CPLR_FLAG_GENERATED = (1<<10),
+   CPLR_FLAG_PREPARED = (1<<11),
+   CPLR_FLAG_COMPILED = (1<<12),
+   CPLR_FLAG_LOADED = (1<<13),
+   CPLR_FLAG_EXECUTED = (1<<14),
+   CPLR_FLAG_FINISHED = (1<<15),
 } cplr_flag_t;
 
 /* target environment */

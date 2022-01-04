@@ -346,6 +346,8 @@ int cplr_generate(cplr_t *c) {
   cplr_generate_report(c);
   /* clean up */
   cplr_generate_finish(c);
+  /* flag the context */
+  c->flag |= CPLR_FLAG_GENERATED;
   /* done */
   return 0;
 }

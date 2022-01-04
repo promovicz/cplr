@@ -40,5 +40,11 @@ int cplr_execute(cplr_t *c) {
   if(c->verbosity >= 1) {
     fprintf(stderr, "Execution finished (ret=%d).\n", ret);
   }
+
+  /* we are finished */
+  c->flag |= CPLR_FLAG_FINISHED;
+
+ out:
+
   return ret;
 }

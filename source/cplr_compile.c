@@ -53,6 +53,8 @@ int cplr_compile(cplr_t *c) {
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
   }
+  c->flag |= CPLR_FLAG_COMPILED;
+  c->flag |= CPLR_FLAG_LOADED;
   /* redefine symbols */
   if(c->c_prev && c->c_prev->tcc) {
     if(c->verbosity >= 3) {

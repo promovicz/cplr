@@ -35,8 +35,7 @@ int cplr_run(cplr_t *c) {
     }
   }
 
-  c->flag |= CPLR_FLAG_EVALUATED;
-
+  /* done means success */
   ret = 0;
 
  out:

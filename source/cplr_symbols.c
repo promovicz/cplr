@@ -23,7 +23,7 @@ TCCState *cplr_find_syms(cplr_t *c) {
   TCCState *res = NULL;
 
   while(c) {
-    if(c->flag & CPLR_FLAG_EVALUATED) {
+    if(c->flag & CPLR_FLAG_LOADED) {
       res = c->tcc;
       break;
     }
