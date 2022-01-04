@@ -6,21 +6,25 @@ int cplr_run(cplr_t *c) {
   cplr_t *n;
 
   /* prepare compilation */
-  if(cplr_prepare(c)) {
-    fprintf(stderr, "Error: Prepare failed.\n");
-    goto out;
+  if(!(c->flag & CPLR_FLAG_PREPARED)) {
+    if(cplr_prepare(c)) {
+      fprintf(stderr, "Error: Prepare failed.\n");
+      goto out;
+    }
   }
 
-  /* generate code */
-  if(cplr_generate(c)) {
-    fprintf(stderr, "Error: Code generation failed.\n");
-    goto out;
-  }
+  if(!(c->flag & CPLR_FLAG_COMPILED)) {
+    /* generate code */
+    if(cplr_generate(c)) {
+      fprintf(stderr, "Error: Code generation failed.\n");
+      goto out;
+    }
 
-  /* perform compilation */
-  if(cplr_compile(c)) {
-    fprintf(stderr, "Error: Compilation failed.\n");
-    goto out;
+    /* perform compilation */
+    if(cplr_compile(c)) {
+      fprintf(stderr, "Error: Compilation failed.\n");
+      goto out;
+    }
   }
 
   /* expect success */
