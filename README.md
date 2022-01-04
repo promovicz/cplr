@@ -24,7 +24,7 @@ $ alias c=cplr
  * Could support gcc and/or clang - even embedded
  * Usual compiler options: -I \<incdir\>, -L \<libdir\>, -l \<lib\>
  * Extra convenience options: -i \<include\>, -S <sysincdir\>, -s \<sysinc\>
- * Adding code: -e \<statement\>, -b \<before\>, -a \<after\>, -t \<toplevel\>
+ * Adding code: \<statement\>, -b \<before\>, -a \<after\>, -t \<toplevel\>
  * Flags: -v (verbose compiler), -d (dump code), -p (pristine env), -n (no execute)
  * Environment: CPLR_DUMP_FILTER="cat -n -"
 
