@@ -1,5 +1,5 @@
-# copious build output
-bin/cplr
+# build output
+cplr
 # editor files
 *~
 .*.swp
@@ -7,3 +7,9 @@ bin/cplr
 tests/.edit.stamp
 tests/*.tmp
 tests/*.diff
+# cmake
+Makefile
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
