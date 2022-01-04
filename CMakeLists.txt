@@ -29,6 +29,10 @@ add_executable(
   source/cplr_symbols.c
   )
 
+add_compile_definitions(
+  _GNU_SOURCE _POSIX_C_SOURCE=200809L
+  )
+
 target_link_libraries(
   cplr PUBLIC -pthread -lm -ldl -lreadline
   )
