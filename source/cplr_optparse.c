@@ -56,9 +56,9 @@ const struct option longopts[] = {
   {NULL,    1, NULL, 'b'},
   {NULL,    1, NULL, 'a'},
   {NULL,    1, NULL, 't'},
-  {NULL,    1, NULL, 'f'},
 
   /* files */
+  {NULL,    1, NULL, 's'},
   {NULL,    1, NULL, 'o'},
 
   /* program arguments */
