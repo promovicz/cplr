@@ -111,6 +111,10 @@ struct cplr {
   char *g_codebuf;
   char *g_dumpbuf;
 
+  /* compiler options */
+  lh_t optf;
+  lh_t optm;
+
   /* stable piles (kept in chaining) */
   lh_t defdef;
   lh_t defsys;

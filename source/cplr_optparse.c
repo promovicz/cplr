@@ -24,7 +24,7 @@
 #define USE_GETOPT_LONG
 
 /* short options */
-const char *shortopts = "-:hHVvdnpyD:U:I:i:X:x:L:l:P:b:a:t:f:o:-";
+const char *shortopts = "-:hHVvdnpyf:m:D:U:I:i:X:x:L:l:P:f:m:b:a:t:s:o:-";
 
 /* long is optional */
 #ifdef USE_GETOPT_LONG
@@ -40,6 +40,10 @@ const struct option longopts[] = {
   {"noexec",      0, NULL, 'n'},
   {"pristine",    0, NULL, 'p'},
   {"interactive", 0, NULL, 'y'},
+
+  /* compilation */
+  {NULL,    1, NULL, 'f'},
+  {NULL,    1, NULL, 'm'},
 
   /* paths, libraries, preprocessor */
   {NULL,    1, NULL, 'D'},
@@ -77,6 +81,9 @@ const char *longhelp[] = {
   "inhibit execution",
   "inhibit defaults",
   "run interactor",
+
+  "compiler option",
+  "machine option",
 
   "define cpp symbol",
   "undefine cpp symbol",
@@ -208,6 +215,14 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       break;
     case 'y': /* enable interactive */
       c->flag |= CPLR_FLAG_INTERACTIVE;
+      break;
+
+      /* compiler */
+    case 'f':
+      l_append_str_static(&c->optf, optarg);
+      break;
+    case 'm':
+      l_append_str_static(&c->optf, optarg);
       break;
 
       /* preprocessor */
