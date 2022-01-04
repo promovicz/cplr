@@ -30,6 +30,8 @@
 #include <cext/list.h>
 #include <cext/string.h>
 
+#include "cplr_config.h"
+
 /* cplr backends */
 typedef enum {
    CPLR_BACKEND_LIBTCC,

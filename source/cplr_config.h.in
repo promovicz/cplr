@@ -1,0 +1,2 @@
+#cmakedefine CPLR_USE_GC
+#cmakedefine CPLR_USE_UNWIND

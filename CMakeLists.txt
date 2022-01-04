@@ -8,6 +8,18 @@ find_package(PkgConfig REQUIRED)
 
 # required libtcc
 pkg_search_module(LIBTCC REQUIRED libtcc)
+# optional libgc
+pkg_search_module(LIBGC bdw-gc)
+
+if(LIBGC_FOUND)
+  option(CPLR_USE_GC "Use gc library" OFF)
+endif()
+
+if(CPLR_USE_GC)
+  set(GC_SOURCES source/cgc.c)
+endif()
+
+configure_file(source/cplr_config.h.in source/cplr_config.h)
 
 add_executable(
   cplr
@@ -30,6 +42,7 @@ add_executable(
   source/cplr_run.c
   source/cplr_state.c
   source/cplr_symbols.c
+  ${GC_SOURCES}
   )
 
 add_compile_definitions(
@@ -53,6 +66,14 @@ target_include_directories(
 target_link_libraries(
   cplr PUBLIC ${LIBTCC_LDFLAGS}
   )
+if(CPLR_USE_GC)
+  target_include_directories(
+    cplr PUBLIC ${LIBGC_INCLUDE_DIRS}
+    )
+  target_link_libraries(
+    cplr PUBLIC ${LIBGC_LDFLAGS}
+    )
+endif()
 
 install(
   TARGETS cplr
