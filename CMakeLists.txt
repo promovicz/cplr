@@ -4,6 +4,9 @@ project(cplr)
 
 find_package(PkgConfig REQUIRED)
 
+# TODO detect libm, libdl, libreadline
+
+# required libtcc
 pkg_search_module(LIBTCC REQUIRED libtcc)
 
 add_executable(
