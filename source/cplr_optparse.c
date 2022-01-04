@@ -87,9 +87,8 @@ const char *longhelp[] = {
   "add after statement",
   "add toplevel statement",
 
-  "add file (source, object, archive)",
-
-  "output executable",
+  "input file (source, object, archive)",
+  "output file (executable, object, source, assembly)",
 
   "begin program arguments",
   NULL,
@@ -219,10 +218,10 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
     case 'i':
       l_append_str_static(&c->incs, optarg);
       break;
-    case 'S':
+    case 'X':
       l_append_str_static(&c->sysdirs, optarg);
       break;
-    case 's':
+    case 'x':
       l_append_str_static(&c->syss, optarg);
       break;
 
@@ -250,15 +249,15 @@ int cplr_optparse(cplr_t *c, int argc, char **argv) {
       l_append_str_static(&c->tlfs, optarg);
       break;
 
+      /* input files */
+    case 's':
+      l_append_str_static(&c->srcs, optarg);
+      break;
+
       /* output file */
     case 'o':
       c->flag |= CPLR_FLAG_NORUN;
       c->out = strdup(optarg);
-      break;
-
-      /* input files */
-    case 'f':
-      l_append_str_static(&c->srcs, optarg);
       break;
 
       /* start of program arguments */
