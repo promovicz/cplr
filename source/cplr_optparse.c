@@ -17,9 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <getopt.h>
-
 #include "cplr.h"
+
+#include <getopt.h>
+#include <libgen.h>
 
 #define USE_GETOPT_LONG
 
