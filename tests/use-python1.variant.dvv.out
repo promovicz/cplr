@@ -8,70 +8,45 @@ Package python3 library: python3.7m
 Package python3 found
 Generation phase
 Generating code
-Generating section defsysinclude
-Generating section include
-Generating section statements
+Generating defsysinclude
+Generating include
+Generating labeled statements
 ================================================================================
      1	/* defsysinclude */
-     2	#line 1 "defsysinclude_0"
-     3	#include <sys/stat.h>
-     4	#line 1 "defsysinclude_1"
-     5	#include <sys/types.h>
-     6	#line 1 "defsysinclude_2"
-     7	#include <assert.h>
-     8	#line 1 "defsysinclude_3"
-     9	#include <ctype.h>
-    10	#line 1 "defsysinclude_4"
-    11	#include <errno.h>
-    12	#line 1 "defsysinclude_5"
-    13	#include <fcntl.h>
-    14	#line 1 "defsysinclude_6"
-    15	#include <libgen.h>
-    16	#line 1 "defsysinclude_7"
-    17	#include <limits.h>
-    18	#line 1 "defsysinclude_8"
-    19	#include <locale.h>
-    20	#line 1 "defsysinclude_9"
-    21	#include <stdarg.h>
-    22	#line 1 "defsysinclude_10"
-    23	#include <stdio.h>
-    24	#line 1 "defsysinclude_11"
-    25	#include <stdint.h>
-    26	#line 1 "defsysinclude_12"
-    27	#include <stdlib.h>
-    28	#line 1 "defsysinclude_13"
-    29	#include <string.h>
-    30	#line 1 "defsysinclude_14"
-    31	#include <termios.h>
-    32	#line 1 "defsysinclude_15"
-    33	#include <time.h>
-    34	#line 1 "defsysinclude_16"
-    35	#include <unistd.h>
-    36	#line 1 "defsysinclude_17"
-    37	#include <wchar.h>
-    38	/* include */
-    39	#line 1 "include_0"
-    40	#include <Python.h>
-    41	/* main */
-    42	#line 148 "internal"
-    43	int main(int argc, char **argv) {
-    44	    int ret = 0;
-    45	/* statements */
-    46	#line 1 "statements_0"
-    47	    Py_Initialize();
-    48	#line 1 "statements_1"
-    49	    PyRun_SimpleString("print(\"hello\")");
-    50	#line 1 "statements_2"
-    51	    Py_Finalize();
-    52	/* done */
-    53	#line 163 "internal"
-    54	    return ret;
-    55	}
+     2	#include <sys/stat.h>
+     3	#include <sys/types.h>
+     4	#include <assert.h>
+     5	#include <ctype.h>
+     6	#include <errno.h>
+     7	#include <fcntl.h>
+     8	#include <libgen.h>
+     9	#include <limits.h>
+    10	#include <locale.h>
+    11	#include <stdarg.h>
+    12	#include <stdio.h>
+    13	#include <stdint.h>
+    14	#include <stdlib.h>
+    15	#include <string.h>
+    16	#include <termios.h>
+    17	#include <time.h>
+    18	#include <unistd.h>
+    19	#include <wchar.h>
+    20	/* include */
+    21	#include <Python.h>
+    22	/* main */
+    23	int main(int argc, char **argv) {
+    24		int ret = 0;
+    25	/* statements */
+    26	 s0:	Py_Initialize();
+    27	 s1:	PyRun_SimpleString("print(\"hello\")");
+    28	 s2:	Py_Finalize();
+    29	/* done */
+    30		return ret;
+    31	}
 ================================================================================
-Generated: 1212 bytes code, 1212 bytes dump
+Generated: 1209 bytes code, 602 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase
 hello
-Execution finished (ret=0).
-Writing history
+Execution finished (ret=0)

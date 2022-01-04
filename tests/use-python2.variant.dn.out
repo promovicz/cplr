@@ -22,14 +22,14 @@
     21	#include <Python.h>
     22	/* main */
     23	int main(int argc, char **argv) {
-    24	    int ret = 0;
+    24		int ret = 0;
     25	/* before */
-    26	    Py_Initialize();
+    26	 b0:	Py_Initialize();
     27	/* statements */
-    28	    PyRun_SimpleString("print(\"hello\")");
+    28	 s0:	PyRun_SimpleString("print(\"hello\")");
     29	/* after */
-    30	    Py_Finalize();
+    30	 a0:	Py_Finalize();
     31	/* done */
-    32	    return ret;
+    32		return ret;
     33	}
 ================================================================================

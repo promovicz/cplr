@@ -1,1 +1,1 @@
-../bin/cplr 'ret = 69' -nvv
+../cplr 'ret = 69' -nvv

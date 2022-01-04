@@ -1,1 +1,1 @@
-../bin/cplr '-n' '}{' -dnpv
+../cplr '-n' '}{' -dnpv

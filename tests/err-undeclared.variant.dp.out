@@ -1,11 +1,11 @@
 ================================================================================
      1	/* main */
      2	int main(int argc, char **argv) {
-     3	    int ret = 0;
+     3		int ret = 0;
      4	/* statements */
-     5	    undeclared;
+     5	 s0:	undeclared;
      6	/* done */
-     7	    return ret;
+     7		return ret;
      8	}
 ================================================================================
 Compiler condition:

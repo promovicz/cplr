@@ -23,14 +23,14 @@ Generating code
     19	#include <wchar.h>
     20	/* main */
     21	int main(int argc, char **argv) {
-    22	    int ret = 0;
+    22		int ret = 0;
     23	/* statements */
-    24	    undeclared;
+    24	 s0:	undeclared;
     25	/* done */
-    26	    return ret;
+    26		return ret;
     27	}
 ================================================================================
-Generated: 1044 bytes code, 503 bytes dump
+Generated: 1039 bytes code, 498 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: error: 'undeclared' undeclared

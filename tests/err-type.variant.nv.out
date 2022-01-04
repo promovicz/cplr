@@ -1,7 +1,7 @@
 Preparation phase
 Generation phase
 Generating code
-Generated: 1041 bytes code, 0 bytes dump
+Generated: 1036 bytes code, 0 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: warning: assignment makes pointer from integer without a cast

@@ -1,11 +1,11 @@
 Preparation phase
 Generation phase
 Generating code
-Generating section defsysinclude
-Generating section statements
-Generated: 1036 bytes code, 0 bytes dump
+Generating defsysinclude
+Generating labeled statements
+Generated: 1031 bytes code, 0 bytes dump
 Compilation phase
 Compiler condition:
+  statements_0:1: warning: deprecated use of label at end of compound statement
   statements_0:1: error: declaration expected
 Error: Compilation failed.
-Writing history

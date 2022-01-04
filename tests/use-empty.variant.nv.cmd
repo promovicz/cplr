@@ -1,1 +1,1 @@
-../bin/cplr -nv
+../cplr -nv

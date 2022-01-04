@@ -8,15 +8,14 @@ Package python3 library: python3.7m
 Package python3 found
 Generation phase
 Generating code
-Generating section defsysinclude
-Generating section include
-Generating section before
-Generating section statements
-Generating section after
-Generated: 1228 bytes code, 0 bytes dump
+Generating defsysinclude
+Generating include
+Generating labeled before
+Generating labeled statements
+Generating labeled after
+Generated: 1225 bytes code, 0 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase
 hello
-Execution finished (ret=0).
-Writing history
+Execution finished (ret=0)

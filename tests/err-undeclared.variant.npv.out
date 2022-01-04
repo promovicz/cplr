@@ -1,7 +1,7 @@
 Preparation phase
 Generation phase
 Generating code
-Generated: 189 bytes code, 0 bytes dump
+Generated: 184 bytes code, 0 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: error: 'undeclared' undeclared

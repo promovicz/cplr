@@ -2,9 +2,9 @@ Preparation phase
 Package python3 found
 Generation phase
 Generating code
-Generated: 1212 bytes code, 0 bytes dump
+Generated: 1209 bytes code, 0 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase
 hello
-Execution finished (ret=0).
+Execution finished (ret=0)

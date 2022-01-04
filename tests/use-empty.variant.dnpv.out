@@ -4,11 +4,11 @@ Generating code
 ================================================================================
      1	/* main */
      2	int main(int argc, char **argv) {
-     3	    int ret = 0;
+     3		int ret = 0;
      4	/* done */
-     5	    return ret;
+     5		return ret;
      6	}
 ================================================================================
-Generated: 133 bytes code, 91 bytes dump
+Generated: 127 bytes code, 85 bytes dump
 Compilation phase
 Compilation succeeded

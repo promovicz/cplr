@@ -1,1 +1,1 @@
-../bin/cplr -dnpv
+../cplr -dnpv

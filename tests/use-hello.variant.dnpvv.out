@@ -1,23 +1,19 @@
 Preparation phase
 Generation phase
 Generating code
-Generating section statements
+Generating labeled statements
 ================================================================================
      1	/* main */
-     2	#line 148 "internal"
-     3	int main(int argc, char **argv) {
-     4	    int ret = 0;
-     5	/* statements */
-     6	#line 1 "statements_0"
-     7	    puts("Hello.");
-     8	/* done */
-     9	#line 163 "internal"
-    10	    return ret;
-    11	}
+     2	int main(int argc, char **argv) {
+     3		int ret = 0;
+     4	/* statements */
+     5	 s0:	puts("Hello.");
+     6	/* done */
+     7		return ret;
+     8	}
 ================================================================================
-Generated: 193 bytes code, 193 bytes dump
+Generated: 188 bytes code, 123 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: warning: implicit declaration of function 'puts'
 Compilation succeeded
-Writing history

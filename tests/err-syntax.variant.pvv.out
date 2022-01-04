@@ -1,10 +1,10 @@
 Preparation phase
 Generation phase
 Generating code
-Generating section statements
-Generated: 181 bytes code, 0 bytes dump
+Generating labeled statements
+Generated: 176 bytes code, 0 bytes dump
 Compilation phase
 Compiler condition:
+  statements_0:1: warning: deprecated use of label at end of compound statement
   statements_0:1: error: declaration expected
 Error: Compilation failed.
-Writing history

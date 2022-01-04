@@ -1,4 +1,4 @@
-../bin/cplr \
+../cplr \
     -P python3 \
     -i Python.h \
     -U _XOPEN_SOURCE \

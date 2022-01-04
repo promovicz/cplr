@@ -26,18 +26,18 @@ Generating code
     21	#include <Python.h>
     22	/* main */
     23	int main(int argc, char **argv) {
-    24	    int ret = 0;
+    24		int ret = 0;
     25	/* statements */
-    26	    Py_Initialize();
-    27	    PyRun_SimpleString("print(\"hello\")");
-    28	    Py_Finalize();
+    26	 s0:	Py_Initialize();
+    27	 s1:	PyRun_SimpleString("print(\"hello\")");
+    28	 s2:	Py_Finalize();
     29	/* done */
-    30	    return ret;
+    30		return ret;
     31	}
 ================================================================================
-Generated: 1212 bytes code, 605 bytes dump
+Generated: 1209 bytes code, 602 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase
 hello
-Execution finished (ret=0).
+Execution finished (ret=0)

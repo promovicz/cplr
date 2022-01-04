@@ -1,1 +1,1 @@
-../bin/cplr -dpvv
+../cplr -dpvv

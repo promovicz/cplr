@@ -1,1 +1,1 @@
-../bin/cplr '-n' 'puts(1)' -nvv
+../cplr '-n' 'puts(1)' -nvv

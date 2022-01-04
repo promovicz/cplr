@@ -1,11 +1,11 @@
 ================================================================================
      1	/* main */
      2	int main(int argc, char **argv) {
-     3	    int ret = 0;
+     3		int ret = 0;
      4	/* statements */
-     5	    puts("Hello.");
+     5	 s0:	puts("Hello.");
      6	/* done */
-     7	    return ret;
+     7		return ret;
      8	}
 ================================================================================
 Compiler condition:

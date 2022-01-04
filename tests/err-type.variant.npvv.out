@@ -1,10 +1,9 @@
 Preparation phase
 Generation phase
 Generating code
-Generating section statements
-Generated: 186 bytes code, 0 bytes dump
+Generating labeled statements
+Generated: 181 bytes code, 0 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: warning: implicit declaration of function 'puts'
 Compilation succeeded
-Writing history

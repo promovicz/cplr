@@ -23,13 +23,13 @@ Generating code
     19	#include <wchar.h>
     20	/* main */
     21	int main(int argc, char **argv) {
-    22	    int ret = 0;
+    22		int ret = 0;
     23	/* statements */
-    24	    puts("Hello.");
+    24	 s0:	puts("Hello.");
     25	/* done */
-    26	    return ret;
+    26		return ret;
     27	}
 ================================================================================
-Generated: 1048 bytes code, 507 bytes dump
+Generated: 1043 bytes code, 502 bytes dump
 Compilation phase
 Compilation succeeded

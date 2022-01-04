@@ -1,1 +1,1 @@
-../bin/cplr 'undeclared' -npv
+../cplr 'undeclared' -npv

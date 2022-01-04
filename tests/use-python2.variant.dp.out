@@ -3,15 +3,15 @@
      2	#include <Python.h>
      3	/* main */
      4	int main(int argc, char **argv) {
-     5	    int ret = 0;
+     5		int ret = 0;
      6	/* before */
-     7	    Py_Initialize();
+     7	 b0:	Py_Initialize();
      8	/* statements */
-     9	    PyRun_SimpleString("print(\"hello\")");
+     9	 s0:	PyRun_SimpleString("print(\"hello\")");
     10	/* after */
-    11	    Py_Finalize();
+    11	 a0:	Py_Finalize();
     12	/* done */
-    13	    return ret;
+    13		return ret;
     14	}
 ================================================================================
 hello

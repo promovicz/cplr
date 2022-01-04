@@ -7,18 +7,18 @@ Generating code
      2	#include <Python.h>
      3	/* main */
      4	int main(int argc, char **argv) {
-     5	    int ret = 0;
+     5		int ret = 0;
      6	/* statements */
-     7	    Py_Initialize();
-     8	    PyRun_SimpleString("print(\"hello\")");
-     9	    Py_Finalize();
+     7	 s0:	Py_Initialize();
+     8	 s1:	PyRun_SimpleString("print(\"hello\")");
+     9	 s2:	Py_Finalize();
     10	/* done */
-    11	    return ret;
+    11		return ret;
     12	}
 ================================================================================
-Generated: 357 bytes code, 226 bytes dump
+Generated: 354 bytes code, 223 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase
 hello
-Execution finished (ret=0).
+Execution finished (ret=0)

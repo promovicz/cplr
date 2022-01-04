@@ -8,11 +8,10 @@ Package python3 library: python3.7m
 Package python3 found
 Generation phase
 Generating code
-Generating section include
-Generating section before
-Generating section statements
-Generating section after
-Generated: 392 bytes code, 0 bytes dump
+Generating include
+Generating labeled before
+Generating labeled statements
+Generating labeled after
+Generated: 389 bytes code, 0 bytes dump
 Compilation phase
 Compilation succeeded
-Writing history

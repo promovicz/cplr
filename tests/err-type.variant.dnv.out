@@ -23,14 +23,14 @@ Generating code
     19	#include <wchar.h>
     20	/* main */
     21	int main(int argc, char **argv) {
-    22	    int ret = 0;
+    22		int ret = 0;
     23	/* statements */
-    24	    puts(1);
+    24	 s0:	puts(1);
     25	/* done */
-    26	    return ret;
+    26		return ret;
     27	}
 ================================================================================
-Generated: 1041 bytes code, 500 bytes dump
+Generated: 1036 bytes code, 495 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: warning: assignment makes pointer from integer without a cast
