@@ -24,6 +24,16 @@
 #include <errno.h>
 #include <unistd.h>
 
+int cplr_tcc_execute(cplr_t *c, int argc, char **argv) {
+  int ret;
+  /* run the program */
+  ret = tcc_run(c->tcc, argc, argv);
+  /* free arguments */
+  xfree(argv);
+  /* return */
+  return ret;
+}
+
 int cplr_execute(cplr_t *c) {
   int i, rc, ret = 1;
   int argc; char **argv;
@@ -76,13 +86,11 @@ int cplr_execute(cplr_t *c) {
     /* we are the child - continue executing */
   }
 
-  /* run the program */
-  ret = tcc_run(c->tcc, argc, argv);
-  /* free arguments */
-  xfree(argv);
-  /* report progress */
-  if(c->verbosity >= 1) {
-    fprintf(stderr, "Execution finished (ret=%d)\n", ret);
+  /* call backend method */
+  switch(c->backend) {
+  case CPLR_BACKEND_LIBTCC:
+    cplr_tcc_execute(c, argc, argv);
+    break;
   }
 
   /* exit the fork quickly */
@@ -93,7 +101,15 @@ int cplr_execute(cplr_t *c) {
   /* we are finished */
   c->flag |= CPLR_FLAG_FINISHED;
 
+  /* report */
+  if(c->verbosity >= 1) {
+    fprintf(stderr, "Execution finished (ret=%d)\n", ret);
+  }
+
  out:
+
+  /* free arguents */
+  xfree(argv);
 
   return ret;
 }

@@ -24,6 +24,7 @@
 cplr_t *cplr_new(void) {
   cplr_t *res = xcalloc(sizeof(cplr_t), 1);
 
+  res->backend = CPLR_BACKEND_LIBTCC;
   res->target = CPLR_TARGET_POSIX;
 
   return res;

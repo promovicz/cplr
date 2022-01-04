@@ -30,6 +30,12 @@
 #include <cext/list.h>
 #include <cext/string.h>
 
+/* cplr backends */
+typedef enum {
+   CPLR_BACKEND_LIBTCC,
+   CPLR_BACKEND_LIBDL,
+} cplr_backend_t;
+
 /* cplr flags */
 typedef enum {
    CPLR_FLAG_NODEFAULTS = (1<<1),
@@ -77,6 +83,8 @@ struct cplr {
   int dump;
   /* verbosity level */
   int verbosity;
+  /* target backend (libtcc, libdl...) */
+  cplr_backend_t backend;
   /* target environment (posix, linux...) */
   cplr_target_t target;
   /* output filename (memory if NULL) */

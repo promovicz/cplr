@@ -21,7 +21,7 @@
 
 #include <cext/string.h>
 
-static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
+static void cplr_tcc_redefsym_cb(void *ctx, const char *name, const void *val) {
   cplr_t *c = (cplr_t *)ctx;
   if(name[0] == '_') {
     return;
@@ -44,23 +44,18 @@ static void cplr_redefsym_cb(void *ctx, const char *name, const void *val) {
   tcc_add_symbol(c->tcc, name, val);
 }
 
-int cplr_compile(cplr_t *c) {
-  /* report status */
-  if(c->verbosity >= 1) {
-    fprintf(stderr, "Compilation phase\n");
-  }
+static int cplr_tcc_compile(cplr_t *c) {
   /* compile the code */
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
   }
   c->flag |= CPLR_FLAG_COMPILED;
-  c->flag |= CPLR_FLAG_LOADED;
   /* redefine symbols */
   if(c->c_prev && c->c_prev->tcc) {
     if(c->verbosity >= 3) {
       fprintf(stderr, "Redefining symbols\n");
     }
-    tcc_list_symbols(c->c_prev->tcc, c, &cplr_redefsym_cb);
+    tcc_list_symbols(c->c_prev->tcc, c, &cplr_tcc_redefsym_cb);
   }
   /* produce output if requested */
   if(c->out != NULL) {
@@ -68,11 +63,32 @@ int cplr_compile(cplr_t *c) {
       fprintf(stderr, "Failed to output file %s\n", c->out);
       return 1;
     }
+  } else {
+    /* memory compile means we have loaded */
+    c->flag |= CPLR_FLAG_LOADED;
   }
-  /* report success */
+}
+
+int cplr_compile(cplr_t *c) {
+  int ret = 1;
+  /* report status */
   if(c->verbosity >= 1) {
-    fprintf(stderr, "Compilation succeeded\n");
+    fprintf(stderr, "Compilation phase\n");
+  }
+  /* run backend method */
+  switch(c->backend) {
+  case CPLR_BACKEND_LIBTCC:
+    ret = cplr_tcc_compile(c);
+    break;
+  }
+  /* report */
+  if(ret != 0) {
+    fprintf(stderr, "Compilation failed\n");
+  } else {
+    if(c->verbosity >= 1) {
+      fprintf(stderr, "Compilation succeeded\n");
+    }
   }
   /* done */
-  return 0;
+  return ret;
 }
