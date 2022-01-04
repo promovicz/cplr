@@ -89,7 +89,7 @@ int cplr_execute(cplr_t *c) {
   /* call backend method */
   switch(c->backend) {
   case CPLR_BACKEND_LIBTCC:
-    cplr_tcc_execute(c, argc, argv);
+    ret = cplr_tcc_execute(c, argc, argv);
     break;
   }
 
