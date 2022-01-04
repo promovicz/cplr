@@ -34,12 +34,14 @@ const struct option longopts[] = {
   {"herald",   0, NULL, 'H'},
   {"version",  0, NULL, 'V'},
 
+  /* flags */
   {"verbose",     0, NULL, 'v'},
   {"dump",        0, NULL, 'd'},
   {"noexec",      0, NULL, 'n'},
   {"pristine",    0, NULL, 'p'},
   {"interactive", 0, NULL, 'y'},
 
+  /* paths, libraries, preprocessor */
   {NULL,    1, NULL, 'D'},
   {NULL,    1, NULL, 'U'},
   {NULL,    1, NULL, 'I'},
@@ -50,13 +52,16 @@ const struct option longopts[] = {
   {NULL,    1, NULL, 'l'},
   {NULL,    1, NULL, 'P'},
 
+  /* statements */
   {NULL,    1, NULL, 'b'},
   {NULL,    1, NULL, 'a'},
   {NULL,    1, NULL, 't'},
   {NULL,    1, NULL, 'f'},
 
+  /* files */
   {NULL,    1, NULL, 'o'},
 
+  /* program arguments */
   {NULL,    0, NULL, '-'},
 
   {NULL,    0, NULL, 0 },
@@ -81,7 +86,7 @@ const char *longhelp[] = {
   "add system include",
   "add library directory",
   "add library",
-  "add pkg-config package",
+  "add package",
 
   "add before statement",
   "add after statement",
