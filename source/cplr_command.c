@@ -247,7 +247,12 @@ static int cmd_history(cplr_t *c, int argc, char **argv) {
 }
 
 static int cmd_chain(cplr_t *c, int argc, char **argv) {
-  printf("Chain\n");
+  int i;
+  cplr_t *cur;
+  printf("Chain:\n");
+  for(cur = c, i = 0; cur; cur = cur->c_prev, i++) {
+    printf(" c%d:\n", i);
+  }
   return 0;
 }
 
@@ -262,7 +267,7 @@ static bool print_pile(cplr_t *c, const char *name, lh_t *list, bool reverse) {
   if(reverse) {
     i = 0;
     L_BACKWARDS(list, n) {
-      fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
+      fprintf(stderr, " %s%d: %s\n", name, i, value_get_str(&n->v));
       i++;
     }
   } else {
@@ -297,18 +302,58 @@ static int cmd_dump(cplr_t *c, int argc, char **argv) {
 }
 
 static int cmd_library(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Libraries:\n");
   return 0;
 }
 
 static int cmd_memory(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Memory:\n");
   return 0;
 }
 
 static int cmd_package(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Packages:\n");
   return 0;
 }
 
 static int cmd_state(cplr_t *c, int argc, char **argv) {
+  fprintf(stderr, "Flags:");
+  if(c->flag & CPLR_FLAG_NODEFAULTS) {
+    fprintf(stderr, " nodefaults");
+  }
+  if(c->flag & CPLR_FLAG_NOCOMPILE) {
+    fprintf(stderr, " norun");
+  }
+  if(c->flag & CPLR_FLAG_NOLINK) {
+    fprintf(stderr, " nolink");
+  }
+  if(c->flag & CPLR_FLAG_NORUN) {
+    fprintf(stderr, " norun");
+  }
+  if(c->flag & CPLR_FLAG_FORK) {
+    fprintf(stderr, " fork");
+  }
+  if(c->flag & CPLR_FLAG_INTERACTIVE) {
+    fprintf(stderr, " fork");
+  }
+  fprintf(stderr, "\n");
+  fprintf(stderr, "States:");
+  if(c->flag & CPLR_FLAG_GENERATED) {
+    fprintf(stderr, " generated");
+  }
+  if(c->flag & CPLR_FLAG_PREPARED) {
+    fprintf(stderr, " prepared");
+  }
+  if(c->flag & CPLR_FLAG_COMPILED) {
+    fprintf(stderr, " compiled");
+  }
+  if(c->flag & CPLR_FLAG_EXECUTED) {
+    fprintf(stderr, " executed");
+  }
+  if(c->flag & CPLR_FLAG_FINISHED) {
+    fprintf(stderr, " finished");
+  }
+  fprintf(stderr, "\n");
   return 0;
 }
 
@@ -328,9 +373,12 @@ static void print_sym_cb(void *ctx, const char *name, const void *val) {
 static int cmd_symbol(cplr_t *c, int argc, char **argv) {
   if(!c->tcc) {
     fprintf(stderr, "No symbols.\n");
+    return 0;
+  } else {
+    fprintf(stderr, "Symbols:\n");
+    tcc_list_symbols(cplr_find_syms(c), c, &print_sym_cb);
+    return 0;
   }
-  tcc_list_symbols(cplr_find_syms(c), c, &print_sym_cb);
-  return 0;
 }
 
 static int cmd_quit(cplr_t *c, int argc, char **argv) {
@@ -347,16 +395,16 @@ static void print_help(void) {
 
   /* line types */
   fprintf(stderr, "Prefixes: \n");
-  fprintf(stderr, "  \\C   Piler command\n");
-  fprintf(stderr, "  !C   System command\n");
-  fprintf(stderr, "  @S   Push declaration\n");
-  fprintf(stderr, "  ^S   Push toplevel\n");
-  fprintf(stderr, "  <S   Push before\n");
-  fprintf(stderr, "  >S   Push after\n");
-  fprintf(stderr, "  .S   Push statement\n");
-  fprintf(stderr, "  .    Run the pile\n");
-  fprintf(stderr, "  S    Push and run\n");
-  fprintf(stderr, "  ?    Show help\n");
+  fprintf(stderr, "  \\C    Piler command\n");
+  fprintf(stderr, "  !C    System command\n");
+  fprintf(stderr, "  @S    Push declaration\n");
+  fprintf(stderr, "  ^S    Push toplevel\n");
+  fprintf(stderr, "  <S    Push before\n");
+  fprintf(stderr, "  >S    Push after\n");
+  fprintf(stderr, "  .S    Push statement\n");
+  fprintf(stderr, "  .     Run the pile\n");
+  fprintf(stderr, "  S     Push and run\n");
+  fprintf(stderr, "  ?     Show help\n");
   fprintf(stderr, "\n");
 
   /* command summary */
