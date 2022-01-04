@@ -19,26 +19,75 @@
 
 #include "cplr.h"
 
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <unistd.h>
+
 int cplr_execute(cplr_t *c) {
-  int i, ret;
+  int i, rc, ret = 1;
+  int argc; char **argv;
+  pid_t p = 0, rp;
+
   /* report status */
   if(c->verbosity >= 1) {
     fprintf(stderr, "Execution phase\n");
   }
+
   /* copy arguments */
-  int argc = 1 + (c->argc - c->argp);
-  char **argv = xcalloc(sizeof(char*), argc+1);
+  argc = 1 + (c->argc - c->argp);
+  argv = xcalloc(sizeof(char*), argc+1);
   argv[0] = "c";
   for(i = 1; i < argc; i++) {
     argv[i] = c->argv[c->argp + (i - 1)];
   }
+
+  /* set context as executed */
+  c->flag |= CPLR_FLAG_EXECUTED;
+
+  /* fork if requested */
+  if(c->flag & CPLR_FLAG_FORK) {
+    if(c->verbosity >= 1) {
+      fprintf(stderr, "Forking for execution\n");
+    }
+    /* do the fork */
+    p = fork();
+    if(p < 0) {
+      fprintf(stderr, "Failed to fork\n");
+      goto out;
+    }
+    if(p != 0) {
+      /* parent waits for child */
+      do {
+        rp = waitpid(p, &rc, 0);
+        if(rp < 0 && errno != EAGAIN) {
+          fprintf(stderr, "Failed to wait for child\n");
+          goto out;
+        }
+      } while(rp != p);
+      /* use the childs return code */
+      ret = rc;
+      if(c->verbosity >= 1) {
+        fprintf(stderr, "Child has returned\n");
+      }
+      /* done */
+      goto out;
+    }
+    /* we are the child - continue executing */
+  }
+
   /* run the program */
   ret = tcc_run(c->tcc, argc, argv);
   /* free arguments */
   xfree(argv);
   /* report progress */
   if(c->verbosity >= 1) {
-    fprintf(stderr, "Execution finished (ret=%d).\n", ret);
+    fprintf(stderr, "Execution finished (ret=%d)\n", ret);
+  }
+
+  /* exit the fork quickly */
+  if(c->flag & CPLR_FLAG_FORK && p == 0) {
+    exit(ret);
   }
 
   /* we are finished */
