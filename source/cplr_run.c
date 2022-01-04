@@ -23,6 +23,9 @@ int cplr_run(cplr_t *c) {
     goto out;
   }
 
+  /* expect success */
+  ret = 0;
+
   /* execute code */
   if(!(c->flag & CPLR_FLAG_NORUN)) {
     /* perform execution */
@@ -31,13 +34,11 @@ int cplr_run(cplr_t *c) {
         if(c->flag & CPLR_FLAG_INTERACTIVE) {
           fprintf(stderr, "Program returned %d.\n", res);
         }
-        /* XXX preserving ret, exiting !? */
+        ret = res;
     }
   }
 
-  /* done means success */
-  ret = 0;
-
+  /* return */
  out:
   return ret;
 }
