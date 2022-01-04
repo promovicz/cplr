@@ -103,7 +103,7 @@ static void cplr_generate_section(cplr_t *c,
   ln_t *n;
   char fn[64];
   if(c->verbosity >= 2) {
-    fprintf(stderr, "Generating %s\n", name);
+    fprintf(stderr, "Generating section %s\n", name);
   }
   CPLR_EMIT_COMMENT(c, "%s", name);
   if(reverse) {
