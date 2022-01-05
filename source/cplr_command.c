@@ -334,7 +334,7 @@ static int cmd_state(cplr_t *c, int argc, char **argv) {
     fprintf(stderr, " fork");
   }
   if(c->flag & CPLR_FLAG_INTERACTIVE) {
-    fprintf(stderr, " fork");
+    fprintf(stderr, " interactive");
   }
   fprintf(stderr, "\n");
   fprintf(stderr, "States:");
