@@ -49,10 +49,6 @@ static int cplr_tcc_prepare(cplr_t *c) {
   /* error handling */
   tcc_set_error_func(t, c, (void (*)(void *, const char *))&cplr_tcc_error);
 
-  /* basic options */
-  tcc_set_options(t, "-Wall");
-  tcc_set_options(t, "-bt");
-
   /* set output type */
   if(c->out == NULL) {
     otype = TCC_OUTPUT_MEMORY;
@@ -63,6 +59,11 @@ static int cplr_tcc_prepare(cplr_t *c) {
     fprintf(stderr, "Failed to set output type %d\n", otype);
     goto out;
   }
+
+  /* basic options */
+  tcc_set_options(t, "-Wall");
+  //tcc_set_options(t, "-g");
+  //tcc_set_options(t, "-bt");
 
   /* packages */
   L_FORWARD(&c->pkgs, i) {
