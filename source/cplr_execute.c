@@ -28,8 +28,6 @@ int cplr_tcc_execute(cplr_t *c, int argc, char **argv) {
   int ret;
   /* run the program */
   ret = tcc_run(c->tcc, argc, argv);
-  /* free arguments */
-  xfree(argv);
   /* return */
   return ret;
 }
@@ -108,7 +106,7 @@ int cplr_execute(cplr_t *c) {
 
  out:
 
-  /* free arguents */
+  /* free arguments */
   xfree(argv);
 
   return ret;
