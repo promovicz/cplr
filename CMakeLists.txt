@@ -11,16 +11,20 @@ pkg_search_module(LIBTCC REQUIRED libtcc)
 # optional libgc
 pkg_search_module(LIBGC bdw-gc)
 
+# configuration options
 if(LIBGC_FOUND)
   option(CPLR_USE_GC "Use gc library" OFF)
 endif()
 
+# add sources depending on features
 if(CPLR_USE_GC)
   set(GC_SOURCES source/cgc.c)
 endif()
 
+# generate config header
 configure_file(source/cplr_config.h.in source/cplr_config.h)
 
+# main executable
 add_executable(
   cplr
   source/cext_abort.c
@@ -44,28 +48,29 @@ add_executable(
   source/cplr_symbols.c
   ${GC_SOURCES}
   )
-
+# compatibility defines
 add_compile_definitions(
   _GNU_SOURCE _POSIX_C_SOURCE=200809L
   )
-
+# system libraries
 target_link_libraries(
   cplr PUBLIC -pthread -lm -ldl -lreadline
   )
-
+# internal headers
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/source
   )
-
+# libtcc
 target_include_directories(
   cplr PUBLIC ${LIBTCC_INCLUDE_DIRS}
   )
 target_link_libraries(
   cplr PUBLIC ${LIBTCC_LDFLAGS}
   )
+# libgc
 if(CPLR_USE_GC)
   target_include_directories(
     cplr PUBLIC ${LIBGC_INCLUDE_DIRS}
@@ -75,6 +80,7 @@ if(CPLR_USE_GC)
     )
 endif()
 
+# install
 install(
   TARGETS cplr
   RUNTIME DESTINATION bin
