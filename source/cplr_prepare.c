@@ -52,7 +52,6 @@ static int cplr_tcc_prepare(cplr_t *c) {
   /* basic options */
   tcc_set_options(t, "-Wall");
   tcc_set_options(t, "-bt");
-  tcc_set_options(t, "-I.");
 
   /* set output type */
   if(c->out == NULL) {
@@ -98,6 +97,7 @@ static int cplr_tcc_prepare(cplr_t *c) {
       goto out;
     }
   }
+  tcc_add_include_path(t, ".");
 
   /* library dirs */
   L_FORWARD(&c->libdirs, i) {
