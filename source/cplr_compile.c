@@ -67,6 +67,7 @@ static int cplr_tcc_compile(cplr_t *c) {
     /* memory compile means we have loaded */
     c->flag |= CPLR_FLAG_LOADED;
   }
+  return 0;
 }
 
 int cplr_compile(cplr_t *c) {
