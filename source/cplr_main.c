@@ -26,7 +26,7 @@
  *
  * My explicit advice is to use it anyway.
  *
- * Use the power of ~/.local/bin and enjoy it's freedoms.
+ * Use the power of ~/.local/bin and enjoy its freedoms.
  */
 
 #include <stdio.h>
