@@ -60,7 +60,6 @@ typedef enum {
    CPLR_TARGET_NONE = 0,
    CPLR_TARGET_POSIX = 1,
    CPLR_TARGET_LINUX = (2 | CPLR_TARGET_POSIX),
-   CPLR_TARGET_LINUX_KERNEL = 4,
 } cplr_target_t;
 
 /* code generation states */
