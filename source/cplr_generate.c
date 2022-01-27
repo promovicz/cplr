@@ -186,16 +186,16 @@ static int cplr_generate_code(cplr_t *c) {
   CPLR_EMIT_INTERNAL(c, "int main(int argc, char **argv) {\n");
   CPLR_EMIT_INTERNAL(c, "\tint ret = 0;\n");
   if(!l_empty(&c->befs)) {
-    cplr_generate_labeled(c, "before", &c->befs,
-                          false, " b%d:\t%s;\n");
+    cplr_generate_section(c, "before", &c->befs,
+                          false, "\t%s;\n");
   }
   if(!l_empty(&c->stms)) {
-    cplr_generate_labeled(c, "statements", &c->stms,
-                          false, " s%d:\t%s;\n");
+    cplr_generate_section(c, "statements", &c->stms,
+                          false, "\t%s;\n");
   }
   if(!l_empty(&c->afts)) {
-    cplr_generate_labeled(c, "after", &c->afts,
-                          true, " a%d:\t%s;\n");
+    cplr_generate_section(c, "after", &c->afts,
+                          true, "\t%s;\n");
   }
   CPLR_EMIT_COMMENT(c, "done");
   CPLR_EMIT_INTERNAL(c, "\treturn ret;\n");
