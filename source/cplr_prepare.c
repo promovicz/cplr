@@ -98,7 +98,10 @@ static int cplr_tcc_prepare(cplr_t *c) {
       goto out;
     }
   }
-  tcc_add_include_path(t, ".");
+  if(tcc_add_include_path(t, ".")) {
+    fprintf(stderr, "Failed to add include path .\n");
+    goto out;
+  }
 
   /* library dirs */
   L_FORWARD(&c->libdirs, i) {
@@ -106,6 +109,10 @@ static int cplr_tcc_prepare(cplr_t *c) {
       fprintf(stderr, "Failed to add library path %s\n", value_get_str(&i->v));
       goto out;
     }
+  }
+  if(tcc_add_library_path(t, ".")) {
+    fprintf(stderr, "Failed to add library path .\n");
+    goto out;
   }
 
   /* libraries */
