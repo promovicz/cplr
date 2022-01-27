@@ -78,11 +78,15 @@ int main(int argc, char **argv) {
     read_history(realpath("~/.cplr_history", NULL));
   }
 
-  /* perform main action */
+  /* run code on the command line */
+  ret = cplr_run(c);
+  if(ret) {
+    goto done;
+  }
+
+  /* run the interactor */
   if(c->flag & CPLR_FLAG_INTERACTIVE) {
     ret = cplr_interact(c);
-  } else {
-    ret = cplr_run(c);
   }
 
   /* we get here when execution is finished */
