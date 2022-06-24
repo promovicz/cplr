@@ -317,7 +317,7 @@ static int cmd_package(cplr_t *c, int argc, char **argv) {
 }
 
 static int cmd_state(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Flags:");
+  fprintf(stderr, "Option flags:");
   if(c->flag & CPLR_FLAG_NODEFAULTS) {
     fprintf(stderr, " nodefaults");
   }
@@ -337,7 +337,7 @@ static int cmd_state(cplr_t *c, int argc, char **argv) {
     fprintf(stderr, " interactive");
   }
   fprintf(stderr, "\n");
-  fprintf(stderr, "States:");
+  fprintf(stderr, "State flags: ");
   if(c->flag & CPLR_FLAG_GENERATED) {
     fprintf(stderr, " generated");
   }
@@ -371,12 +371,13 @@ static void print_sym_cb(void *ctx, const char *name, const void *val) {
 }
 
 static int cmd_symbol(cplr_t *c, int argc, char **argv) {
-  if(!c->tcc) {
+  TCCState *tc = cplr_find_syms(c);
+  if(!tc) {
     fprintf(stderr, "No symbols.\n");
     return 0;
   } else {
     fprintf(stderr, "Symbols:\n");
-    tcc_list_symbols(cplr_find_syms(c), c, &print_sym_cb);
+    tcc_list_symbols(tc, c, &print_sym_cb);
     return 0;
   }
 }
