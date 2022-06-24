@@ -31,6 +31,11 @@ int cplr_interact(cplr_t *b) {
 
   /* command loop */
   while((line = readline(prompt))) {
+    /* create a new state when needed */
+    if(c->flag & CPLR_FLAG_LOADED) {
+      c = cplr_chain(c);
+    }
+
     /* ignore empty lines */
     if(!strlen(line)) {
       continue;
@@ -48,13 +53,16 @@ int cplr_interact(cplr_t *b) {
       }
       goto out;
     }
-
-    /* create a new state when needed */
-    if(c->flag & CPLR_FLAG_LOADED) {
-      c = cplr_chain(c);
-    }
   }
 
  out:
+
+  /* free the chain */
+  while(c != b) {
+    cplr_t *p = c->c_prev;
+    cplr_free(c);
+    c = p;
+  }
+
   return ret;
 }
