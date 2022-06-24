@@ -52,10 +52,6 @@ add_executable(
 add_compile_definitions(
   _GNU_SOURCE _POSIX_C_SOURCE=200809L
   )
-# system libraries
-target_link_libraries(
-  cplr PUBLIC -pthread -lm -ldl -lreadline
-  )
 # internal headers
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -79,6 +75,10 @@ if(CPLR_USE_GC)
     cplr PUBLIC ${LIBGC_LDFLAGS}
     )
 endif()
+# system libraries
+target_link_libraries(
+  cplr PUBLIC -pthread -lm -ldl -lreadline
+  )
 
 # install
 install(
