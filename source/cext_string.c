@@ -41,11 +41,11 @@ bool strprefix(const char *str, const char *pfx) {
 bool strsuffix(const char *str, const char *suf)
 {
   if (!str || !suf)
-    return 0;
+    return false;
   size_t lenstr = strlen(str);
   size_t lensuf = strlen(suf);
   if (lensuf >  lenstr)
-    return 0;
+    return false;
   return strncmp(str + lenstr - lensuf, suf, lensuf) == 0;
 }
 
