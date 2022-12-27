@@ -79,9 +79,11 @@ int main(int argc, char **argv) {
   }
 
   /* run code on the command line */
-  ret = cplr_run(c);
-  if(ret) {
-    goto done;
+  if(!cplr_empty(c)) {
+    ret = cplr_run(c);
+    if(ret) {
+      goto done;
+    }
   }
 
   /* run the interactor */

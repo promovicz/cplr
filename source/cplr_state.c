@@ -88,6 +88,14 @@ cplr_t *cplr_clone(cplr_t *c) {
   return r;
 }
 
+bool cplr_empty(cplr_t *c) {
+  return l_empty(&c->srcs)
+         && l_empty(&c->tlfs)
+         && l_empty(&c->stms)
+         && l_empty(&c->befs)
+         && l_empty(&c->afts);
+}
+
 cplr_t *cplr_chain(cplr_t *c) {
   cplr_t *n;
 

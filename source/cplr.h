@@ -148,6 +148,7 @@ struct cplr {
 /* cplr_state.c - piler state management */
 extern cplr_t *cplr_new(void);
 extern void cplr_free(cplr_t *c);
+extern bool cplr_empty(cplr_t *c);
 extern cplr_t *cplr_clone(cplr_t *c);
 extern cplr_t *cplr_chain(cplr_t *c);
 
