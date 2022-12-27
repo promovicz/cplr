@@ -38,36 +38,33 @@ static void print_help(void);
 
 /* Command definitions */
 
-static int cmd_help(cplr_t *c, int argc, char **argv);
-static int cmd_cwd(cplr_t *c, int argc, char **argv);
-static int cmd_history(cplr_t *c, int argc, char **argv);
 static int cmd_chain(cplr_t *c, int argc, char **argv);
-static int cmd_piles(cplr_t *c, int argc, char **argv);
+static int cmd_listing(cplr_t *c, int argc, char **argv);
 static int cmd_dump(cplr_t *c, int argc, char **argv);
-static int cmd_library(cplr_t *c, int argc, char **argv);
 static int cmd_memory(cplr_t *c, int argc, char **argv);
-static int cmd_package(cplr_t *c, int argc, char **argv);
-static int cmd_state(cplr_t *c, int argc, char **argv);
 static int cmd_symbol(cplr_t *c, int argc, char **argv);
+static int cmd_workdir(cplr_t *c, int argc, char **argv);
+static int cmd_history(cplr_t *c, int argc, char **argv);
+static int cmd_help(cplr_t *c, int argc, char **argv);
 static int cmd_quit(cplr_t *c, int argc, char **argv);
 
 static command_t commands[] = {
-{ "?", "Show help", cmd_help },
-{ "h", "Show history", cmd_history },
-{ "c", "Show chain", cmd_chain },
-{ "p", "Show piles", cmd_piles },
-{ "w", "Show cwd", cmd_cwd },
+{ "c", "Show chain",       cmd_chain },
+{ "l", "Show listing",     cmd_listing },
 #if 0
-{ "u", "Move up in chain", cmd_up },
-{ "d", "Move down in chain", cmd_down },
+{ "+", "Move up",          cmd_chain_up },
+{ "-", "Move down",        cmd_chain_down },
 #endif
-{ "D", "Show dump", cmd_dump },
-{ "L", "Show libraries", cmd_library },
-{ "M", "Show memory", cmd_memory },
-{ "P", "Show packages", cmd_package },
-{ "S", "Show state", cmd_state },
-{ "Y", "Show symbols", cmd_symbol },
-{ "q", "Quit", cmd_quit },
+{ "D", "Show dump",        cmd_dump },
+//{ "E", "Show environment", cmd_environment },
+//{ "L", "Show locale",      cmd_locale },
+//{ "M", "Show memory",      cmd_memory },
+//{ "P", "Show process",     cmd_process },
+//{ "Y", "Show symbols",     cmd_symbol },
+//{ "W", "Show workdir",     cmd_cwd },
+//{ "h", "Show history",     cmd_history },
+{ "?", "Show help",        cmd_help },
+{ "q", "Quit",             cmd_quit },
 { NULL, NULL, NULL },
 };
 
@@ -242,14 +239,12 @@ static int cmd_cwd(cplr_t *c, int argc, char **argv) {
 }
 
 static int cmd_history(cplr_t *c, int argc, char **argv) {
-  printf("History\n");
   return 0;
 }
 
 static int cmd_chain(cplr_t *c, int argc, char **argv) {
   int i;
   cplr_t *cur;
-  printf("Chain:\n");
   for(cur = c, i = 0; cur; cur = cur->c_prev, i++) {
     printf(" c%d:\n", i);
   }
@@ -282,14 +277,23 @@ static bool print_pile(cplr_t *c, const char *name, lh_t *list, bool reverse) {
 }
 
 static int cmd_piles(cplr_t *c, int argc, char **argv) {
-  bool any = false;
+  bool any;
+
+  any = false;
+  any |= print_pile(c, "p", &c->pkgs, false);
+  any |= print_pile(c, "L", &c->libdirs, false);
+  any |= print_pile(c, "I", &c->incdirs, false);
+  any |= print_pile(c, "l", &c->libs, false);
+  any |= print_pile(c, "i", &c->incs, false);
+  any |= print_pile(c, "s", &c->srcs, false);
   any |= print_pile(c, "d", &c->tlds, false);
-  any |= print_pile(c, "t", &c->tlfs, false);
-  if(any)
-    fprintf(stderr, "\n");
+  if(any) fprintf(stderr, "\n");
+
+  print_pile(c, "t", &c->tlfs, false);
   print_pile(c, "b", &c->befs, false);
   print_pile(c, "s", &c->stms, false);
   print_pile(c, "a", &c->afts, true);
+
   return 0;
 }
 
@@ -301,18 +305,8 @@ static int cmd_dump(cplr_t *c, int argc, char **argv) {
   return 0;
 }
 
-static int cmd_library(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Libraries:\n");
-  return 0;
-}
-
 static int cmd_memory(cplr_t *c, int argc, char **argv) {
   fprintf(stderr, "Memory:\n");
-  return 0;
-}
-
-static int cmd_package(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Packages:\n");
   return 0;
 }
 
