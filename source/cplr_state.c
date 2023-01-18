@@ -27,6 +27,8 @@ cplr_t *cplr_new(void) {
   res->backend = CPLR_BACKEND_LIBTCC;
   res->target = CPLR_TARGET_POSIX;
 
+  res->c_first = res;
+
   return res;
 }
 
@@ -104,7 +106,9 @@ cplr_t *cplr_chain(cplr_t *c) {
 
   /* establish chaining */
   n->c_index = c->c_index + 1;
+  n->c_first = c->c_first;
   n->c_prev = c;
+  c->c_next = n;
 
   /* reset flags */
   n->flag &= ~(CPLR_FLAG_PREPARED

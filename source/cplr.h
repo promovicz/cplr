@@ -100,8 +100,12 @@ struct cplr {
 
   /* index in chain */
   int c_index;
+  /* first in chain */
+  cplr_t *c_first;
   /* previous in chain */
   cplr_t *c_prev;
+  /* next in chain */
+  cplr_t *c_next;
 
   /* compiler state */
   TCCState *tcc;
