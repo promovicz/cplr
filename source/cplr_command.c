@@ -38,33 +38,22 @@ static void print_help(void);
 
 /* Command definitions */
 
-static int cmd_chain(cplr_t *c, int argc, char **argv);
-static int cmd_listing(cplr_t *c, int argc, char **argv);
+static int cmd_list(cplr_t *c, int argc, char **argv);
+static int cmd_syms(cplr_t *c, int argc, char **argv);
 static int cmd_dump(cplr_t *c, int argc, char **argv);
-static int cmd_memory(cplr_t *c, int argc, char **argv);
-static int cmd_symbol(cplr_t *c, int argc, char **argv);
-static int cmd_workdir(cplr_t *c, int argc, char **argv);
-static int cmd_history(cplr_t *c, int argc, char **argv);
+static int cmd_opts(cplr_t *c, int argc, char **argv);
+static int cmd_stat(cplr_t *c, int argc, char **argv);
 static int cmd_help(cplr_t *c, int argc, char **argv);
 static int cmd_quit(cplr_t *c, int argc, char **argv);
 
 static command_t commands[] = {
-{ "c", "Show chain",       cmd_chain },
-{ "l", "Show listing",     cmd_listing },
-#if 0
-{ "+", "Move up",          cmd_chain_up },
-{ "-", "Move down",        cmd_chain_down },
-#endif
-{ "D", "Show dump",        cmd_dump },
-//{ "E", "Show environment", cmd_environment },
-//{ "L", "Show locale",      cmd_locale },
-//{ "M", "Show memory",      cmd_memory },
-//{ "P", "Show process",     cmd_process },
-//{ "Y", "Show symbols",     cmd_symbol },
-//{ "W", "Show workdir",     cmd_cwd },
-//{ "h", "Show history",     cmd_history },
-{ "?", "Show help",        cmd_help },
-{ "q", "Quit",             cmd_quit },
+{ "l", "List code",     cmd_list },
+{ "y", "List syms",     cmd_syms },
+{ "d", "Show dump",     cmd_dump },
+{ "o", "Show opts",     cmd_opts },
+{ "s", "Show stat",     cmd_stat },
+{ "?", "Show help",     cmd_help },
+{ "q", "Quit",          cmd_quit },
 { NULL, NULL, NULL },
 };
 
@@ -225,162 +214,7 @@ int cplr_command(cplr_t *c, const char *line) {
   return ret;
 }
 
-/* Command implementations */
-
-static int cmd_help(cplr_t *c, int argc, char **argv) {
-  print_help();
-  return 0;
-}
-
-static int cmd_cwd(cplr_t *c, int argc, char **argv) {
-  char cwd[PATH_MAX];
-  printf("%s\n", getcwd(cwd, sizeof(cwd)));
-  return 0;
-}
-
-static int cmd_history(cplr_t *c, int argc, char **argv) {
-  return 0;
-}
-
-static int cmd_chain(cplr_t *c, int argc, char **argv) {
-  int i;
-  cplr_t *cur;
-  for(cur = c, i = 0; cur; cur = cur->c_prev, i++) {
-    printf(" c%d:\n", i);
-  }
-  return 0;
-}
-
-static bool print_pile(cplr_t *c, const char *name, lh_t *list, bool reverse) {
-  int i;
-  ln_t *n;
-
-  if(l_empty(list)) {
-    return false;
-  }
-
-  if(reverse) {
-    i = 0;
-    L_BACKWARDS(list, n) {
-      fprintf(stderr, " %s%d: %s\n", name, i, value_get_str(&n->v));
-      i++;
-    }
-  } else {
-    i = 0;
-    L_FORWARD(list, n) {
-      fprintf(stderr, "  %s%d: %s\n", name, i, value_get_str(&n->v));
-      i++;
-    }
-  }
-
-  return true;
-}
-
-static int cmd_piles(cplr_t *c, int argc, char **argv) {
-  bool any;
-
-  any = false;
-  any |= print_pile(c, "p", &c->pkgs, false);
-  any |= print_pile(c, "L", &c->libdirs, false);
-  any |= print_pile(c, "I", &c->incdirs, false);
-  any |= print_pile(c, "l", &c->libs, false);
-  any |= print_pile(c, "i", &c->incs, false);
-  any |= print_pile(c, "s", &c->srcs, false);
-  any |= print_pile(c, "d", &c->tlds, false);
-  if(any) fprintf(stderr, "\n");
-
-  print_pile(c, "t", &c->tlfs, false);
-  print_pile(c, "b", &c->befs, false);
-  print_pile(c, "s", &c->stms, false);
-  print_pile(c, "a", &c->afts, true);
-
-  return 0;
-}
-
-static int cmd_dump(cplr_t *c, int argc, char **argv) {
-  int dumpsave = c->dump;
-  c->dump = 1;
-  cplr_generate(c);
-  c->dump = dumpsave;
-  return 0;
-}
-
-static int cmd_memory(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Memory:\n");
-  return 0;
-}
-
-static int cmd_state(cplr_t *c, int argc, char **argv) {
-  fprintf(stderr, "Option flags:");
-  if(c->flag & CPLR_FLAG_NODEFAULTS) {
-    fprintf(stderr, " nodefaults");
-  }
-  if(c->flag & CPLR_FLAG_NOCOMPILE) {
-    fprintf(stderr, " norun");
-  }
-  if(c->flag & CPLR_FLAG_NOLINK) {
-    fprintf(stderr, " nolink");
-  }
-  if(c->flag & CPLR_FLAG_NORUN) {
-    fprintf(stderr, " norun");
-  }
-  if(c->flag & CPLR_FLAG_FORK) {
-    fprintf(stderr, " fork");
-  }
-  if(c->flag & CPLR_FLAG_INTERACTIVE) {
-    fprintf(stderr, " interactive");
-  }
-  fprintf(stderr, "\n");
-  fprintf(stderr, "State flags: ");
-  if(c->flag & CPLR_FLAG_GENERATED) {
-    fprintf(stderr, " generated");
-  }
-  if(c->flag & CPLR_FLAG_PREPARED) {
-    fprintf(stderr, " prepared");
-  }
-  if(c->flag & CPLR_FLAG_COMPILED) {
-    fprintf(stderr, " compiled");
-  }
-  if(c->flag & CPLR_FLAG_EXECUTED) {
-    fprintf(stderr, " executed");
-  }
-  if(c->flag & CPLR_FLAG_FINISHED) {
-    fprintf(stderr, " finished");
-  }
-  fprintf(stderr, "\n");
-  return 0;
-}
-
-static void print_sym_cb(void *ctx, const char *name, const void *val) {
-  if(name[0] == '_') {
-    return;
-  }
-  if(strprefix(name, "tcc_")) {
-    return;
-  }
-  if(strsuffix(name, "@plt")) {
-    return;
-  }
-  fprintf(stderr, "  %-12s\t%p\n", name, val);
-}
-
-static int cmd_symbol(cplr_t *c, int argc, char **argv) {
-  TCCState *tc = cplr_find_syms(c);
-  if(!tc) {
-    fprintf(stderr, "No symbols.\n");
-    return 0;
-  } else {
-    fprintf(stderr, "Symbols:\n");
-    tcc_list_symbols(tc, c, &print_sym_cb);
-    return 0;
-  }
-}
-
-static int cmd_quit(cplr_t *c, int argc, char **argv) {
-  return 1;
-}
-
-/* Internal functions */
+/* Printing */
 
 static void print_help(void) {
   command_t *ci;
@@ -411,3 +245,163 @@ static void print_help(void) {
   }
   fprintf(stderr, "\n");
 }
+
+static bool print_pile(cplr_t *c, const char *name, lh_t *list, bool compact, bool reverse) {
+  int i;
+  ln_t *n;
+
+  if(l_empty(list)) {
+    return false;
+  }
+
+  if(compact) {
+    fprintf(stderr, "c%d-%s:", c->c_index, name);
+  }
+
+  if(reverse) {
+    i = 0;
+    L_BACKWARDS(list, n) {
+      if(compact) {
+        fprintf(stderr, " %s", value_get_str(&n->v));
+      } else {
+        fprintf(stderr, "c%d%s%d: %s\n", c->c_index, name, i, value_get_str(&n->v));
+      }
+      i++;
+    }
+  } else {
+    i = 0;
+    L_FORWARD(list, n) {
+      if(compact) {
+        fprintf(stderr, " %s", value_get_str(&n->v));
+      } else {
+        fprintf(stderr, "c%d%s%d: %s\n", c->c_index, name, i, value_get_str(&n->v));
+      }
+      i++;
+    }
+  }
+
+  if(compact) {
+    fprintf(stderr, "\n");
+  }
+
+  return true;
+}
+
+static int print_piles(cplr_t *c) {
+  print_pile(c, "p", &c->pkgs, true, false);
+  print_pile(c, "L", &c->libdirs, true, false);
+  print_pile(c, "I", &c->incdirs, true, false);
+  print_pile(c, "l", &c->libs, true, false);
+  print_pile(c, "i", &c->incs, true, false);
+  print_pile(c, "s", &c->srcs, true, false);
+  print_pile(c, "d", &c->tlds, true, false);
+  print_pile(c, "t", &c->tlfs, false, false);
+  print_pile(c, "b", &c->befs, false, false);
+  print_pile(c, "s", &c->stms, false, false);
+  print_pile(c, "a", &c->afts, false, true);
+
+  return 0;
+}
+
+/* Command implementations */
+
+static int cmd_dump(cplr_t *c, int argc, char **argv) {
+  int dumpsave = c->dump;
+  c->dump = 1;
+  cplr_generate(c);
+  c->dump = dumpsave;
+  return 0;
+}
+
+static int cmd_list(cplr_t *c, int argc, char **argv) {
+  cplr_t *cur;
+  for(cur = c->c_first; cur; cur = cur->c_next) {
+    if(!cplr_empty(cur)) {
+      print_piles(cur);
+    }
+  }
+  return 0;
+}
+
+static int cmd_opts(cplr_t *c, int argc, char **argv) {
+  c = c->c_first;
+  fprintf(stderr, "opts:");
+  if(c->flag & CPLR_FLAG_NODEFAULTS) {
+    fprintf(stderr, " nodefaults");
+  }
+  if(c->flag & CPLR_FLAG_NOCOMPILE) {
+    fprintf(stderr, " norun");
+  }
+  if(c->flag & CPLR_FLAG_NOLINK) {
+    fprintf(stderr, " nolink");
+  }
+  if(c->flag & CPLR_FLAG_NORUN) {
+    fprintf(stderr, " norun");
+  }
+  if(c->flag & CPLR_FLAG_FORK) {
+    fprintf(stderr, " fork");
+  }
+  if(c->flag & CPLR_FLAG_INTERACTIVE) {
+    fprintf(stderr, " interactive");
+  }
+  fprintf(stderr, "\n");
+  return 0;
+}
+
+static int cmd_stat(cplr_t *c, int argc, char **argv) {
+  cplr_t *cur;
+  for(cur = c->c_first; cur; cur = cur->c_next) {
+    fprintf(stderr, "c%d:", cur->c_index);
+    if(cur->flag & CPLR_FLAG_GENERATED) {
+      fprintf(stderr, " generated");
+    }
+    if(cur->flag & CPLR_FLAG_PREPARED) {
+      fprintf(stderr, " prepared");
+    }
+    if(cur->flag & CPLR_FLAG_COMPILED) {
+      fprintf(stderr, " compiled");
+    }
+    if(cur->flag & CPLR_FLAG_EXECUTED) {
+      fprintf(stderr, " executed");
+    }
+    if(cur->flag & CPLR_FLAG_FINISHED) {
+      fprintf(stderr, " finished");
+    }
+    fprintf(stderr, "\n");
+  }
+  return 0;
+}
+
+static void cmd_syms_print_cb(void *ctx, const char *name, const void *val) {
+  if(name[0] == '_') {
+    return;
+  }
+  if(strprefix(name, "tcc_")) {
+    return;
+  }
+  if(strsuffix(name, "@plt")) {
+    return;
+  }
+  fprintf(stderr, "  %-12s\t%p\n", name, val);
+}
+
+static int cmd_syms(cplr_t *c, int argc, char **argv) {
+  TCCState *tc = cplr_find_syms(c);
+  if(!tc) {
+    fprintf(stderr, "No syms.\n");
+    return 0;
+  } else {
+    tcc_list_symbols(tc, c, &cmd_syms_print_cb);
+    return 0;
+  }
+}
+
+static int cmd_help(cplr_t *c, int argc, char **argv) {
+  print_help();
+  return 0;
+}
+
+static int cmd_quit(cplr_t *c, int argc, char **argv) {
+  return 1;
+}
+
