@@ -1,29 +1,40 @@
 ================================================================================
      1	/* defsysinclude */
-     2	#include <sys/stat.h>
-     3	#include <sys/types.h>
-     4	#include <assert.h>
-     5	#include <ctype.h>
-     6	#include <errno.h>
-     7	#include <fcntl.h>
-     8	#include <libgen.h>
-     9	#include <limits.h>
-    10	#include <locale.h>
-    11	#include <stdarg.h>
-    12	#include <stdio.h>
-    13	#include <stdint.h>
-    14	#include <stdlib.h>
-    15	#include <string.h>
-    16	#include <termios.h>
-    17	#include <time.h>
-    18	#include <unistd.h>
-    19	#include <wchar.h>
-    20	/* main */
-    21	int main(int argc, char **argv) {
-    22		int ret = 0;
-    23	/* statements */
-    24	 s0:	puts("Hello.");
-    25	/* done */
-    26		return ret;
-    27	}
+     2	#include <stdalign.h>
+     3	#include <stdarg.h>
+     4	#include <stdatomic.h>
+     5	#include <stdbool.h>
+     6	#include <stddef.h>
+     7	#include <stdint.h>
+     8	#include <stdnoreturn.h>
+     9	#include <sys/stat.h>
+    10	#include <sys/types.h>
+    11	#include <sys/wait.h>
+    12	#include <assert.h>
+    13	#include <ctype.h>
+    14	#include <errno.h>
+    15	#include <fcntl.h>
+    16	#include <inttypes.h>
+    17	#include <libgen.h>
+    18	#include <limits.h>
+    19	#include <locale.h>
+    20	#include <stdio.h>
+    21	#include <stdlib.h>
+    22	#include <string.h>
+    23	#include <termios.h>
+    24	#include <time.h>
+    25	#include <unistd.h>
+    26	#include <wchar.h>
+    27	#include <sys/epoll.h>
+    28	#include <sys/eventfd.h>
+    29	#include <sys/inotify.h>
+    30	#include <sys/signalfd.h>
+    31	/* main */
+    32	int main(int argc, char **argv) {
+    33		int ret = 0;
+    34	/* statements */
+    35		puts("Hello.");
+    36	/* done */
+    37		return ret;
+    38	}
 ================================================================================

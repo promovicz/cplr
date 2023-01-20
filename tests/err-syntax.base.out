@@ -1,4 +1,4 @@
 Compiler condition:
-  statements_0:1: warning: deprecated use of label at end of compound statement
   statements_0:1: error: declaration expected
+Compilation failed
 Error: Compilation failed.

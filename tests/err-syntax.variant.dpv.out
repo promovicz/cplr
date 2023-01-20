@@ -6,14 +6,14 @@ Generating code
      2	int main(int argc, char **argv) {
      3		int ret = 0;
      4	/* statements */
-     5	 s0:	}{;
+     5		}{;
      6	/* done */
      7		return ret;
      8	}
 ================================================================================
-Generated: 176 bytes code, 111 bytes dump
+Generated: 172 bytes code, 107 bytes dump
 Compilation phase
 Compiler condition:
-  statements_0:1: warning: deprecated use of label at end of compound statement
   statements_0:1: error: declaration expected
+Compilation failed
 Error: Compilation failed.

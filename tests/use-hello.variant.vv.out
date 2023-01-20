@@ -1,9 +1,9 @@
 Preparation phase
 Generation phase
 Generating code
-Generating defsysinclude
-Generating labeled statements
-Generated: 1043 bytes code, 0 bytes dump
+Generating section defsysinclude
+Generating section statements
+Generated: 1590 bytes code, 0 bytes dump
 Compilation phase
 Compilation succeeded
 Execution phase

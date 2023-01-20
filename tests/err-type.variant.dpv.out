@@ -6,12 +6,12 @@ Generating code
      2	int main(int argc, char **argv) {
      3		int ret = 0;
      4	/* statements */
-     5	 s0:	puts(1);
+     5		puts(1);
      6	/* done */
      7		return ret;
      8	}
 ================================================================================
-Generated: 181 bytes code, 116 bytes dump
+Generated: 177 bytes code, 112 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: warning: implicit declaration of function 'puts'

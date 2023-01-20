@@ -1,19 +1,20 @@
 Preparation phase
 Generation phase
 Generating code
-Generating labeled statements
+Generating section statements
 ================================================================================
      1	/* main */
      2	int main(int argc, char **argv) {
      3		int ret = 0;
      4	/* statements */
-     5	 s0:	undeclared;
+     5		undeclared;
      6	/* done */
      7		return ret;
      8	}
 ================================================================================
-Generated: 184 bytes code, 119 bytes dump
+Generated: 180 bytes code, 115 bytes dump
 Compilation phase
 Compiler condition:
   statements_0:1: error: 'undeclared' undeclared
+Compilation failed
 Error: Compilation failed.
