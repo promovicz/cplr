@@ -47,6 +47,9 @@ target_include_directories(
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/source
   )
+target_include_directories(
+  cplr PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/source
+  )
 # libtcc
 target_include_directories(
   cplr PUBLIC ${LIBTCC_INCLUDE_DIRS}
