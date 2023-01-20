@@ -12,6 +12,11 @@ pkg_search_module(LIBTCC REQUIRED libtcc)
 # generate config header
 configure_file(source/cplr_config.h.in source/cplr_config.h)
 
+# compatibility defines
+add_compile_definitions(
+  _GNU_SOURCE _POSIX_C_SOURCE=200809L
+  )
+
 # main executable
 add_executable(
   cplr
@@ -34,10 +39,6 @@ add_executable(
   source/cplr_run.c
   source/cplr_state.c
   source/cplr_symbols.c
-  )
-# compatibility defines
-add_compile_definitions(
-  _GNU_SOURCE _POSIX_C_SOURCE=200809L
   )
 # internal headers
 target_include_directories(
