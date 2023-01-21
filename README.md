@@ -2,26 +2,43 @@
 
 The C piler is utility for executing C code directly from the shell.
 
-Pretty much everything on a POSIX system can be done in C, and quite a few things can't be done without.
+Pretty much everything on a POSIX system can be done in C, and many not without.
 
 It's like awk with C as the language. You can do anything with it.
 
-The name means that it "piles" up strings.
+The name comes from "piling" up C code in before, after and main sections.
 
 Personally I do:
 ```
 $ alias c=cplr
+$ c 'puts("Hello!")'
+Hello!
+$ c 'printf("%zu\n", sizeof(struct stat))'
+144
+```
+
+For convenience I use shell functions like these:
+```
+$ csz() { c "printf(\"%zu\n\",sizeof($1))"; }
+$ csz long
+8
+```
+
+It allows you to treat C like a scripting language:
+```
+$ c 'puts(realpath(argv[1],NULL))' -- ~
+/home/user
+$ c -P tinfo -i term.h 'setupterm(NULL, 1, NULL); putp(tigetstr("clear"))'
 ```
 
 ### Features
 
  * Command-line utility for running C code directly
  * Fast
- * Will include most UNIX headers by default
+ * Includes many UNIX headers by default
  * Has error messages appropriate for command-line use
  * Can import any pkg-config package
  * Uses libtcc internally
- * Could support gcc and/or clang - even embedded
  * Usual compiler options: -I \<incdir\>, -L \<libdir\>, -l \<lib\>
  * Extra convenience options: -i \<include\>, -S <sysincdir\>, -s \<sysinc\>
  * Adding code: \<statement\>, -b \<before\>, -a \<after\>, -t \<toplevel\>
