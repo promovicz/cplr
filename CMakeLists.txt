@@ -2,12 +2,38 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(cplr)
 
+include(ExternalProject)
+
 find_package(PkgConfig REQUIRED)
 
 # TODO detect libm, libdl, libreadline
 
-# required libtcc
-pkg_search_module(LIBTCC REQUIRED libtcc)
+# build directory for dependencies
+set(DEPBLD ${CMAKE_BINARY_DIR}/depbld)
+
+# stage directory for dependencies
+set(STAGE ${CMAKE_BINARY_DIR}/stage)
+
+# build TinyCC or find using pkg-config
+option(CPLR_ENABLE_TINYCC "Enable TinyCC backend" ON)
+if(CPLR_ENABLE_TINYCC)
+  option(CPLR_TINYCC_EXTERNAL "TinyCC: use system libtcc" OFF)
+  if(CPLR_TINYCC_EXTERNAL)
+    pkg_search_module(LIBTCC REQUIRED libtcc)
+  else()
+    set(TINYCC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/tinycc)
+    ExternalProject_Add(tinycc
+      PREFIX ${DEPBLD}
+      SOURCE_DIR ${TINYCC_SOURCE_DIR}
+      DOWNLOAD_COMMAND true
+      CONFIGURE_COMMAND ${TINYCC_SOURCE_DIR}/configure --prefix=/tinycc --enable-static
+      BUILD_COMMAND make clean && make all
+      INSTALL_COMMAND make install DESTDIR=${STAGE}
+      )
+    set(LIBTCC_INCLUDE_DIRS ${STAGE}/tinycc/include)
+    set(LIBTCC_LDFLAGS ${STAGE}/tinycc/lib/libtcc.a)
+  endif()
+endif()
 
 # generate config header
 configure_file(source/cplr_config.h.in source/cplr_config.h)
@@ -51,12 +77,17 @@ target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/source
   )
 # libtcc
-target_include_directories(
-  cplr PUBLIC ${LIBTCC_INCLUDE_DIRS}
-  )
-target_link_libraries(
-  cplr PUBLIC ${LIBTCC_LDFLAGS}
-  )
+if(CPLR_ENABLE_TINYCC)
+  target_include_directories(
+    cplr PUBLIC ${LIBTCC_INCLUDE_DIRS}
+    )
+  target_link_libraries(
+    cplr PUBLIC ${LIBTCC_LDFLAGS}
+    )
+  if(NOT CPLR_TINYCC_EXTERNAL)
+    add_dependencies(cplr tinycc)
+  endif()
+endif()
 # system libraries
 target_link_libraries(
   cplr PUBLIC -pthread -lm -ldl -lreadline
