@@ -14,6 +14,23 @@ set(DEPBLD ${CMAKE_BINARY_DIR}/depbld)
 # stage directory for dependencies
 set(STAGE ${CMAKE_BINARY_DIR}/stage)
 
+# build BDW garbage collector
+option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector" OFF)
+if(CPLR_ENABLE_BDWGC)
+  set(BDWGC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/bdwgc)
+  ExternalProject_Add(bdwgc
+    PREFIX ${DEPBLD}
+    SOURCE_DIR ${BDWGC_SOURCE_DIR}
+    DOWNLOAD_COMMAND true
+    PATCH_COMMAND autoreconf -vi ${BDWGC_SOURCE_DIR}
+    CONFIGURE_COMMAND ${BDWGC_SOURCE_DIR}/configure --prefix=/bdwgc --enable-static --disable-shared --enable-replace-malloc
+    BUILD_COMMAND make clean && make all
+    INSTALL_COMMAND make install DESTDIR=${STAGE}
+    )
+  set(BDWGC_INCLUDE_DIRS ${STAGE}/bdwgc/include)
+  set(BDWGC_LDFLAGS ${STAGE}/bdwgc/lib/libgc.a)
+endif()
+
 # build TinyCC or find using pkg-config
 option(CPLR_ENABLE_TINYCC "Enable TinyCC backend" ON)
 if(CPLR_ENABLE_TINYCC)
@@ -76,6 +93,18 @@ target_include_directories(
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/source
   )
+# bdwgc
+if(CPLR_ENABLE_BDWGC)
+  target_include_directories(
+    cplr PUBLIC ${BDWGC_INCLUDE_DIRS}
+    )
+  target_link_libraries(
+    cplr PUBLIC ${BDWGC_LDFLAGS}
+    )
+  if(NOT CPLR_BDWGC_EXTERNAL)
+    add_dependencies(cplr bdwgc)
+  endif()
+endif()
 # libtcc
 if(CPLR_ENABLE_TINYCC)
   target_include_directories(
