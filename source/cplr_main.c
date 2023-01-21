@@ -34,16 +34,10 @@
 #include <readline/history.h>
 
 #include "cplr.h"
-#include "cgc.h"
 
 int main(int argc, char **argv) {
   int res, ret = 1;
   cplr_t *c;
-
-  /* initialize garbage collector */
-#ifdef CPLR_USE_GC
-  cgc_init();
-#endif
 
   /* create the root piler */
   c = cplr_new();
