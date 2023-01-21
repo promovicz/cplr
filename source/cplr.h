@@ -34,8 +34,8 @@
 
 /* cplr backends */
 typedef enum {
+   CPLR_BACKEND_CCDL,
    CPLR_BACKEND_LIBTCC,
-   CPLR_BACKEND_LIBDL,
 } cplr_backend_t;
 
 /* cplr flags */
@@ -84,7 +84,7 @@ struct cplr {
   int dump;
   /* verbosity level */
   int verbosity;
-  /* target backend (libtcc, libdl...) */
+  /* target backend (libtcc...) */
   cplr_backend_t backend;
   /* target environment (posix, linux...) */
   cplr_target_t target;
