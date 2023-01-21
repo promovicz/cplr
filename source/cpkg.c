@@ -56,16 +56,16 @@ char *cpkg_retrieve(const char *name, const char *what, bool verbose) {
   ps = popen(cmd, "r");
   if(!ps) {
     fprintf(stderr, "Error: Could not popen \"%s\"\n", cmd);
-    goto err;
+    goto err_popen;
   }
   res = fread(rbuf, 1, sizeof(rbuf), ps);
   if(res < 0) {
     fprintf(stderr, "Error: Failed to read from \"%s\"\n", cmd);
-    goto err;
+    goto err_fread;
   }
   if(res == sizeof(rbuf)) {
     fprintf(stderr, "Error: Package options for %s are too long.\n", name);
-    goto err;
+    goto err_fread;
   }
   rbuf[res] = 0;
   if(rbuf[res - 1] == '\n')
@@ -73,7 +73,9 @@ char *cpkg_retrieve(const char *name, const char *what, bool verbose) {
   pclose(ps);
   xfree(cmd);
   return strdup(rbuf);
- err:
+ err_fread:
+  pclose(ps);
+ err_popen:
   xfree(cmd);
   return NULL;
 }
