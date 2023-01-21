@@ -47,7 +47,7 @@ int cplr_interact(cplr_t *b) {
     /* run the command */
     ret = cplr_command(c, line);
     if(ret != 0) {
-      /* Fix return code */
+      /* fix return code */
       if(ret >= 1) {
         ret -= 1;
       }
