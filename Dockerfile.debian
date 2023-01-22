@@ -1,0 +1,23 @@
+
+ARG BASE="debian:stable"
+
+FROM ${BASE}
+
+# configuration
+ENV CPLR_DEPENDS="build-essential autoconf automake cmake libreadline-dev libtool make"
+ENV CPLR_CONFIG="-DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+
+# install dependencies
+RUN apt-get update \
+ && apt-get install -y ${CPLR_DEPENDS} \
+ && apt-get clean
+# keep package lists
+
+# copy, build, install
+WORKDIR /build
+COPY ./ /build/src
+RUN mkdir -p build \
+ && cd build \
+ && cmake ${CPLR_CONFIG} ../src \
+ && make VERBOSE=1 \
+ && make install
