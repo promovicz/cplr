@@ -4,7 +4,7 @@ project(cplr)
 
 include(ExternalProject)
 
-find_package(PkgConfig REQUIRED)
+find_package(PkgConfig)
 
 # TODO detect libm, libdl, libreadline
 
