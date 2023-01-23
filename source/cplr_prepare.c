@@ -33,6 +33,22 @@ static void cplr_tcc_error(cplr_t *c, const char *msg) {
   free(clone);
 }
 
+static int cplr_tcc_prepare_libdir(cplr_t *c) {
+  const char *libdir = NULL;
+  /* check the environment */
+  libdir = getenv("CPLR_TINYCC_LIBDIR");
+  /* default to our custom directory */
+#ifndef CPLR_TINYCC_EXTERNAL
+  if(!libdir) {
+    libdir = CPLR_TINYCC_LIBDIR;
+  }
+#endif
+  /* give the path to tcc - owned by it */
+  if(libdir) {
+    tcc_set_lib_path(c->tcc, libdir);
+  }
+}
+
 static int cplr_tcc_prepare(cplr_t *c) {
   int ret = 1;
   TCCState *t;
@@ -45,6 +61,9 @@ static int cplr_tcc_prepare(cplr_t *c) {
     fprintf(stderr, "Failed to create compiler instance\n");
   }
   c->tcc = t;
+
+  /* set up libdir */
+  cplr_tcc_prepare_libdir(c);
 
   /* error handling */
   tcc_set_error_func(t, c, (void (*)(void *, const char *))&cplr_tcc_error);
