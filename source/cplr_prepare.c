@@ -66,7 +66,7 @@ static int cplr_tcc_prepare(cplr_t *c) {
   cplr_tcc_prepare_libdir(c);
 
   /* error handling */
-  tcc_set_error_func(t, c, (void (*)(void *, const char *))&cplr_tcc_error);
+  tcc_set_error_func(t, c, (TCCErrorFunc)cplr_tcc_error);
 
   /* set output type */
   if(c->out == NULL) {
