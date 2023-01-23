@@ -1,2 +1,5 @@
-#cmakedefine CPLR_USE_GC
-#cmakedefine CPLR_USE_UNWIND
+#cmakedefine CPLR_ENABLE_BDWGC
+#cmakedefine CPLR_ENABLE_TINYCC
+#cmakedefine CPLR_TINYCC_EXTERNAL
+#cmakedefine CPLR_TINYCC_LIBDIR "${CPLR_TINYCC_LIBDIR}"
+
