@@ -18,6 +18,7 @@ set(STAGE ${CMAKE_BINARY_DIR}/stage)
 option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector" ON)
 if(CPLR_ENABLE_BDWGC)
   set(BDWGC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/bdwgc)
+  # build bdwgc and install to stage
   ExternalProject_Add(bdwgc
     PREFIX ${DEPBLD}
     SOURCE_DIR ${BDWGC_SOURCE_DIR}
@@ -27,6 +28,7 @@ if(CPLR_ENABLE_BDWGC)
     BUILD_COMMAND make all
     INSTALL_COMMAND make install DESTDIR=${STAGE}
     )
+  # determine includes and libs
   set(BDWGC_INCLUDE_DIRS ${STAGE}/bdwgc/include)
   set(BDWGC_LDFLAGS ${STAGE}/bdwgc/lib/libgc.a)
 endif()
@@ -39,6 +41,7 @@ if(CPLR_ENABLE_TINYCC)
     pkg_search_module(LIBTCC REQUIRED libtcc)
   else()
     set(TINYCC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/tinycc)
+    # build tinycc and install to stage
     ExternalProject_Add(tinycc
       PREFIX ${DEPBLD}
       SOURCE_DIR ${TINYCC_SOURCE_DIR}
@@ -47,6 +50,7 @@ if(CPLR_ENABLE_TINYCC)
       BUILD_COMMAND make all
       INSTALL_COMMAND make install DESTDIR=${STAGE}
       )
+    # determine includes and libs
     set(LIBTCC_INCLUDE_DIRS ${STAGE}/tinycc/include)
     set(LIBTCC_LDFLAGS ${STAGE}/tinycc/lib/libtcc.a)
     # install tcc libdir
