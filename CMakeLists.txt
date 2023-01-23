@@ -49,6 +49,11 @@ if(CPLR_ENABLE_TINYCC)
       )
     set(LIBTCC_INCLUDE_DIRS ${STAGE}/tinycc/include)
     set(LIBTCC_LDFLAGS ${STAGE}/tinycc/lib/libtcc.a)
+    # install tcc libdir
+    set(CPLR_TINYCC_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib/cplr/tcc)
+    install(
+      DIRECTORY ${CMAKE_BINARY_DIR}/stage/tinycc/lib/tcc
+      DESTINATION lib/cplr)
   endif()
 endif()
 
