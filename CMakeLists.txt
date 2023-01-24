@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(cplr)
 
+include(CheckIncludeFile)
 include(ExternalProject)
 
 find_package(PkgConfig)
@@ -38,7 +39,11 @@ option(CPLR_ENABLE_TINYCC "Enable TinyCC backend" ON)
 if(CPLR_ENABLE_TINYCC)
   option(CPLR_TINYCC_EXTERNAL "TinyCC: use system libtcc" OFF)
   if(CPLR_TINYCC_EXTERNAL)
-    pkg_search_module(LIBTCC REQUIRED libtcc)
+    pkg_search_module(LIBTCC libtcc)
+    if(NOT LIBTCC_FOUND)
+      check_include_file(libtcc.h LIBTCC_INCLUDE_DIRS)
+      find_library(LIBTCC_LDFLAGS tcc RERQUIRED)
+    endif()
   else()
     set(TINYCC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/tinycc)
     # build tinycc and install to stage
