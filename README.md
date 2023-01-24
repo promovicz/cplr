@@ -4,29 +4,35 @@ The C piler *cplr* is a tool for executing C code from the shell and is meant to
 
 ### But why!?
 
-Its practical purpose is to allow the compilation and execution of short C programs for testing, system information retrieval, live coding and interactive development of C small sequences and programs.
+The practical purpose of *cplr* is to allow the compilation and execution of short C programs for testing, system information retrieval, live coding and interactive development of C small sequences and programs.
 
-At its most basic, *cplr* just runs C:
+It really just runs C:
 ```
 $ cplr 'puts("hello!")'
 hello!
 $ cplr 'printf("%d\n", getpagesize())'
 4096
+```
+
+### Tell me more!
+
+*cplr* itself is a simple **compiler front-end** that does not have any comprehension of the C language or even data types, but this is why it works well because it does not try to do something hard. Instead we follow the UNIX philosophy and do just one thing: act as the interactive equivalent of *cc*.
+
+The current backend of *cplr* is based on **TinyCC**, which gives it a language level of C99 or better and the ability to interact with almost any C library on a normal Linux system including large and complicated ones. You can run Gtk or Python in this tool without having to expect any issues.
+
+### Usage examples
+
+A basic use is to retrieve type information:
+```
 $ cplr -i linux/kvm.h 'printf("%zu\n", sizeof(struct kvm_regs))'
 144
 ```
 
-You can also create ad-hoc executables:
+You can also use *cplr* to create ad-hoc executables:
 ```
 $ cplr -o realpath 'puts(realpath(argv[1],NULL))'
-$ ./rp .
+$ ./realpath .
 /home/user
-```
-
-Thanks to pkg-config, build configuration is easy:
-```
-$ cplr -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("colors"))'
-256
 ```
 
 Small C libraries can be used directly from source:
@@ -36,26 +42,26 @@ $ cplr -s linenoise.c -i linenoise.h 'printf("Line: %s\n", linenoise("% "))'
 Line: hello
 ```
 
-### Tell me more!
-
-*cplr* itself is a simple **compiler front-end** that does not have any comprehension of the C language or even data types, but this is why it works well because it does not try to do something hard. Instead we follow the UNIX philosophy and do just one thing: act as the interactive equivalent of *cc*.
-
-The current backend of *cplr* is based on **TinyCC**, which gives it a language level of C99 or better and the ability to interact with almost any C library on a normal Linux system including large and complicated ones. You can run Gtk or Python in this tool without having to expect any issues.
+Thanks to pkg-config you can easily call any library:
+```
+$ cplr -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("colors"))'
+256
+```
 
 ### Future possibilities
 
- * C REPL (experimental at this point)
+ * C REPL (experimental form exists)
  * Garbage collection (in progress)
- * Crash handlers
+ * Crash handlers (easy)
  * Backtrace support
  * Bounds checking
  * Instruction trace
- * Internal disassembler (capstone/udis86/disarm)
- * Support other compilers through dlopen
+ * Call trace
+ * Internal disassembler (capstone)
+ * Support other compilers using dlopen
  * Support launching into gdb/lldb
  * Source code and assembly dumping
  * Editor and pager integration
  * Live process code injection (researching)
  * Live kernel code injection (needs gcc)
  * Support for C++ and ObjC (needs gcc/clang)
-
