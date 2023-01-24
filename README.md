@@ -4,7 +4,7 @@ The C piler *cplr* is a tool for executing C code from the shell and is meant to
 
 Its practical purpose is to allow the compilation and execution of short C programs for testing, system information retrieval, live coding and interactive development of C small sequences and programs.
 
-At its most basic, `cplr` just runs C:
+At its most basic, *cplr* just runs C:
 ```
 $ alias c=cplr
 $ c 'puts("hello!")'
