@@ -35,11 +35,11 @@ $ c -s linenoise.c -i linenoise.h 'printf("Line: %s\n", linenoise("% "))'
 Line: hello
 ```
 
-### How it works
+### Tell me more!
 
-*cplr* itself is a simple **compiler front-end** that does not have any comprehension of the C language or even data types, but this is why it works well because it does not try to do something hard. Instead we follow the UNIX philosophy and do just one thing: act as the **interactive equivalent of 'cc'**.
+*cplr* itself is a simple **compiler front-end** that does not have any comprehension of the C language or even data types, but this is why it works well because it does not try to do something hard. Instead we follow the UNIX philosophy and do just one thing: act as the interactive equivalent of *cc*.
 
-The current backend of *cplr* is based on **TinyCC**, which gives it a language level of **C99 or better** and the ability to interact with almost any C library on a normal Linux system - including large and complicated ones. You can run Gtk or Python in this tool without having to expect any issues.
+The current backend of *cplr* is based on **TinyCC**, which gives it a language level of C99 or better and the ability to interact with almost any C library on a normal Linux system including large and complicated ones. You can run Gtk or Python in this tool without having to expect any issues.
 
 ### Future possibilities
 
