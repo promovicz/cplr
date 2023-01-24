@@ -2,7 +2,7 @@
 
 The C piler is a tool for executing C code from the shell and is meant to break the barrier between the shell and the core language of UNIX, which it does by making the compiler a tool like sed, grep and awk.
 
-Its practical purpose is to allow the compilation and execution of short C programs for testing, experimentation, system information retrieval, live coding and interactive development of C sequences and programs.
+Its practical purpose is to allow the compilation and execution of short C programs for testing, system information retrieval, live coding and interactive development of C small sequences and programs.
 
 At its most basic, cplr just runs C:
 ```sh
