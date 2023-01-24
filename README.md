@@ -1,38 +1,38 @@
 ## cplr - the C piler
 
-The C piler is a tool for executing C code directly from the shell and is meant to break the abstraction barrier between the shell and the core language of UNIX, which it does by making the compiler a tool like sed, grep and awk.
+The C piler is a tool for executing C code from the shell and is meant to break the barrier between the shell and the core language of UNIX, which it does by making the compiler a tool like sed, grep and awk.
 
-Its practical purpose is to allow the compilation and execution of short C programs and source files for testing, experimentation, system information retrieval, live coding and interactive development of C sequences and programs.
+Its practical purpose is to allow the compilation and execution of short C programs for testing, experimentation, system information retrieval, live coding and interactive development of C sequences and programs.
 
+At its most basic, cplr just runs C:
 ```sh
-# small, quick, simple
 $ alias c=cplr
-
-# run C code at any time
 $ c 'puts("hello!")'
 hello!
-
-# access low-level information
 $ c 'printf("%d\n", getpagesize())'
 4096
-
-# get information about heap structure
 $ c -i linux/kvm.h 'printf("%zu\n", sizeof(struct kvm_regs))'
 144
+```
 
-# create ad-hoc executables
+You can also create ad-hoc executables:
+```sh
 $ c -o realpath 'puts(realpath(argv[1],NULL))'
 $ ./rp .
 /home/user
+```
 
-# try libraries right from source
+Thanks to pkg-config, build configuration is easy:
+```sh
+$ c -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("colors"))'
+256
+```
+
+Small C libraries can be used directly from source:
+```sh
 $ c -s linenoise.c -i linenoise.h 'printf("Line: %s\n", linenoise("% "))'
 % hello
 Line: hello
-
-# call any pkg-config library
-$ c -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("colors"))'
-256
 ```
 
 This program itself is a simple compiler front-end that does not have any comprehension of the C language or even data types, but this is why it works well because it does not try to do something hard. Instead we follow the UNIX philosophy and do just one thing: act as the interactive equivalent of `cc`.
