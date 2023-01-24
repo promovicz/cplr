@@ -6,7 +6,6 @@ The C piler *cplr* is a tool for executing C code from the shell and is meant to
 
 The practical purpose of *cplr* is to allow the compilation and execution of short C programs for testing, system information retrieval, live coding and interactive development of C small sequences and programs.
 
-It really just runs C:
 ```
 $ cplr 'puts("hello!")'
 hello!
@@ -46,6 +45,18 @@ Thanks to pkg-config you can easily call any library:
 ```
 $ cplr -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("colors"))'
 256
+```
+
+### Building cplr
+
+We build using CMake. You need readline. We bring our own copy of TinyCC.
+
+```
+$ git clone https://github.com/promovicz/cplr.git
+$ cd cplr
+$ cmake .
+$ make
+$ make install
 ```
 
 ### Future possibilities
