@@ -68,6 +68,7 @@ $ make install
  * Bounds checking
  * Instruction trace
  * Call trace
+ * Other line editors (not readline)
  * Internal disassembler (capstone)
  * Support other compilers using dlopen
  * Support launching into gdb/lldb
