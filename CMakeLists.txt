@@ -15,7 +15,7 @@ set(DEPBLD ${CMAKE_BINARY_DIR}/depbld)
 set(STAGE ${CMAKE_BINARY_DIR}/stage)
 
 # build BDW garbage collector
-option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector" ON)
+option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector as malloc replacement" ON)
 if(CPLR_ENABLE_BDWGC)
   set(BDWGC_CONFIG --prefix=/bdwgc --enable-static --disable-shared --enable-replace-malloc)
   set(BDWGC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/bdwgc)
