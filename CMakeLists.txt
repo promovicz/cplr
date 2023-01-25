@@ -17,6 +17,7 @@ set(STAGE ${CMAKE_BINARY_DIR}/stage)
 # build BDW garbage collector
 option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector" ON)
 if(CPLR_ENABLE_BDWGC)
+  set(BDWGC_CONFIG --prefix=/bdwgc --enable-static --disable-shared --enable-replace-malloc)
   set(BDWGC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/bdwgc)
   # build bdwgc and install to stage
   ExternalProject_Add(bdwgc
@@ -24,7 +25,7 @@ if(CPLR_ENABLE_BDWGC)
     SOURCE_DIR ${BDWGC_SOURCE_DIR}
     DOWNLOAD_COMMAND true
     PATCH_COMMAND autoreconf -vi ${BDWGC_SOURCE_DIR}
-    CONFIGURE_COMMAND ${BDWGC_SOURCE_DIR}/configure --prefix=/bdwgc --enable-static --disable-shared --enable-replace-malloc && make clean
+    CONFIGURE_COMMAND ${BDWGC_SOURCE_DIR}/configure ${BDWGC_CONFIG} && make clean
     BUILD_COMMAND make all
     INSTALL_COMMAND make install DESTDIR=${STAGE}
     )
