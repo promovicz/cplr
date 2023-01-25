@@ -41,13 +41,14 @@ if(CPLR_ENABLE_TINYCC)
   if(CPLR_TINYCC_EXTERNAL)
     pkg_search_module(LIBTCC REQUIRED libtcc)
   else()
+    set(TINYCC_CONFIG --prefix=/tinycc --enable-static)
     set(TINYCC_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/tinycc)
     # build tinycc and install to stage
     ExternalProject_Add(tinycc
       PREFIX ${DEPBLD}
       SOURCE_DIR ${TINYCC_SOURCE_DIR}
       DOWNLOAD_COMMAND true
-      CONFIGURE_COMMAND ${TINYCC_SOURCE_DIR}/configure --prefix=/tinycc --enable-static && make clean
+      CONFIGURE_COMMAND ${TINYCC_SOURCE_DIR}/configure ${TINYCC_CONFIG} && make clean
       BUILD_COMMAND make all
       INSTALL_COMMAND make install DESTDIR=${STAGE}
       )
