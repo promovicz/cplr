@@ -47,7 +47,7 @@ $ cplr -P tinfo -i term.h 'setupterm(NULL,1,NULL)' 'printf("%d\n", tigetnum("col
 256
 ```
 
-Further examples can be found [here](doc/examples).
+Further examples can be found [here](doc/examples.md).
 
 ### Building cplr
 
