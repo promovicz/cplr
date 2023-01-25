@@ -2,6 +2,7 @@
 
 ### Using libc
 
+A small implementation of the *realpath* utitlity:
 ```sh
 $ cplr -o realpath \
   'char *res' \
@@ -16,6 +17,7 @@ $ ./realpath /bin/ls
 
 ### Using Python
 
+An example of embedding Python 3:
 ```sh
 $ cplr -P python3-embed -i Python.h \
    'Py_Initialize()' \
@@ -29,6 +31,7 @@ $ cplr -P python3-embed -i Python.h \
 
 ### Using Tcl
 
+An example of embedding Tcl:
 ```sh
 $ cplr -P tcl -i tcl/tcl.h \
    'int i, res' \
@@ -46,8 +49,7 @@ $ cplr -P tcl -i tcl/tcl.h \
 
 ### Using Gtk
 
-It's quite possible to build simple GUI programs using cplr:
-
+It's quite possible to build simple GUI programs using *cplr*:
 ```sh
 $ cplr -P gtk+-3.0 -i gtk/gtk.h \
 -t 'int clicks = 0' \
@@ -61,8 +63,7 @@ $ cplr -P gtk+-3.0 -i gtk/gtk.h \
    'g_signal_connect (G_OBJECT(b), "clicked", G_CALLBACK (clicked), "button")' \
    'g_signal_connect (G_OBJECT(w), "destroy", G_CALLBACK (closed), "window")' \
    'gtk_widget_show_all(w)' \
-   'gtk_main()' \
-   -p "$@"
+   'gtk_main()'
 \<window pops up\>
 ** Message: 06:40:30.615: Click 1 on widget button.
 ** Message: 06:40:31.002: Click 2 on widget button.
@@ -72,32 +73,27 @@ $ cplr -P gtk+-3.0 -i gtk/gtk.h \
 ```
 
 Doing this with modern GTK provides decent error messages:
-
 ```
-# note that GTK has some crazy useful error messages
-# this sample is something that happened to me
-$ bin/cplr -P gtk+-3.0 -i gtk/gtk.h \
+$ cplr -P gtk+-3.0 -i gtk/gtk.h \
   'gtk_init(&argc, &argv)' \
   'GtkApplication *a = gtk_application_new("c.sample", G_APPLICATION_NON_UNIQUE)' \
   'GtkApplicationWindow *w = gtk_application_window_new(a)' \
   'g_signal_connect (G_OBJECT(w), "destroy", G_CALLBACK (gtk_main_quit), NULL)' \
-  'gtk_main()' -p
+  'gtk_main()'
 
 (c:2354): Gtk-CRITICAL **: 12:52:47.374: New application windows must be added after the GApplication::startup signal has been emitted.
 ^C
 ```
 
 And this version works fine:
-
 ```
-$ bin/cplr -P gtk+-3.0 -i gtk/gtk.h \
+$ cplr -P gtk+-3.0 -i gtk/gtk.h \
    'gtk_init(&argc, &argv)' \
    'GtkApplication *a = gtk_application_new("c.sample", G_APPLICATION_NON_UNIQUE)' \
    'if (!g_application_register(G_APPLICATION(a), NULL, NULL)) { g_error("Registration failed"); exit(1); }'  \
    'GtkWindow *w = gtk_application_window_new(a)' \
    'g_signal_connect (G_OBJECT(w), "destroy", G_CALLBACK (gtk_main_quit), NULL)' \
    'gtk_widget_show_all(w)' \
-   'gtk_main()' \
-   -p "$@"
+   'gtk_main()'
 \<app exits when window is closed\>
 ```
