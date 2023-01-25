@@ -3,14 +3,14 @@
 ### Using libc
 
 A small implementation of the *realpath* utitlity:
-```sh
+```
 $ cplr -o realpath \
-  'char *res' \
-  'if(argc != 2) { printf("Usage: %s <path>\n", argv[0]); return 1; }' \
-  'res = realpath(argv[1], NULL)' \
-  'if(!res) { perror("realpath"); return 1; }' \
-  'puts(res)' \
-  'free(res)'
+   'char *res' \
+   'if(argc != 2) { printf("Usage: %s <path>\n", argv[0]); return 1; }' \
+   'res = realpath(argv[1], NULL)' \
+   'if(!res) { perror("realpath"); return 1; }' \
+   'puts(res)' \
+   'free(res)'
 $ ./realpath /bin/ls
 /usr/bin/ls
 ```
@@ -18,7 +18,7 @@ $ ./realpath /bin/ls
 ### Using Python
 
 An example of embedding Python 3:
-```sh
+```
 $ cplr -P python3-embed -i Python.h \
    'Py_Initialize()' \
    'for (int i = 1; i < argc; i++) PyRun_SimpleString(argv[i])' \
@@ -32,7 +32,7 @@ $ cplr -P python3-embed -i Python.h \
 ### Using Tcl
 
 An example of embedding Tcl:
-```sh
+```
 $ cplr -P tcl -i tcl/tcl.h \
    'int i, res' \
    'Tcl_Interp *interp' \
@@ -45,12 +45,15 @@ $ cplr -P tcl -i tcl/tcl.h \
       -- \
       'set a 123' \
       'puts $a'
+> set a 123
+> puts $a
+123
 ```
 
 ### Using Gtk
 
 It's quite possible to build simple GUI programs using *cplr*:
-```sh
+```
 $ cplr -P gtk+-3.0 -i gtk/gtk.h \
 -t 'int clicks = 0' \
 -t 'void clicked(GtkWidget *w, char *s) { g_message("Click %d on widget %s.", ++clicks, s); }' \
@@ -75,11 +78,11 @@ $ cplr -P gtk+-3.0 -i gtk/gtk.h \
 Doing this with modern GTK provides decent error messages:
 ```
 $ cplr -P gtk+-3.0 -i gtk/gtk.h \
-  'gtk_init(&argc, &argv)' \
-  'GtkApplication *a = gtk_application_new("c.sample", G_APPLICATION_NON_UNIQUE)' \
-  'GtkApplicationWindow *w = gtk_application_window_new(a)' \
-  'g_signal_connect (G_OBJECT(w), "destroy", G_CALLBACK (gtk_main_quit), NULL)' \
-  'gtk_main()'
+   'gtk_init(&argc, &argv)' \
+   'GtkApplication *a = gtk_application_new("c.sample", G_APPLICATION_NON_UNIQUE)' \
+   'GtkApplicationWindow *w = gtk_application_window_new(a)' \
+   'g_signal_connect (G_OBJECT(w), "destroy", G_CALLBACK (gtk_main_quit), NULL)' \
+   'gtk_main()'
 
 (c:2354): Gtk-CRITICAL **: 12:52:47.374: New application windows must be added after the GApplication::startup signal has been emitted.
 ^C
