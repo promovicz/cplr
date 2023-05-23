@@ -7,7 +7,7 @@ include(ExternalProject)
 
 find_package(PkgConfig)
 
-# TODO detect libm, libdl, libreadline
+# TODO detect libm, libdl, libreadline, libpthread
 
 set(CPLR_VERSION_STRING "0.1")
 
@@ -17,7 +17,10 @@ set(DEPBLD ${CMAKE_BINARY_DIR}/depbld)
 # stage directory for dependencies
 set(STAGE ${CMAKE_BINARY_DIR}/stage)
 
-# build BDW garbage collector
+# Build optional BDW garbage collector
+#
+# We must build the collector ourselves because we want replace-malloc.
+#
 option(CPLR_ENABLE_BDWGC "Enable BDW garbage collector as malloc replacement" ON)
 if(CPLR_ENABLE_BDWGC)
   set(BDWGC_CONFIG --prefix=/bdwgc --enable-static --disable-shared --enable-replace-malloc)
@@ -37,7 +40,12 @@ if(CPLR_ENABLE_BDWGC)
   set(BDWGC_LDFLAGS ${STAGE}/bdwgc/lib/libgc.a)
 endif()
 
-# build TinyCC or find using pkg-config
+# Build TinyCC or find using pkg-config
+#
+# We prefer building our own libtcc to prevent issues with stale versions.
+#
+# Use of external libtcc builds requires yet-unmerged pkg-config support.
+#
 option(CPLR_ENABLE_TINYCC "Enable TinyCC backend" ON)
 if(CPLR_ENABLE_TINYCC)
   option(CPLR_TINYCC_EXTERNAL "TinyCC: use system libtcc" OFF)
@@ -70,15 +78,15 @@ if(CPLR_ENABLE_TINYCC)
   endif()
 endif()
 
-# generate config header
+# Generate config header
 configure_file(source/cplr_config.h.in source/cplr_config.h)
 
-# compatibility defines
+# Compatibility defines
 add_compile_definitions(
   _GNU_SOURCE _POSIX_C_SOURCE=200809L
   )
 
-# main executable
+# Main executable
 add_executable(
   cplr
   source/cext_abort.c
@@ -101,7 +109,7 @@ add_executable(
   source/cplr_state.c
   source/cplr_symbols.c
   )
-# internal headers
+# Include internal headers
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
@@ -111,7 +119,7 @@ target_include_directories(
 target_include_directories(
   cplr PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/source
   )
-# bdwgc
+# Take care of bdwgc
 if(CPLR_ENABLE_BDWGC)
   target_include_directories(
     cplr PUBLIC ${BDWGC_INCLUDE_DIRS}
@@ -123,7 +131,7 @@ if(CPLR_ENABLE_BDWGC)
     add_dependencies(cplr bdwgc)
   endif()
 endif()
-# libtcc
+# Take care of tinycc
 if(CPLR_ENABLE_TINYCC)
   target_include_directories(
     cplr PUBLIC ${LIBTCC_INCLUDE_DIRS}
@@ -135,12 +143,11 @@ if(CPLR_ENABLE_TINYCC)
     add_dependencies(cplr tinycc)
   endif()
 endif()
-# system libraries
+# Required system libraries
 target_link_libraries(
   cplr PUBLIC -pthread -lm -ldl -lreadline
   )
-
-# install
+# Install the binary
 install(
   TARGETS cplr
   RUNTIME DESTINATION bin
