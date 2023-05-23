@@ -1,3 +1,4 @@
+#cmakedefine CPLR_VERSION_STRING
 #cmakedefine CPLR_ENABLE_BDWGC
 #cmakedefine CPLR_ENABLE_TINYCC
 #cmakedefine CPLR_TINYCC_EXTERNAL

@@ -9,6 +9,8 @@ find_package(PkgConfig)
 
 # TODO detect libm, libdl, libreadline
 
+set(CPLR_VERSION_STRING "0.1")
+
 # build directory for dependencies
 set(DEPBLD ${CMAKE_BINARY_DIR}/depbld)
 
