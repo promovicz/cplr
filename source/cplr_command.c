@@ -87,7 +87,7 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
     argn++;
   }
   argc = argn;
-  cext_free(tokline);
+  cext_lfree(tokline);
 
   /* split arguments */
   tokline = strdup(line);
@@ -102,7 +102,7 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
     }
     argn++;
   }
-  cext_free(tokline);
+  cext_lfree(tokline);
 
   /* check for command */
   if(argc == 0) {
