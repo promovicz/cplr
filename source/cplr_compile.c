@@ -32,6 +32,12 @@ static void cplr_tcc_redefsym_cb(void *ctx, const char *name, const void *val) {
   if(strcmp(name, "exit") == 0) {
     return;
   }
+  if(strcmp(name, "atexit") == 0) {
+    return;
+  }
+  if(strcmp(name, "on_exit") == 0) {
+    return;
+  }
   if(strprefix(name, "tcc_")) {
     return;
   }
