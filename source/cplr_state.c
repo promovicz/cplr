@@ -22,7 +22,7 @@
 #include "cplr.h"
 
 cplr_t *cplr_new(void) {
-  cplr_t *res = xcalloc(sizeof(cplr_t), 1);
+  cplr_t *res = cext_calloc(sizeof(cplr_t), 1);
 
   res->backend = CPLR_BACKEND_LIBTCC;
   res->target = CPLR_TARGET_POSIX;
@@ -37,9 +37,9 @@ void cplr_free(cplr_t *c) {
     tcc_delete(c->tcc);
     c->tcc = NULL;
   }
-  lptrfree((void*)&c->out);
-  lptrfree((void*)&c->g_codebuf);
-  lptrfree((void*)&c->g_dumpbuf);
+  cext_lptrfree((void*)&c->out);
+  cext_lptrfree((void*)&c->g_codebuf);
+  cext_lptrfree((void*)&c->g_dumpbuf);
   l_clear(&c->defdef);
   l_clear(&c->defsys);
   l_clear(&c->sysdirs);
@@ -56,7 +56,7 @@ void cplr_free(cplr_t *c) {
   l_clear(&c->stms);
   l_clear(&c->befs);
   l_clear(&c->afts);
-  xfree(c);
+  cext_free(c);
 }
 
 cplr_t *cplr_clone(cplr_t *c) {

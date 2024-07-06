@@ -21,7 +21,7 @@
 
 #include "cext/memory.h"
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 void l_clear(lh_t *lh) {
   ln_t *n, *next;
   /* clear and free nodes */
@@ -29,7 +29,7 @@ void l_clear(lh_t *lh) {
   while(n) {
     next = n->n;
     value_clear(&n->v);
-    xfree(n);
+    cext_free(n);
     n = next;
   }
   /* clear head */
@@ -38,7 +38,7 @@ void l_clear(lh_t *lh) {
   lh->l = NULL;
 }
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 void l_clone(lh_t *lsrc, lh_t *ldst) {
   ln_t *nsrc, *ndst = NULL, *fdst = NULL, *pdst;
   /* copy nodes */
@@ -47,7 +47,7 @@ void l_clone(lh_t *lsrc, lh_t *ldst) {
     /* determine the previous node */
     pdst = ndst;
     /* alloc new node */
-    ndst = xcalloc(1, sizeof(ln_t));
+    ndst = cext_calloc(1, sizeof(ln_t));
     /* initialize the node */
     ndst->h = ldst;
     ndst->p = pdst;
@@ -70,7 +70,7 @@ void l_clone(lh_t *lsrc, lh_t *ldst) {
   ldst->l = ndst;
 }
 
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 void l_append(lh_t *lh, ln_t *n) {
   /* chain */
   n->h = lh;
@@ -88,23 +88,23 @@ void l_append(lh_t *lh, ln_t *n) {
   lh->c++;
 }
 
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 void l_append_str(lh_t *lh, char *s) {
-  ln_t *n = xcalloc(1, sizeof(ln_t));
+  ln_t *n = cext_calloc(1, sizeof(ln_t));
   value_set_str(&n->v, s);
   l_append(lh, n);
 }
 
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 void l_append_str_owned(lh_t *lh, char *s) {
-  ln_t *n = xcalloc(1, sizeof(ln_t));
+  ln_t *n = cext_calloc(1, sizeof(ln_t));
   value_set_str_owned(&n->v, s);
   l_append(lh, n);
 }
 
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 void l_append_str_static(lh_t *lh, const char *s) {
-  ln_t *n = xcalloc(sizeof(ln_t), 1);
+  ln_t *n = cext_calloc(sizeof(ln_t), 1);
   value_set_str_static(&n->v, s);
   l_append(lh, n);
 }

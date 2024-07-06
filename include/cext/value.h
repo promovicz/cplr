@@ -141,33 +141,33 @@ typedef struct value {
   };
 } value_t;
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 extern void value_clear(value_t *vp);
 
-ATTR_ARG_NONNULL(1)
-ATTR_ARG_NONNULL(2)
+CEXT_FUNC_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(2)
 extern void value_clone(value_t *vsrc, value_t *vdst);
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 static inline bool value_has_type(value_t *vp, vtype_t vt) {
   return ((vp->type & VTEQ_MASK) == (vt & VTEQ_MASK));
 }
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 static inline void value_assert_type(value_t *vp, vtype_t vt) {
   if(!value_has_type(vp, vt)) {
-    xabortf("Value type error: expected XXX got YYY\n");
+    cext_abortf("Value type error: expected XXX got YYY\n");
   }
 }
 
-ATTR_FUN_PURE
+CEXT_FUNC_PURE
 static inline vtype_t value_get_type(value_t *vp) {
   return vp->type;
 }
 
 #define VALUE_SIMPLE_INLINE_GETTER(_name, _type, _field, _vtype)	\
-  ATTR_FUN_PURE								\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_PURE								\
+  CEXT_FUNC_ARG_NONNULL(1)							\
     static inline _type value_get_##_name(value_t *vp) {		\
     value_assert_type(vp, _vtype);					\
     return vp->_field;							\
@@ -200,11 +200,11 @@ VALUE_SIMPLE_INLINE_GETTER(ssize, ssize_t, ssz, VT_SSIZE);
 #undef VALUE_SIMPLE_INLINE_GETTER
 
 #define VALUE_SIMPLE_DECLARE_SETTER(_name, _type)	\
-  ATTR_ARG_NONNULL(1)					\
+  CEXT_FUNC_ARG_NONNULL(1)					\
   void value_set_##_name(value_t *vp, _type v);
 
 #define VALUE_SIMPLE_DEFINE_SETTER(_name, _type, _field, _vtype)	\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   void value_set_##_name(value_t *vp, _type v) {			\
     value_clear(vp);							\
     vp->type = _vtype;							\
@@ -239,20 +239,20 @@ VALUE_SIMPLE_DECLARE_SETTER(ssize, ssize_t);
 
 
 #define VALUE_POINTER_DECLARE_GETTERS(_name, _type)		\
-  ATTR_FUN_PURE						\
-  ATTR_ARG_NONNULL(1)						\
+  CEXT_FUNC_PURE						\
+  CEXT_FUNC_ARG_NONNULL(1)						\
   _type *value_get_##_name(value_t *vp);			\
-  ATTR_ARG_NONNULL(1)						\
+  CEXT_FUNC_ARG_NONNULL(1)						\
   _type *value_ref_##_name(value_t *vp);
 
 #define VALUE_POINTER_DEFINE_GETTERS(_name, _type, _field, _vtype, _ref) \
-  ATTR_FUN_PURE							\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_PURE							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   _type *value_get_##_name(value_t *vp) {				\
     value_assert_type(vp, _vtype);					\
     return vp->_field;							\
   }									\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   _type *value_ref_##_name(value_t *vp) {				\
     value_assert_type(vp, _vtype);					\
     return _ref(vp->_field);						\
@@ -265,27 +265,27 @@ VALUE_POINTER_DECLARE_GETTERS(str, char);
 
 
 #define VALUE_POINTER_DECLARE_SETTERS(_name, _type)		\
-  ATTR_ARG_NONNULL(1)						\
+  CEXT_FUNC_ARG_NONNULL(1)						\
   void value_set_##_name(value_t *vp, _type *v);		\
-  ATTR_ARG_NONNULL(1)						\
+  CEXT_FUNC_ARG_NONNULL(1)						\
   void value_set_##_name##_owned(value_t *vp, _type *v);	\
-  ATTR_ARG_NONNULL(1)						\
+  CEXT_FUNC_ARG_NONNULL(1)						\
   void value_set_##_name##_static(value_t *vp, const _type *v)
 
 #define VALUE_POINTER_DEFINE_SETTERS(_name, _type, _field, _vtype, _clone) \
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   void value_set_##_name(value_t *vp, _type *v) {			\
     value_clear(vp);							\
     vp->_field = _clone(v);						\
     vp->type = _vtype | VTM_OWNED;					\
   }									\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   void value_set_##_name##_owned(value_t *vp, _type *v) {		\
     value_clear(vp);							\
     vp->_field = v;							\
     vp->type = _vtype | VTM_OWNED;					\
   }									\
-  ATTR_ARG_NONNULL(1)							\
+  CEXT_FUNC_ARG_NONNULL(1)							\
   void value_set_##_name##_static(value_t *vp, const _type *v) {	\
     value_clear(vp);							\
     vp->_field = (_type *)v;						\

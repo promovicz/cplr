@@ -21,18 +21,18 @@
 
 #include "cext/value.h"
 
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 void value_clear(value_t *vp) {
   if(vp->type & VTF_POINTER) {
     if(vp->type & VTM_OWNED) {
-      ptrfree(&vp->ptr);
+      cext_ptrfree(&vp->ptr);
     }
   }
   memset(vp, 0, sizeof(value_t));
 }
 
-ATTR_ARG_NONNULL(1)
-ATTR_ARG_NONNULL(2)
+CEXT_FUNC_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(2)
 void value_clone(value_t *vsrc, value_t *vdst) {
   memcpy(vdst, vsrc, sizeof(value_t));
   if(value_has_type(vdst, VT_STRING)) {
@@ -40,7 +40,7 @@ void value_clone(value_t *vsrc, value_t *vdst) {
     vdst->type |= VTM_OWNED;
   } else if(vdst->type & VTF_POINTER) {
     if(vdst->type & VTM_OWNED) {
-      xaborts("Cloning owned raw pointer");
+      cext_aborts("Cloning owned raw pointer");
     }
   }
 }
@@ -70,7 +70,7 @@ VALUE_SIMPLE_DEFINE_SETTER(size, size_t, sz, VT_SIZE);
 VALUE_SIMPLE_DEFINE_SETTER(ssize, ssize_t, ssz, VT_SSIZE);
 
 static void *ptr_fault(void *p) {
-  xaborts("Cannot clone or reference void pointer\n");
+  cext_aborts("Cannot clone or reference void pointer\n");
 }
 
 VALUE_POINTER_DEFINE_GETTERS(ptr, void, ptr, VT_POINTER, ptr_fault);

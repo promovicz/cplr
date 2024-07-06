@@ -19,59 +19,59 @@
 
 #include "cext/memory.h"
 
-ATTR_FUN_MALLOC
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(1)
-void *xmalloc(size_t s) {
-  X_VOIDPTR_NOTNULL(malloc, "Allocation of size %zu failed", s);
+CEXT_FUNC_MALLOC
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_ALLOC_SIZE(1)
+void *cext_malloc(size_t s) {
+  CEXT_VOIDPTR_NOTNULL(malloc, "Allocation of size %zu failed", s);
 }
 
-ATTR_FUN_MALLOC
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(1, 2)
-void *xcalloc(size_t n, size_t s) {
-  X_VOIDPTR_NOTNULL(calloc, "Allocation of %zu objects of size %zu failed", n, s);
+CEXT_FUNC_MALLOC
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_ALLOC_SIZE(1, 2)
+void *cext_calloc(size_t n, size_t s) {
+  CEXT_VOIDPTR_NOTNULL(calloc, "Allocation of %zu objects of size %zu failed", n, s);
 }
 
-ATTR_ARG_NONNULL(1)
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(2)
-void *xrealloc(void *ptr, size_t s) {
-  X_VOIDPTR_NOTNULL(realloc, "Reallocation of %p to size %zu failed", ptr, s);
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_NONNULL(1)
+CEXT_FUNC_ARG_ALLOC_SIZE(2)
+void *cext_realloc(void *ptr, size_t s) {
+  CEXT_VOIDPTR_NOTNULL(realloc, "Reallocation of %p to size %zu failed", ptr, s);
 }
 
-void xfree(void *p) {
+void cext_free(void *p) {
   if(!p) {
-    xaborts("xfree: Trying to free a NULL pointer");
+    cext_aborts("xfree: Trying to free a NULL pointer");
   }
   free(p);
 }
 
-void lfree(void *p) {
+void cext_lfree(void *p) {
   if(p) {
     free(p);
   }
 }
 
-ATTR_ARG_NONNULL(1)
-void ptrfree(void **p) {
+CEXT_FUNC_ARG_NONNULL(1)
+void cext_ptrfree(void **p) {
   free(*p);
   *p = NULL;
 }
 
-void xptrfree(void **p) {
+void cext_xptrfree(void **p) {
   if(!p) {
-    xaborts("xptrfree: Trying to free a NULL-referenced pointer");
+    cext_aborts("xptrfree: Trying to free a NULL-referenced pointer");
   }
   if(!*p) {
-    xaborts("xptrfree: Trying to free a NULL pointer");
+    cext_aborts("xptrfree: Trying to free a NULL pointer");
   }
-  ptrfree(p);
+  cext_ptrfree(p);
 }
 
-void lptrfree(void **p) {
+void cext_lptrfree(void **p) {
   if(!p) {
-    xaborts("lptrfree: Trying to free a NULL-referenced pointer");
+    cext_aborts("lptrfree: Trying to free a NULL-referenced pointer");
   }
   if(*p) {
     free(*p);

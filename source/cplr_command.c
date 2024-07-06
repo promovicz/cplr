@@ -87,12 +87,12 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
     argn++;
   }
   argc = argn;
-  free(tokline);
+  cext_free(tokline);
 
   /* split arguments */
   tokline = strdup(line);
   argn = 0;
-  argv = xcalloc(argc + 1, sizeof(char*));
+  argv = cext_calloc(argc + 1, sizeof(char*));
   argv[argc] = NULL;
   while((token = strtok_r(tokline, " \t\r\n", &toksave))) {
     tokline = NULL;
@@ -102,7 +102,7 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
     }
     argn++;
   }
-  free(tokline);
+  cext_free(tokline);
 
   /* check for command */
   if(argc == 0) {
@@ -134,9 +134,9 @@ static int cplr_command_internal(cplr_t *c, const char *line) {
   /* clean up */
   if(argv) {
     for(argn = 0; argn < argc; argn++) {
-      xfree(argv[argn]);
+      cext_free(argv[argn]);
     }
-    free(argv);
+    cext_free(argv);
   }
 
   /* return */

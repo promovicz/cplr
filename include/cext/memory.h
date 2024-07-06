@@ -25,37 +25,37 @@
 #include "abort.h"
 #include "attr.h"
 
-#define X_VOIDPTR_NOTNULL(function, fmt, ...)   \
-  {						\
-    void *p = function(__VA_ARGS__);		\
-    if(p == NULL) xabortf(fmt, __VA_ARGS__);    \
-    return p;					\
+#define CEXT_VOIDPTR_NOTNULL(function, fmt, ...)     \
+  {                                                  \
+    void *p = function(__VA_ARGS__);                 \
+    if(p == NULL) cext_abortf(fmt, __VA_ARGS__);    \
+    return p;                                        \
   }
 
-ATTR_FUN_MALLOC
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(1)
-extern void *xmalloc(size_t s);
+CEXT_FUNC_MALLOC
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_ALLOC_SIZE(1)
+extern void *cext_malloc(size_t s);
 
-ATTR_FUN_MALLOC
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(1, 2)
-extern void *xcalloc(size_t n, size_t s);
+CEXT_FUNC_MALLOC
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_ALLOC_SIZE(1, 2)
+extern void *cext_calloc(size_t n, size_t s);
 
-ATTR_ARG_NONNULL(1)
-ATTR_FUN_RETURNS_NONNULL
-ATTR_ARG_ALLOC_SIZE(2)
-extern void *xrealloc(void *ptr, size_t s);
+CEXT_FUNC_ARG_NONNULL(1)
+CEXT_FUNC_RETURNS_NONNULL
+CEXT_FUNC_ARG_ALLOC_SIZE(2)
+extern void *cext_realloc(void *ptr, size_t s);
 
-extern void xfree(void *p);
+extern void cext_free(void *p);
 
-extern void lfree(void *p);
+extern void cext_lfree(void *p);
 
-ATTR_ARG_NONNULL(1)
-extern void ptrfree(void **p);
+CEXT_FUNC_ARG_NONNULL(1)
+extern void cext_ptrfree(void **p);
 
-extern void xptrfree(void **p);
+extern void cext_xptrfree(void **p);
 
-extern void lptrfree(void **p);
+extern void cext_lptrfree(void **p);
 
 #endif /* !CPLR_MEMORY_H */

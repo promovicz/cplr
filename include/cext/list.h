@@ -44,42 +44,42 @@ struct ln {
 };
 
 /* initialize list as empty */
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 static inline void l_init(lh_t *lh) {
   lh->c = 0; lh->f = NULL; lh->l = NULL;
 }
 
 /* check if list is empty */
-ATTR_FUN_PURE
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_PURE
+CEXT_FUNC_ARG_NONNULL(1)
 static inline bool l_empty(lh_t *lh) {
   return lh->c == 0;
 }
 
 /* get length of list */
-ATTR_FUN_PURE
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_PURE
+CEXT_FUNC_ARG_NONNULL(1)
 static inline size_t l_size(lh_t *lh) {
   return lh->c;
 }
 
 /* clear the list */
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 extern void l_clear(lh_t *lh);
 
 /* clone a list */
-ATTR_ARG_NONNULL(1)
+CEXT_FUNC_ARG_NONNULL(1)
 void l_clone(lh_t *lsrc, lh_t *ldst);
 
 /* append a node to a list */
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 extern void l_append(lh_t *lh, ln_t *n);
 
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 extern void l_append_str(lh_t *lh, char *s);
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 extern void l_append_str_owned(lh_t *lh, char *s);
-ATTR_ARG_NONNULL(1,2)
+CEXT_FUNC_ARG_NONNULL(1,2)
 extern void l_append_str_static(lh_t *lh, const char *s);
 
 #define L_FORWARD(_lhp, _i) \

@@ -31,7 +31,7 @@ static void cplr_tcc_error(void *o, const char *msg) {
   do {
     fprintf(stderr, "  %s\n", cur);
   } while((cur = strtok_r(NULL, "\n", &save)));
-  free(clone);
+  cext_free(clone);
 }
 
 static int cplr_tcc_prepare_libdir(cplr_t *c) {

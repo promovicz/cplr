@@ -65,14 +65,14 @@ static void cplr_emit(cplr_t *c,
   }
 
   if(needline)
-    xfree(sline);
-  xfree(sfmt);
+    cext_free(sline);
+  cext_free(sfmt);
 
   if(nstate != CPLR_GSTATE_COMMENT) {
     c->g_state = nstate;
     c->g_prevline = line;
     if(c->g_prevfile) {
-      xptrfree((void**)&c->g_prevfile);
+      cext_xptrfree((void**)&c->g_prevfile);
     }
     c->g_prevfile = strdup(file);
   }
@@ -211,7 +211,7 @@ static ssize_t code_stream_write(void *cp, const char *buf, size_t size) {
   assert(size < SSIZE_MAX);
   size_t ol = strlen(c->g_codebuf);
   size_t nl = ol + size + 1;
-  char *n = xrealloc(c->g_codebuf, nl);
+  char *n = cext_realloc(c->g_codebuf, nl);
   c->g_codebuf = n;
   strncpy(n + ol, buf, size);
   (n+ol)[size] = 0;
@@ -226,7 +226,7 @@ static ssize_t dump_stream_write(void *cp, const char *buf, size_t size) {
   assert(size < SSIZE_MAX);
   size_t ol = strlen(c->g_dumpbuf);
   size_t nl = ol + size + 1;
-  char *n = xrealloc(c->g_dumpbuf, nl);
+  char *n = cext_realloc(c->g_dumpbuf, nl);
   c->g_dumpbuf = n;
   strncpy(n + ol, buf, size);
   (n+ol)[size] = 0;
@@ -242,7 +242,7 @@ static void cplr_generate_open(cplr_t *c) {
   c->g_codebuf = strdup("");
   c->g_code = fopencookie(c, "w", code_stream_functions);
 #else
-  c->g_codebuf = xcalloc(2^16, 1);
+  c->g_codebuf = cext_calloc(2^16, 1);
   c->g_code = fmemopen(c->g_codebuf, 2^16, "w");
 #endif
   if(c->dump > 0) {
@@ -250,7 +250,7 @@ static void cplr_generate_open(cplr_t *c) {
     c->g_dumpbuf = strdup("");
     c->g_dump = fopencookie(c, "w", dump_stream_functions);
 #else
-    c->g_dumpbuf = xcalloc(2^16, 1);
+    c->g_dumpbuf = cext_calloc(2^16, 1);
     c->g_dump = fmemopen(c->g_dumpbuf, 2^16, "w");
 #endif
   }
@@ -271,10 +271,10 @@ static void cplr_generate_close(cplr_t *c) {
 
 static void cplr_generate_free(cplr_t *c) {
   if(c->g_codebuf) {
-    xptrfree((void**)&c->g_codebuf);
+    cext_xptrfree((void**)&c->g_codebuf);
   }
   if(c->g_dumpbuf) {
-    xptrfree((void**)&c->g_dumpbuf);
+    cext_xptrfree((void**)&c->g_dumpbuf);
   }
 }
 
@@ -321,7 +321,7 @@ static void cplr_generate_report(cplr_t *c) {
 
 static void cplr_generate_finish(cplr_t *c) {
   if(c->g_prevfile) {
-    xptrfree((void**)&c->g_prevfile);
+    cext_xptrfree((void**)&c->g_prevfile);
   }
 }
 

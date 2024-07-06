@@ -43,7 +43,7 @@ int cplr_pkgconfig_prepare(cplr_t *c, const char *name) {
       fprintf(stderr, "Error: Failed to process package %s.\n", name);
       return 1;
     }
-    free(s);
+    cext_free(s);
 
     if(c->verbosity >= 1) {
       fprintf(stderr, "Package %s found\n", name);
@@ -69,7 +69,7 @@ int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args) {
       case 'D':
       case 'U':
         l_append_str_owned(&c->defs, msprintf("-%c%s", opt, s));
-        xfree(s);
+        cext_free(s);
         if(c->verbosity >= 2)
           fprintf(stderr, "Package %s define: -%c%s\n", name, opt, s);
         break;
@@ -89,7 +89,7 @@ int cplr_pkgconfig_add(cplr_t *c, const char *name, const char *args) {
           fprintf(stderr, "Package %s library: %s\n", name, s);
         break;
       default:
-        xfree(s);
+        cext_free(s);
         break;
       }
       opt = 0;

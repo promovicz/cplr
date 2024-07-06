@@ -40,7 +40,7 @@ bool cpkg_exists(const char *name, bool verbose) {
   } else {
     ret = true;
   }
-  xfree(cmd);
+  cext_free(cmd);
   return ret;
 }
 
@@ -71,11 +71,11 @@ char *cpkg_retrieve(const char *name, const char *what, bool verbose) {
   if(rbuf[res - 1] == '\n')
     rbuf[res - 1] = 0;
   pclose(ps);
-  xfree(cmd);
+  cext_free(cmd);
   return strdup(rbuf);
  err_fread:
   pclose(ps);
  err_popen:
-  xfree(cmd);
+  cext_free(cmd);
   return NULL;
 }

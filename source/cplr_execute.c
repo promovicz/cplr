@@ -44,7 +44,7 @@ int cplr_execute(cplr_t *c) {
 
   /* copy arguments */
   argc = 1 + (c->argc - c->argp);
-  argv = xcalloc(sizeof(char*), argc+1);
+  argv = cext_calloc(sizeof(char*), argc+1);
   argv[0] = "c";
   for(i = 1; i < argc; i++) {
     argv[i] = c->argv[c->argp + (i - 1)];
@@ -107,7 +107,7 @@ int cplr_execute(cplr_t *c) {
  out:
 
   /* free arguments */
-  xfree(argv);
+  cext_free(argv);
 
   return ret;
 }

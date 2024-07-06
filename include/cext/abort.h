@@ -24,12 +24,12 @@
 
 #include "attr.h"
 
-ATTR_FUN_COLD
-ATTR_FUN_NORETURN
-extern void xaborts(const char *msg);
+CEXT_FUNC_COLD
+CEXT_FUNC_NORETURN
+extern void cext_aborts(const char *msg);
 
-ATTR_FUN_COLD
-ATTR_FUN_NORETURN
-extern void xabortf(const char *fmt, ...);
+CEXT_FUNC_COLD
+CEXT_FUNC_NORETURN
+extern void cext_abortf(const char *fmt, ...);
 
 #endif /* !CPLR_ABORT_H */
