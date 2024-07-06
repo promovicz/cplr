@@ -19,7 +19,8 @@
 
 #include "cplr.h"
 
-static void cplr_tcc_error(cplr_t *c, const char *msg) {
+static void cplr_tcc_error(void *o, const char *msg) {
+  cplr_t *c = (cplr_t*)o;
   char *clone = strdup(msg);
   char *cur, *save;
   if(!c->tccerr) {
@@ -66,7 +67,7 @@ static int cplr_tcc_prepare(cplr_t *c) {
   cplr_tcc_prepare_libdir(c);
 
   /* error handling */
-  tcc_set_error_func(t, c, (TCCErrorFunc)cplr_tcc_error);
+  tcc_set_error_func(t, c, cplr_tcc_error);
 
   /* set output type */
   if(c->out == NULL) {
