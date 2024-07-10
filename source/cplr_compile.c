@@ -23,6 +23,7 @@
 
 static void cplr_tcc_redefsym_cb(void *ctx, const char *name, const void *val) {
   cplr_t *c = (cplr_t *)ctx;
+  /* ignore various built-ins (FIXME better method?) */
   if(name[0] == '_') {
     return;
   }
@@ -44,9 +45,11 @@ static void cplr_tcc_redefsym_cb(void *ctx, const char *name, const void *val) {
   if(strsuffix(name, "@plt")) {
     return;
   }
+  /* log for debugging */
   if(c->verbosity >= 3) {
     fprintf(stderr, "Redefining symbol %s as %p\n", name, val);
   }
+  /* define the symbol */
   tcc_add_symbol(c->tcc, name, val);
 }
 
@@ -55,24 +58,27 @@ static int cplr_tcc_compile(cplr_t *c) {
   if(tcc_compile_string(c->tcc, c->g_codebuf)) {
     return 1;
   }
+  /* compilation was successful */
   c->flag |= CPLR_FLAG_COMPILED;
-  /* redefine symbols */
+  /* if chained, redefine symbols from previous context */
   if(c->c_prev && c->c_prev->tcc) {
     if(c->verbosity >= 3) {
       fprintf(stderr, "Redefining symbols\n");
     }
     tcc_list_symbols(c->c_prev->tcc, c, &cplr_tcc_redefsym_cb);
   }
-  /* produce output if requested */
-  if(c->out != NULL) {
+  /* produce compilation output */
+  if(c->out == NULL) {
+    /* this was a memory compilation, so mark state as loaded */
+    c->flag |= CPLR_FLAG_LOADED;
+  } else {
+    /* produce an object file or executable */
     if(tcc_output_file(c->tcc, c->out)) {
       fprintf(stderr, "Failed to output file %s\n", c->out);
       return 1;
     }
-  } else {
-    /* memory compile means we have loaded */
-    c->flag |= CPLR_FLAG_LOADED;
   }
+  /* done */
   return 0;
 }
 
