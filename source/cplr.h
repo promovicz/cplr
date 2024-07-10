@@ -34,7 +34,7 @@
 
 /* cplr backends */
 typedef enum {
-   CPLR_BACKEND_CCDL,
+   CPLR_BACKEND_CC,
    CPLR_BACKEND_LIBTCC,
 } cplr_backend_t;
 

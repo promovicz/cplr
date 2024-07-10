@@ -21,6 +21,10 @@
 
 #include <cext/string.h>
 
+static int cplr_cc_compile(cplr_t *c) {
+  return 0;
+}
+
 static void cplr_tcc_redefsym_cb(void *ctx, const char *name, const void *val) {
   cplr_t *c = (cplr_t *)ctx;
   /* ignore various built-ins (FIXME better method?) */
@@ -90,6 +94,9 @@ int cplr_compile(cplr_t *c) {
   }
   /* run backend method */
   switch(c->backend) {
+  case CPLR_BACKEND_CC:
+    ret = cplr_cc_compile(c);
+    break;
   case CPLR_BACKEND_LIBTCC:
     ret = cplr_tcc_compile(c);
     break;
