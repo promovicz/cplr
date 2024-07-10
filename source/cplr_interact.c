@@ -27,7 +27,6 @@ int cplr_interact(cplr_t *b) {
   cplr_t *c = b;
   char *line;
   char *prompt = "> ";
-  bool backslash;
 
   /* command loop */
   while((line = readline(prompt))) {
